@@ -1,14 +1,22 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
-
 var server = createServer();
-var con = createDb();
+
+//Change it to your own connection info
+const dbConnectionInfo =  {
+    host: "127.0.0.1",
+    user: "karol",
+    password: "password",
+    database: "fastodos"
+};
+var con = createDb(dbConnectionInfo);
+const authors = ['Krzysztof Balwierczak', 'Karol Bartyzel', 'Adam Dyszy', 'Weronika Gancarczyk', 'Maciej Mizera', 'Anna Zubel'];
 
 function createServer(){
     var server = express();
     const PORT = 8000;
-    const authors = ['Karol Bartyzel', 'Adam Dyszy', 'Krzysztof Balwierczak', 'Maciej Mizera', 'Weronika Gancarczyk', 'Anna Zubel'];
+    
     server.use(bodyParser.urlencoded({ extended: false }));
     
     server.listen(PORT);
@@ -65,13 +73,8 @@ function createServer(){
     return server;
 }
 
-function createDb(){
-    var con = mysql.createConnection({
-        host: "127.0.0.1",
-        user: "karol",
-        password: "password",
-        database: "fastodos"
-    });
+function createDb(dbConnectionInfo){
+    var con = mysql.createConnection(dbConnectionInfo);
     
     con.connect(function(err) {
         if (err) throw err;
