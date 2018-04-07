@@ -6,8 +6,8 @@ var server = createServer();
 //Change it to your own connection info
 const dbConnectionInfo =  {
     host: "127.0.0.1",
-    user: "karol",
-    password: "password",
+    user: "root",
+    password: "root",
     database: "fastodos"
 };
 var con = createDb(dbConnectionInfo);
@@ -23,6 +23,21 @@ function createServer(){
     server.get('/authors', (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.send(authors);
+    });
+
+    server.get('/todos', (req,res) =>{
+      res.setHeader('Access-Control-Allow-Origin', '*');
+
+      getAllTodos().then((todos) => {
+          console.log(todos);
+          todos=JSON.stringify(todos);
+          console.log(todos);
+          res.send(todos);
+      })
+        .catch((err) =>{
+          res.stats(500).send('Problem occured when pulling todos');
+      });
+
     });
 
     server.get('/todos/:id', (req, res) => {
@@ -103,6 +118,17 @@ function getTodos(userId){
                 resolve(result);
             });
         })
+    });
+}
+
+function getAllTodos(){
+    return new Promise((resolve,reject ) => {
+       con.connect((err) => {
+           con.query('SELECT * FROM todos',(err, result) => {
+               if(err) reject(err);
+               resolve(result);
+           });
+       })
     });
 }
 
