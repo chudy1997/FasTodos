@@ -12,10 +12,13 @@ class List extends Component {
 
     render() {
         return (
-            <list className='list'>
-            {/*List : [ {this.state.todos.join(', ')}]*/}
-             List : {JSON.stringify(this.state.todos,null,5)}
-            </list>
+            <div className='list'>
+            <ul>
+            {
+                this.state.todos.map((todo) => <li>{todo.text}</li>)
+            }
+            </ul>
+            </div>
         );
     }
 }
