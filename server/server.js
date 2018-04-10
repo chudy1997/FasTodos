@@ -9,13 +9,6 @@ const PORT = 8000;
 const server = createServer();
 const pool = mysql.createPool(dbConnectionInfo);
 createTables();
-addTodo('zrob tamtooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo');
-addTodo('zrob siamto');
-addTodo('zrob owamto');
-addTodo('zrob cos');
-addTodo('zrob cokolwiek');
-
-
 
 //Server
 function createServer(){
