@@ -13,11 +13,11 @@ class List extends Component {
     render() {
         return (
             <div className='list'>
-            <ul>
+            <ol>
             {
                 this.state.todos.map((todo) => <li>{todo.text}</li>)
             }
-            </ul>
+            </ol>
             </div>
         );
     }
