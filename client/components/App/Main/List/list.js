@@ -3,22 +3,28 @@ import './list.scss';
 
 class List extends Component {
     state = {
-      todos: []
+      todos: [],
+      chosenTodoId: '0'
     };
 
     componentDidMount(){
         $.get('http://localhost:8000/todos').then((res) => this.setState({todos: res}));
+        
+        this.chooseTodo = (e) => {
+            this.setState({chosenTodoId: e.target.id})
+        }
     }
 
     render() {
         return (
-            <div className='list'>
-            <ol>
+            <span className='list-span'>
+            <ol className='list'>
             {
-                this.state.todos.map((todo) => <li>{todo.text}</li>)
+                this.state.todos.map((todo) => <li id={todo.todoId} key={todo.todoId} onClick={this.chooseTodo} 
+                    className={this.state.chosenTodoId == todo.todoId ? 'list-element chosen-list-element': 'list-element'}>{todo.text}</li>)
             }
             </ol>
-            </div>
+            </span>
         );
     }
 }

@@ -9,6 +9,13 @@ const PORT = 8000;
 const server = createServer();
 const pool = mysql.createPool(dbConnectionInfo);
 createTables();
+addTodo('zrob tamtooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo');
+addTodo('zrob siamto');
+addTodo('zrob owamto');
+addTodo('zrob cos');
+addTodo('zrob cokolwiek');
+
+
 
 //Server
 function createServer(){
@@ -26,9 +33,11 @@ function createServer(){
 
         getTodos().then((todos) => {
             res.send(todos);
+            console.log("lala");
         })
         .catch((err) =>{
-          res.stats(500).send('Problem occured when fetching todos');
+            console.log('Error');
+          res.status(500).send('Problem occured when fetching todos');
         });
 
     });
@@ -82,9 +91,9 @@ function getTodos(){
     });
 }
 
-function addTodo(userId, text){
+function addTodo(text){
     return new Promise((resolve, reject) => {
-        executeSql(`INSERT INTO todos (userId, text, finished) VALUES (${userId}, '${text}', 0)`, 
+        executeSql(`INSERT INTO todos (text, finished) VALUES ('${text}', 0)`, 
             (err, result) => {
                 if(err) reject(err);
                 resolve(result);
