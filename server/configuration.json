@@ -1,7 +1,7 @@
 {
     "host": "127.0.0.1",
-    "user": "user",
-    "password": "password",
-    "database": "fastodos",
-    "connectionLimit" : 10
+    "user": "root",
+    "password": "pass",
+    "database": "todos",
+    "connectionLimit" : 1000
 }

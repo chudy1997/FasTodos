@@ -13,7 +13,7 @@ createTables();
 //Server
 function createServer(){
     var server = express();
-    server.use(bodyParser.urlencoded({ extended: false }));
+    server.use(bodyParser.urlencoded({ extended: false}));
     server.listen(PORT);
 
     server.get('/authors', (req, res) => {
@@ -28,29 +28,30 @@ function createServer(){
             res.send(todos);
             console.log("lala");
         })
-        .catch((err) =>{
-            console.log('Error');
-          res.status(500).send('Problem occured when fetching todos');
-        });
+            .catch((err) =>{
+                console.log('Error');
+                res.status(500).send('Problem occured when fetching todos');
+            });
 
     });
 
     server.post('/todos/new', (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
-        var userId = req.body.id;
-        var text = req.body.text;
+        var text = req.body.value;
+        console.log(req);
 
-        addTodo(userId, text).then((todoId) => {
+        addTodo(text).then((todoId) => {
             res.status(201).send(todoId);
         })
-        .catch((err) => {
-            res.status(500).send('Problem occured when adding new todo');
-        });
+            .catch((err) => {
+                res.status(500).send('Problem occured when adding new todo');
+            });
     });
 
     server.put('/todos/:id/finish', (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
-        var todoId = req.params.id;
+        var todoId = req.chosenTodoId;
+        console.log(req);
 
         finishTodo(todoId);
         res.status(200).send('Ok');
@@ -68,7 +69,7 @@ function executeSql(query, callback){
 }
 
 function createTables(){
-    executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL)", 
+    executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL)",
         (err, result) => {
             if (err) throw err;
         });
@@ -86,7 +87,7 @@ function getTodos(){
 
 function addTodo(text){
     return new Promise((resolve, reject) => {
-        executeSql(`INSERT INTO todos (text, finished) VALUES ('${text}', 0)`, 
+        executeSql(`INSERT INTO todos (text, finished) VALUES ('${text}', 0)`,
             (err, result) => {
                 if(err) reject(err);
                 resolve(result);
@@ -95,7 +96,7 @@ function addTodo(text){
 }
 
 function finishTodo(todoId){
-    executeSql(`UPDATE todos SET finished = 1 WHERE todoId=${todoId}`, 
+    executeSql(`UPDATE todos SET finished = 1 WHERE todoId=${todoId}`,
         (err, result) => {
             if (err) throw err;
         });
