@@ -46,7 +46,7 @@ function createServer(){
             });
     });
 
-    server.put('/todos/:id/finish', (req, res) => {
+    server.put('/todos/finish', (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         var todoId = req.query.id;
         console.log(req);

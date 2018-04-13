@@ -1,51 +1,47 @@
 import React, { Component } from 'react';
 import './list.scss';
-import Input from "./Input/input";
 
 class List extends Component {
     state = {
       todos: [],
       chosenTodoId: '0',
-      text : ' '
+      input : ' '
     };
 
     componentDidMount(){
-        $.get('http://localhost:8000/todos').then((res) => this.setState({todos: res}));
-        
-        this.chooseTodo = (e) => {
-            this.setState({chosenTodoId: e.target.id})
-        }
-
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
 
-    componentDidUpdate(){
         $.get('http://localhost:8000/todos').then((res) => this.setState({todos: res}));
-
+        
+        this.chooseTodo = (e) => {
+            this.setState({chosenTodoId: e.target.id});
+            this.handleFinished(e);
+        }
     }
 
     handleChange(e) {
-        this.setState({ text: e.target.value});
+        this.setState({ input: e.target.value});
     }
 
-    handleSubmit() {
-        $.post('http://localhost:8000/todos/new?text='.concat(this.state.text)).then(console.log("saved"));
+    handleSubmit(e) {
+        $.post('http://localhost:8000/todos/new?text='.concat(this.state.input)).then();
+    }
 
-
+    handleFinished(e){
+        $.put(`http://localhost:8000/todos/finish?id='${this.state.chosenTodoId}'/finish`).then();
     }
 
     render() {
         return (
             <span className='list-span'>
-            <form onSubmit={this.handleSubmit} >
-                <input type="text"  onChange={this.handleChange} value={this.state.text} className="input-area"/>
+            <form onSubmit={this.handleSubmit} className="input">
+                <input type="text"  onChange={this.handleChange} value={this.state.input} className="input-area"/>
             </form>
             <ol className='list'>
-
             {
-                this.state.todos.map((todo) => <li id={todo.todoId} key={todo.todoId} onClick={this.chooseTodo} 
+                this.state.todos.map((todo) => <li id={todo.todoId} key={todo.todoId} onClick={this.chooseTodo}
                     className={this.state.chosenTodoId == todo.todoId ? 'list-element chosen-list-element': 'list-element'}>{todo.text}</li>)
             }
             </ol>
