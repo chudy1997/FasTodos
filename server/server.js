@@ -26,7 +26,6 @@ function createServer(){
 
         getTodos().then((todos) => {
             res.send(todos);
-            console.log("lala");
         })
             .catch((err) =>{
                 console.log('Error');
@@ -37,8 +36,7 @@ function createServer(){
 
     server.post('/todos/new', (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
-        var text = req.body.value;
-        console.log(req);
+        var text = req.query.text;
 
         addTodo(text).then((todoId) => {
             res.status(201).send(todoId);
@@ -50,7 +48,7 @@ function createServer(){
 
     server.put('/todos/:id/finish', (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
-        var todoId = req.chosenTodoId;
+        var todoId = req.query.id;
         console.log(req);
 
         finishTodo(todoId);
