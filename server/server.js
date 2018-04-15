@@ -4,7 +4,7 @@ const authors = ['Krzysztof Balwierczak', 'Karol Bartyzel', 'Adam Dyszy', 'Weron
 const PORT = 8000;
 
 const server = createServer();
-const db = require('./db').default;
+const db = require('./db').initDb('./dbConf.json');
 
 //Server
 function createServer(){
