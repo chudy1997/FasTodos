@@ -32,7 +32,14 @@ module.exports = {
                 executeSql('SELECT * FROM todos',
                     (err, result) => {
                         if(err) reject(err);
-                        resolve(result);
+                        const todos = result.map(rowDataPacket => {
+                            return {
+                                todoId: rowDataPacket.todoId,
+                                text: rowDataPacket.text,
+                                finished: rowDataPacket.finished
+                            };
+                        });
+                        resolve(todos);
                     });
             });
         }

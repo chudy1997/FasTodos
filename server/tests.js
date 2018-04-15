@@ -26,7 +26,10 @@ function tearUp() {
 }
 
 function runTests(tests) {
-  Promise.all(tests.map(test => runTest(test))).then(() => tearUp());
+  if(tests.length === 0)
+    tearUp();
+
+  runTest(tests[0]).then(() => runTests(tests.slice(1)));
 }
 
 function getTodosTest() {
@@ -62,15 +65,8 @@ function getTodosTest() {
     //assert
       .then(expectedTodos => {
         db.getTodos()
-          .then((todosRowDataPackets) => {
-            const todos = todosRowDataPackets.map(rowDataPacket => {
-              return {
-                todoId: rowDataPacket.todoId,
-                text: rowDataPacket.text,
-                finished: rowDataPacket.finished
-              };
-            });
-            assert.deepStrictEqual(todos, expectedTodos);
+          .then((todos) => {
+            assert.deepEqual(todos, expectedTodos);
             resolve('passed');
           })
           .catch(error => reject(error));
@@ -80,31 +76,24 @@ function getTodosTest() {
 }
 
 function addTodoTest() {
-  return new Promise(((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     db.clearDb();
     let testContent = "test_content";
-
-    const testTodo = [{ text: `${testContent}`, finished: 0 }];
-
-    try {
-      db.addTodo(testContent);
-      db.getTodos().then((todoRaw) => {
-        const todo = todoRaw.map(rowDataPacket => {
-          return {
-            text: rowDataPacket.text,
-            finished: rowDataPacket.finished
-          };
-        });
-        assert.deepStrictEqual(todo, testTodo);
-        resolve('passed');
-      });
-    } catch (err) {
-      reject(err);
-    }
-  }));
+    const testTodos = [{ text: `${testContent}`, finished: 0 }];
+    db.addTodo(testContent);
+    
+    db.getTodos().then(fullTodos => {
+      const todos = fullTodos.map(todo => { return {
+        text: todo.text,
+        finished: todo.finished
+      }});
+      
+      assert.deepEqual(todos, testTodos);
+      resolve('passed');
+    });
+  });
 }
 
-
-const tests = [addTodoTest, getTodosTest];
+const tests = [getTodosTest, addTodoTest];
 
 runTests(tests);
