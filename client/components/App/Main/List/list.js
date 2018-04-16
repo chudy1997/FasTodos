@@ -5,7 +5,8 @@ class List extends Component {
     state = {
       todos: [],
       chosenTodoId: '0',
-      input : ' '
+      input : ' ',
+      currId : 0
     };
 
     componentDidMount(){
@@ -35,7 +36,9 @@ class List extends Component {
     handleSubmit(e) {
         $.post('http://localhost:8000/todos/new?text='.concat(this.state.input)).then();
         let todos = this.state.todos;
-        var val = {text:this.state.input , todoId : todos.length+1};
+        let currId = this.state.currId;
+        currId++;
+        var val = {text:this.state.input , todoId : currId};
         todos.push(val);
         this.setState({chosenTodoID: e.target.id});
         e.preventDefault();
