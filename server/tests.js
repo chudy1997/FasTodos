@@ -94,6 +94,52 @@ function addTodoTest() {
   });
 }
 
-const tests = [getTodosTest, addTodoTest];
+function getCategoriesTest(){
+  return new Promise((resolve, reject) => {
+    //setup
+    db.clearDb();
+
+    const testCategories = [
+      {categoryName: 'category1'},
+      {categoryName: 'category2'},
+      {categoryName: 'category3'},
+      {categoryName: 'category4'},
+      {categoryName: 'category5'},
+    ];
+
+    Promise.all(
+      testCategories.map(category => {
+        return new Promise((resolve, reject) => {
+          db.executeSql(`INSERT INTO categories (categoryName) VALUES ('${category.categoryName}')`, (err, result) => {
+            if(err) reject(err);
+            resolve({
+              categoryId: result.insertId,
+              categoryName: category.categoryName,
+            });
+          });
+        });
+      })
+    )
+
+    //assert
+      .then(expectedCategories => {
+        db.getCategories()
+          .then((categoriesRowDataPackets) => {
+            const categories = categoriesRowDataPackets.map(rowDataPacket => {
+              return {
+                categoryId: rowDataPacket.categoryId,
+                categoryName: rowDataPacket.categoryName,
+              }
+            });
+            assert.deepStrictEqual(categories, expectedCategories);
+            resolve('passed');
+          })
+          .catch(error => reject(error));
+      })
+      .catch(error => reject(error));
+  });
+}
+
+const tests = [getTodosTest, addTodoTest, getCategoriesTest];
 
 runTests(tests);

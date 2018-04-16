@@ -48,5 +48,31 @@ function createServer(){
         res.status(200).send('Ok');
     });
 
+  server.get('/categories', (req,res) =>{
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    db.getCategories().then((categories) => {
+      res.send(categories);
+      console.log("getting categories");
+    })
+      .catch((err) =>{
+        console.log('Error');
+        res.status(500).send('Problem occured when fetching categories');
+      });
+
+  });
+
+  server.post('/categories/new', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    var categoryName = req.query.categoryName;
+
+    db.addCategory(categoryName).then((categoryId) => {
+      res.status(201).send(categoryId);
+    })
+      .catch((err) => {
+        res.status(500).send('Problem occured when adding new category');
+      });
+  });
+
     return server;
 }
