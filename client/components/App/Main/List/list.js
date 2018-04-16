@@ -21,17 +21,28 @@ class List extends Component {
         }
     }
 
+
+    getList(){
+        $.get('http://localhost:8000/todos').then((res) => this.setState({ todos: res }));
+
+    }
+
+
     handleChange(e) {
         this.setState({ input: e.target.value});
     }
 
     handleSubmit(e) {
         $.post('http://localhost:8000/todos/new?text='.concat(this.state.input)).then();
+        let todos = this.state.todos;
+        var val = {text:this.state.input , todoId : todos.length+1};
+        todos.push(val);
+        this.setState({chosenTodoID: e.target.id});
+        e.preventDefault();
+
     }
 
-    handleFinished(e){
-        $.put(`http://localhost:8000/todos/finish?id='${this.state.chosenTodoId}'/finish`).then();
-    }
+
 
     render() {
         return (
