@@ -3,4 +3,5 @@ node_modules/
 *.DS_Store
 dist/bundle.js
 coverage
-server/configuration.json
+server/dbConf.json
+server/testdbConf.json
