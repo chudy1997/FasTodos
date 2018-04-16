@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import './footer.scss';
 
+var CONFIG = require('client/components/App/config.json');
+
 class Footer extends Component {
-    state = {
+  state = {
     authors: []
-    };
+  };
 
-    componentDidMount() {
-        $.getJSON('http://localhost:8000/authors').then((res) => this.setState({ authors: res }));
-    }
+  componentDidMount() {
+    $.getJSON(CONFIG.serverUrl+'/authors').then((res) => this.setState({ authors: res }));
+  }
 
-    render() {
-        return (
-            <footer className='footer'>
-                Authors: [ {this.state.authors.join(', ')} ]
-            </footer>
-        );
+  render() {
+    return (
+      <footer className='footer'>
+        Authors: [ {this.state.authors.join(', ')} ]
+      </footer>
+    );
   }
 }
 
