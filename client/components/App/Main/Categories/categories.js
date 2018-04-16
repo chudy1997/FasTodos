@@ -5,12 +5,9 @@ class Categories extends Component {
   state = {
     newCategory: '',
     categories: [],
-    chosenCategoryId: '0'
+    chosenCategoryId: '0',
+    currId: 0
   };
-
-  getCategories(){
-    $.get('http://localhost:8000/categories').then((res) => this.setState({ categories: res }));
-  }
 
   componentDidMount(){
     this.handleChange = this.handleChange.bind(this);
@@ -21,6 +18,11 @@ class Categories extends Component {
     };
   }
 
+  getCategories(){
+    $.get('http://localhost:8000/categories').then((res) => this.setState({ categories: res }));
+    console.log(this.state.categories.map(function(e){return e.categoryId;}));
+  }
+
   handleChange(e) {
     this.setState({ newCategory: e.target.value });
   }
@@ -29,7 +31,7 @@ class Categories extends Component {
     if(this.state.newCategory==="") {
       alert('A new category must have a name');
       return false;
-    } else if (this.state.categories.map(function(e){return e.categoryName;}).indexOf(this.state.newCategory)>0){
+    } else if (this.state.categories.map(function(e){return e.categoryName;}).indexOf(this.state.newCategory)!==-1){
       alert('There is already a category named: '+this.state.newCategory+' in database');
       return false;
     }
@@ -38,9 +40,15 @@ class Categories extends Component {
 
   handleSubmit(e) {
     if(this.isInputValid()) {
-      $.post('http://localhost:8000/categories/new?categoryName='.concat(this.state.newCategory)).then(this.getCategories());
-      e.preventDefault();
+      $.post('http://localhost:8000/categories/new?categoryName='.concat(this.state.newCategory)).then();
+      let categories = this.state.categories;
+      let currId = this.state.currId;
+      currId++;
+      var inputCategory = {categoryName: this.state.newCategory, categoryId: currId};
+      categories.push(inputCategory);
     }
+    this.setState({newCategory: ''});
+    e.preventDefault();
   }
 
   render() {

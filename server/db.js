@@ -29,6 +29,10 @@ module.exports = {
                 (err, result) => {
                     if (err) throw err;
                 });
+            executeSql("DELETE FROM `categories`",
+                (err, result) => {
+                    if (err) throw err;
+                });
         }
 
         function getTodos(){
