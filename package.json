@@ -14,7 +14,7 @@
     "test:watch": "jest client/** --watch",
     "test:watchAll": "jest client/** --watchAll",
     "test:coverage:report": "open coverage/lcov-report/index.html",
-    "heroku-prebuild": "npm i yarn"
+    "heroku-prebuild": "npm install & npm i yarn"
   },
   "author": "",
   "license": "ISC",
