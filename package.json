@@ -14,7 +14,7 @@
     "test:watch": "jest client/** --watch",
     "test:watchAll": "jest client/** --watchAll",
     "test:coverage:report": "open coverage/lcov-report/index.html",
-    "heroku-prebuild": "npm install & npm i yarn"
+    "heroku-prebuild": "npm install"
   },
   "author": "",
   "license": "ISC",
@@ -39,8 +39,7 @@
     "request-promise": "^4.2.2",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
-    "webpack": "^3.6.0",
-    "yarn": "^1.6.0"
+    "webpack": "^3.6.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",
