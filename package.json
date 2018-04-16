@@ -13,7 +13,8 @@
     "test": "jest client/**",
     "test:watch": "jest client/** --watch",
     "test:watchAll": "jest client/** --watchAll",
-    "test:coverage:report": "open coverage/lcov-report/index.html"
+    "test:coverage:report": "open coverage/lcov-report/index.html",
+    "heroku-prebuild": "npm i yarn"
   },
   "author": "",
   "license": "ISC",
