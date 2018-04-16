@@ -5,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "build": "webpack --config webpack.prod.config.js",
-    "dev": "webpack-dev-server --hot --inline",
+    "dev": "webpack-dev-server --port 443 --hot --host 0.0.0.0 --inline",
     "lint": "eslint client/**",
     "lint:watch": "esw -w client/**",
     "review": "npm run lint && npm test",
@@ -40,7 +40,7 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "webpack": "^3.6.0",
-    "yarn": "^1.5.1"
+    "yarn": "^1.6.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",
