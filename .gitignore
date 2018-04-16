@@ -4,3 +4,4 @@ node_modules/
 dist/bundle.js
 coverage
 server/configuration.json
+.idea/
