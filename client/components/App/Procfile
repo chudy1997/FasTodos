@@ -1,1 +1,2 @@
+api: yarn install
 api: yarn dev
