@@ -19,16 +19,16 @@ module.exports = {
       path.resolve('./'),
       path.resolve('./node_modules'),
     ],
-    extensions: ['.js','.scss'],
+    extensions: ['.js','.css'],
   },
   output: {
-    path: path.join(__dirname, '/client/dist'),
+    path: path.join(__dirname, '/client'),
     publicPath: '/',
     filename: 'bundle.js'
   },
   devtool: 'cheap-eval-source-map',
   devServer: {
-    contentBase: './client/dist',
+    contentBase: './client',
     hot: true,
     disableHostCheck: true
   },

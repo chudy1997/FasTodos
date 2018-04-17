@@ -1,0 +1,63 @@
+.todos {
+    float: left;
+    width: 70%;
+    height: 100%;
+    font-size: 20px;
+    background-color: #e8ecf2;
+}
+
+
+    .todos .todos-list {
+        height: 85%;
+        overflow: auto;
+        list-style: none;
+        margin: 10px;
+        padding: 5px;
+    }
+
+
+    .todos .todo {
+        counter-increment: item;
+        margin-bottom: 5px;
+        padding: 10px;
+        word-wrap: break-word;
+    }
+
+    .todos .todo:before {
+        margin-right: 10px;
+        content: counter(item);
+        background: lightblue;
+        border-radius: 100%;
+        color: white;
+        width: 2.0em;
+        height: 1.7em;
+        padding-top: 0.3em;
+        text-align: center;
+        display: inline-block;
+        word-wrap: unset;
+    }
+
+    .todos .todo:hover {
+        background-color : lightblue;
+        border-radius : 25px;
+        cursor: pointer;
+    }
+
+
+    .todos .chosen-todo{
+        border-radius : 25px;
+        background-color : lightblue;
+    }
+
+
+    .todos .input{
+        width: 50%;
+        border: none;
+        
+        display: block;
+        margin: 15px auto;
+        padding: 5px;
+
+        font-size: 20px;
+        border-radius: 10px;
+    }

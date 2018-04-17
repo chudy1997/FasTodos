@@ -1,0 +1,64 @@
+.categories {
+    float: left;
+    width: 30%;
+    height: 100%;
+    font-size: 30px;
+    background-color: #ADADAD;
+}
+
+
+    .categories .categories-list {
+        height: 85%;
+        overflow: auto;
+        list-style: none;
+        margin: 10px;
+        padding: 5px;
+    }
+
+
+    .categories .category {
+        float: left;
+        counter-increment: item;
+        margin-bottom: 5px;
+        padding: 10px;
+        word-wrap: break-word;
+    }
+
+    .categories .category:before {
+        margin-right: 10px;
+        content: counter(item);
+        background: lightblue;
+        border-radius: 100%;
+        color: white;
+        width: 2.0em;
+        height: 1.7em;
+        padding-top: 0.3em;
+        text-align: center;
+        display: inline-block;
+        word-wrap: unset;
+    }
+
+    .categories .category:hover {
+        background-color : lightblue;
+        border-radius : 25px;
+        cursor: pointer;
+    }
+
+
+    .categories .chosen-category{
+        border-radius : 25px;
+        background-color : lightblue;
+    }
+
+
+    .categories .input {
+        width: 80%;
+        border: none;
+
+        display: block;
+        margin: 15px auto;
+        padding: 5px;
+
+        font-size: 30px;
+        border-radius: 10px;
+    }

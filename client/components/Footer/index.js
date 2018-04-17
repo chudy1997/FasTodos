@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import './footer.scss';
+import $ from 'jquery';
 
 var CONFIG = require('client/components/App/config.json');
 
-class Footer extends Component {
+export default class Footer extends Component {
   state = {
     authors: []
   };
@@ -20,5 +20,3 @@ class Footer extends Component {
     );
   }
 }
-
-export default Footer;

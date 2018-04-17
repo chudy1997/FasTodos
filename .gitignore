@@ -1,9 +1,11 @@
 node_modules/
 *npm-debug.log
 *.DS_Store
-dist/bundle.js
+client/bundle.js
 coverage
 server/dbConf.json
 server/testdbConf.json
 .idea/
 /client/components/App/config.json
+yarn-error.log
+yarn.lock
