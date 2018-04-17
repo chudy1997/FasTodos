@@ -29,7 +29,8 @@ module.exports = {
   devtool: 'cheap-eval-source-map',
   devServer: {
     contentBase: './client/dist',
-    hot: true
+    hot: true,
+    disableHostCheck: true
   },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
