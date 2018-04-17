@@ -6,3 +6,4 @@ coverage
 server/dbConf.json
 server/testdbConf.json
 .idea/
+/client/components/App/config.json

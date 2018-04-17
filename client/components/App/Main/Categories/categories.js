@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './categories.scss';
-
+var CONFIG = require('client/components/App/config.json');
 class Categories extends Component {
   state = {
     newCategory: '',
@@ -19,7 +19,7 @@ class Categories extends Component {
   }
 
   getCategories(){
-    $.get('http://localhost:8000/categories').then((res) => this.setState({ categories: res }));
+    $.get(CONFIG.serverUrl+'/categories').then((res) => this.setState({ categories: res }));
     console.log(this.state.categories.map(function(e){return e.categoryId;}));
   }
 
@@ -40,7 +40,7 @@ class Categories extends Component {
 
   handleSubmit(e) {
     if(this.isInputValid()) {
-      $.post('http://localhost:8000/categories/new?categoryName='.concat(this.state.newCategory)).then();
+      $.post(CONFIG.serverUrl+'/categories/new?categoryName='.concat(this.state.newCategory)).then();
       let categories = this.state.categories;
       let currId = this.state.currId;
       currId++;

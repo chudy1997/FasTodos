@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './list.scss';
-
+var CONFIG = require('client/components/App/config.json');
 class List extends Component {
     state = {
       todos: [],
@@ -14,7 +14,7 @@ class List extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
-        $.get('http://localhost:8000/todos').then((res) => this.setState({todos: res}));
+        $.get(CONFIG.serverUrl+'/todos').then((res) => this.setState({todos: res}));
         
         this.chooseTodo = (e) => {
             this.setState({chosenTodoId: e.target.id});
@@ -24,7 +24,7 @@ class List extends Component {
 
 
     getList(){
-        $.get('http://localhost:8000/todos').then((res) => this.setState({ todos: res }));
+        $.get(CONFIG.serverUrl+'/todos').then((res) => this.setState({ todos: res }));
 
     }
 
@@ -34,7 +34,7 @@ class List extends Component {
     }
 
     handleSubmit(e) {
-        $.post('http://localhost:8000/todos/new?text='.concat(this.state.input)).then();
+        $.post(CONFIG.serverUrl+'/todos/new?text='.concat(this.state.input)).then();
         let todos = this.state.todos;
         let currId = this.state.currId;
         currId++;
