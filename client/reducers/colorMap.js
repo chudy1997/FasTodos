@@ -1,7 +1,3 @@
-export default function(state =[] , action){
-  switch(action.type){
-    case 'COLOR_MAP_FETCHED':
-      return action.payload;
-  }
-  return state;
+export default function (state, action) {
+  return { 1: 'red', 2: 'blue', 3: 'green', 4: 'yellow', 5: 'orange', 6: 'purple', 7:'pink' };
 }

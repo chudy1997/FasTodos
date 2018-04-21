@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import Todos from './../components/Todos';
 import fetchTodos from './../actions/fetchTodos';
 import chooseTodo from './../actions/chooseTodo';
-import fetchColorMap from "../actions/fetchColorMap";
 
 function mapStateToProps(state){
     return {
@@ -18,7 +17,7 @@ function mapStateToProps(state){
 }
 
 function matchDispatchToProps(dispatch){
-    return bindActionCreators({fetchColorMap: fetchColorMap, fetchTodos: fetchTodos, chooseTodo: chooseTodo}, dispatch);
+    return bindActionCreators({fetchTodos: fetchTodos, chooseTodo: chooseTodo}, dispatch);
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(Todos); 
