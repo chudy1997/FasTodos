@@ -3,6 +3,7 @@ import todosReducer from './todos';
 import chosenTodoIdReducer from './chosenTodoId';
 import categoriesReducer from './categories';
 import chosenCategoryIdReducer from './chosenCategoryId';
+import colorMap from "./colorMap";
 
 const reducers = combineReducers({
     //Todos
@@ -11,7 +12,11 @@ const reducers = combineReducers({
     
     //Categories
     categories: categoriesReducer,
-    chosenCategoryId: chosenCategoryIdReducer
+    chosenCategoryId: chosenCategoryIdReducer,
+
+
+    //map
+    colorMap: colorMap
 })
 
 export default reducers;

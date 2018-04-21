@@ -34,7 +34,7 @@ class Todos extends Component {
     createTodos = () => {
         let id = -1;
         return this.props.todos.filter(todo => todo.categoryId === this.getCategoryId()).map(todo =>
-            <li key={(id++)} id={id} className={this.props.chosenTodoId == id ? 'todo chosen-todo': 'todo'} onClick={this.chooseTodo}>
+            <li style={{backgroundColor:this.props.colorMap[1]}} key={(id++)} id={id} className={this.props.chosenTodoId == id ? 'todo chosen-todo': 'todo'} onClick={this.chooseTodo}>
                 {todo.text}
             </li>
         );
@@ -51,6 +51,8 @@ class Todos extends Component {
             <ol className='todos-list'>
                 {this.createTodos()}
             </ol>
+            fff
+          {this.props.colorMap[1]}
         </span>
     );
 }
