@@ -1,10 +1,30 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const authors = ['Krzysztof Balwierczak', 'Karol Bartyzel', 'Adam Dyszy', 'Weronika Gancarczyk', 'Maciej Mizera', 'Anna Zubel'];
-const PORT = 8000;
 
+var PORT = null;
+if(process.env.PORT){//if port is set as environment variable
+  PORT=process.env.PORT;
+}
+else{
+  PORT=8000;//default value
+}
+
+
+var db = null;
 const server = createServer();
-const db = require('./db').initDb('./dbConf.json');
+if (process.env.CLEARDB_HOST){//if CLEARDB_HOST is set = if server on heroku
+  db = require('./db').initDb({
+    "host": process.env.CLEARDB_HOST,
+    "user": process.env.CLEARDB_USER,
+    "password": process.env.CLEARDB_PASS,
+    "database": process.env.CLEARDB_DB,
+    "connectionLimit" : process.env.CLEARDB_CONN_LIM
+  })
+}
+else {
+  db = require('./db').initDb('./dbConf.json');
+}
 
 //Server
 function createServer(){
