@@ -10,6 +10,7 @@ else{
   PORT=8000;//default value
 }
 
+console.log("port = "+PORT);
 
 var db = null;
 const server = createServer();
