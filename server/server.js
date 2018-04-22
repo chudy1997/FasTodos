@@ -12,20 +12,8 @@ else{
 
 console.log("port = "+PORT);
 
-var db = null;
+const db = require('./db').initDb('./dbConf.json');//if CLEARDB_HOST is set = if server on heroku then dbConf is ignored
 const server = createServer();
-if (process.env.CLEARDB_HOST){//if CLEARDB_HOST is set = if server on heroku
-  db = require('./db').initDb({
-    "host": process.env.CLEARDB_HOST.toString(),
-    "user": process.env.CLEARDB_USER.toString(),
-    "password": process.env.CLEARDB_PASS.toString(),
-    "database": process.env.CLEARDB_DB.toString(),
-    "connectionLimit" : process.env.CLEARDB_CONN_LIM
-  })
-}
-else {
-  db = require('./db').initDb('./dbConf.json');
-}
 
 //Server
 function createServer(){
