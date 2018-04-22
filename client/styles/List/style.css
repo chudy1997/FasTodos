@@ -22,7 +22,7 @@
         padding: 10px;
         word-wrap: break-word;
         border-radius : 25px;
-        opacity:.75;
+        opacity:0.75;
     }
 
     .todos .todo:before {
