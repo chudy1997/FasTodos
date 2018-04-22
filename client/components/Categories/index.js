@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 
+var CONFIG = require('client/components/App/config.json');
+
 export default class Categories extends Component {
   state = {
     input: ''
   };
 
   componentDidMount = () => {
-    $.get('http://localhost:8000/categories').then(categories => this.props.fetchCategories(categories.sort((a, b) => b.categoryId - a.categoryId)));
+    $.get(CONFIG.serverUrl+'/categories').then(categories => this.props.fetchCategories(categories.sort((a, b) => b.categoryId - a.categoryId)));
   }
 
   createCategories = () => {
@@ -27,7 +29,7 @@ export default class Categories extends Component {
     if(this.isInputValid(categoryName)){
         let categories = this.props.categories;
     
-        $.post(`http://localhost:8000/categories/new?categoryName=${categoryName}`).then(res => {
+        $.post(`${CONFIG.serverUrl}/categories/new?categoryName=${categoryName}`).then(res => {
           var newCategory = { categoryId: res.insertId, categoryName: categoryName };
           categories.unshift(newCategory);
           this.props.fetchCategories(categories);
