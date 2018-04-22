@@ -5,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "build": "webpack --config webpack.prod.config.js",
-    "dev": "webpack-dev-server --port ${PORT} --hot --host 0.0.0.0 --inline",
+    "dev": "webpack-dev-server --port 8080 --hot --host 0.0.0.0 --inline",
     "lint": "eslint client/**",
     "lint:watch": "esw -w client/**",
     "review": "npm run lint && npm test",
