@@ -16,10 +16,10 @@ var db = null;
 const server = createServer();
 if (process.env.CLEARDB_HOST){//if CLEARDB_HOST is set = if server on heroku
   db = require('./db').initDb({
-    "host": process.env.CLEARDB_HOST,
-    "user": process.env.CLEARDB_USER,
-    "password": process.env.CLEARDB_PASS,
-    "database": process.env.CLEARDB_DB,
+    "host": process.env.CLEARDB_HOST.toString(),
+    "user": process.env.CLEARDB_USER.toString(),
+    "password": process.env.CLEARDB_PASS.toString(),
+    "database": process.env.CLEARDB_DB.toString(),
     "connectionLimit" : process.env.CLEARDB_CONN_LIM
   })
 }
