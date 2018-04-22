@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 
+var CONFIG = require('client/components/App/config.json');
+
 class Todos extends Component {
     state = {
         input: ''
     }
 
     componentDidMount = () => {
-        $.get('http://localhost:8000/todos').then(todos => this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId)));
+        $.get(CONFIG.serverUrl+'/todos').then(todos => this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId)));
     }
 
     handleSubmit = (e) => {
@@ -15,8 +17,8 @@ class Todos extends Component {
             let todos = this.props.todos;
             let categoryId = this.getCategoryId();
 
-            $.post(`http://localhost:8000/todos/new?text=${text}&categoryId=${categoryId}`);
-    
+            $.post(`${CONFIG.serverUrl}/todos/new?text=${text}&categoryId=${categoryId}`);
+
             var newTodo = { text: text, categoryId: categoryId };
             todos.unshift(newTodo);
             this.props.fetchTodos(todos);

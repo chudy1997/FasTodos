@@ -9,3 +9,4 @@ server/testdbConf.json
 /client/components/App/config.json
 yarn-error.log
 yarn.lock
+/package-lock.json

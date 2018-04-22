@@ -1,10 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const authors = ['Krzysztof Balwierczak', 'Karol Bartyzel', 'Adam Dyszy', 'Weronika Gancarczyk', 'Maciej Mizera', 'Anna Zubel'];
-const PORT = 8000;
 
+var PORT = null;
+if(process.env.PORT){//if port is set as environment variable
+  PORT=process.env.PORT;
+}
+else{
+  PORT=8000;//default value
+}
+
+console.log("port = "+PORT);
+
+const db = require('./db').initDb('./dbConf.json');//if CLEARDB_HOST is set = if server on heroku then dbConf is ignored
 const server = createServer();
-const db = require('./db').initDb('./dbConf.json');
 
 //Server
 function createServer(){
