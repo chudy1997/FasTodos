@@ -22,6 +22,8 @@
         margin-bottom: 5px;
         padding: 10px;
         word-wrap: break-word;
+        opacity:0.60;
+        border-radius : 25px;
     }
 
     .categories .category:before {
@@ -48,6 +50,7 @@
     .categories .chosen-category{
         border-radius : 25px;
         background-color : lightblue;
+        opacity:1;
     }
 
 

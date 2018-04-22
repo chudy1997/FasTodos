@@ -13,7 +13,7 @@ export default class Categories extends Component {
   createCategories = () => {
     let id = -1;
     return this.props.categories.map(category =>
-        <li key={(id++)} id={id} className={this.props.chosenCategoryId == id ? 'category chosen-category': 'category'} onClick={this.chooseCategory} >
+        <li style={{backgroundColor:this.props.colorMap[category.categoryId%Object.keys(this.props.colorMap).length]}} key={(id++)} id={id} className={this.props.chosenCategoryId == id ? 'category chosen-category': 'category'} onClick={this.chooseCategory} >
             {category.categoryName}
         </li>
     );

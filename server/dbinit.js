@@ -78,6 +78,83 @@ p.then(new Promise((resolve => {
     });
 })));
 
+p.then(new Promise((resolve => {
+  executeSql("INSERT INTO todos(text,finished,categoryId)\n" +
+    " SELECT 'Fix car','0','1' WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Fix car' AND categoryId='1');",
+    (err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+})));
+
+p.then(new Promise((resolve => {
+  executeSql("INSERT INTO todos(text,finished,categoryId)\n" +
+    " SELECT 'Meet Michael','0','1' WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Meet Michael' AND categoryId='1');",
+    (err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+})));
+
+p.then(new Promise((resolve => {
+  executeSql("INSERT INTO todos(text,finished,categoryId)\n" +
+    " SELECT 'Pack for holiday','0','1' WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Pack for holiday' AND categoryId='1');",
+    (err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+})));
+
+p.then(new Promise((resolve => {
+  executeSql("INSERT INTO todos(text,finished,categoryId)\n" +
+    " SELECT 'Clean kitchen','0','2' WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Clean kitchen' AND categoryId='2');",
+    (err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+})));
+
+p.then(new Promise((resolve => {
+  executeSql("INSERT INTO todos(text,finished,categoryId)\n" +
+    " SELECT 'Pay bills','0','2' WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Pay bills' AND categoryId='2');",
+    (err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+})));
+
+p.then(new Promise((resolve => {
+  executeSql("INSERT INTO todos(text,finished,categoryId)\n" +
+    " SELECT 'Call boss about oay rise','0','3' WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Call boss about oay rise' AND categoryId='3');",
+    (err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+})));
+
+p.then(new Promise((resolve => {
+  executeSql("INSERT INTO todos(text,finished,categoryId)\n" +
+    " SELECT 'Take holidays','0','3' WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Take holidays' AND categoryId='3');",
+    (err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+})));
+
 p.then(process.exit);
 
 function executeSql(query, callback) {

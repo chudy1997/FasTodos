@@ -9,7 +9,8 @@ import chooseCategory from './../actions/chooseCategory';
 function mapStateToProps(state){
     return {
         categories: state.categories,
-        chosenCategoryId: state.chosenCategoryId
+        chosenCategoryId: state.chosenCategoryId,
+        colorMap: state.colorMap
     };
 }
 

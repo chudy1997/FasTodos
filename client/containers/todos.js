@@ -11,7 +11,8 @@ function mapStateToProps(state){
         todos: state.todos,
         chosenTodoId: state.chosenTodoId,
         categories: state.categories,
-        chosenCategoryId: state.chosenCategoryId
+        chosenCategoryId: state.chosenCategoryId,
+        colorMap: state.colorMap
     };
 }
 

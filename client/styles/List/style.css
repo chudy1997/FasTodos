@@ -21,6 +21,8 @@
         margin-bottom: 5px;
         padding: 10px;
         word-wrap: break-word;
+        border-radius : 25px;
+        opacity:0.75;
     }
 
     .todos .todo:before {
@@ -47,6 +49,7 @@
     .todos .chosen-todo{
         border-radius : 25px;
         background-color : lightblue;
+        opacity:1;
     }
 
 
@@ -60,4 +63,6 @@
 
         font-size: 20px;
         border-radius: 10px;
+
+        background-color: #bdbdbd;
     }
