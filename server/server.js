@@ -40,9 +40,12 @@ function createServer(){
             });
     });
 
-    server.put('/todos/finish', (req, res) => {
+    server.post('/todos/finish', (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
-        const todoId = req.params.id;
+        const todoId = req.query.id;
+        console.log("hej");
+        console.log(todoId);
+        
 
         db.finishTodo(todoId);
         res.status(200).send('Ok');
