@@ -19,7 +19,15 @@ export default class Categories extends Component {
     );
   }
 
-  chooseCategory = (e) => this.props.chooseCategory(e.target.id);
+  chooseCategory = (e) => {
+    if(this.props.chosenCategoryId===e.target.id){
+      this.props.chooseCategory(-1);
+    } else {
+      this.props.chooseCategory(e.target.id);
+    }
+
+
+  }
   handleChange = (e) => this.setState({ input: e.target.value});
 
   handleSubmit = (e) => {
