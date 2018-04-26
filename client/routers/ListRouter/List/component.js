@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Todos extends Component {
+class List extends Component {
     state = {
         input: ''
     }
@@ -56,15 +56,16 @@ class Todos extends Component {
     chooseTodo = (e) => this.props.chooseTodo(e.target.id);
 
     render = () => (
-        <span className='todos'>
+        <div className='list'>
             <form className="form" onSubmit={this.handleSubmit}>
+                {this.props.toggle}
                 <input className="input" autoFocus="autofocus" type="text" maxLength="50" onChange={this.handleChange} value={this.state.input} placeholder="What are you going TODO ?"/>
             </form>
-            <ol className='todos-list'>
+            <ol className='todos'>
                 {this.createTodos()}
             </ol>
-        </span>
+        </div>
     );
 }
 
-export default Todos;
+export default List;

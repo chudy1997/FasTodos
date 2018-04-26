@@ -1,0 +1,14 @@
+.header {
+    height: 25px;
+    padding-left: 20px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.name {
+    margin: 2px;
+    position: absolute;
+    top: 0px;
+    color: lightblue;
+    text-decoration: none;
+}

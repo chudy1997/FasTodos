@@ -1,0 +1,20 @@
+.welcome .intro {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 200;
+    color: lightblue;
+}
+
+.welcome .toggle {
+    font-size: 80px;
+}
+
+.welcome a.list {
+    position: relative;
+    left: 42%;
+}
+
+.welcome a.calendar {
+    position: relative;
+    left: 48%;
+}

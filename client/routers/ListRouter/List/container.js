@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Todos from './../components/Todos';
-import fetchTodos from './../actions/fetchTodos';
-import chooseTodo from './../actions/chooseTodo';
+import fetchTodos from './../../../actions/fetchTodos'
+import chooseTodo from './../../../actions/chooseTodo';
 
 function mapStateToProps(state){
     return {
@@ -20,4 +19,7 @@ function matchDispatchToProps(dispatch){
     return bindActionCreators({fetchTodos: fetchTodos, chooseTodo: chooseTodo}, dispatch);
 }
 
-export default connect(mapStateToProps, matchDispatchToProps)(Todos); 
+export default {
+    mapStateToProps, 
+    matchDispatchToProps
+}; 

@@ -1,0 +1,70 @@
+.list-router {
+    height: 600px;
+    background-color: #e8ecf2;
+}
+
+    .list-router .toggle .fa-calendar {
+        font-size: 33px;
+        margin-left: 50px;
+        float: left;
+    }
+
+    .list-router .list {
+        float: left;
+        padding-right: 3%;
+        width: 67%;
+        height: 600px;
+    }
+
+        .list .todos {
+            overflow: auto;
+            height: 85%;
+            padding-left: 5%;
+            list-style: none;
+        }
+
+            .todos .todo {
+                font-size: 18px;
+                counter-increment: item;
+                margin-bottom: 5px;
+                padding: 10px;
+                border-radius : 25px;
+                opacity: 0.75;
+            }
+
+            .todos .todo:before {
+                content: counter(item);
+                margin-right: 10px;
+                background: lightblue;
+                color: white;
+                border-radius: 100%;
+                width: 2.0em;
+                height: 1.7em;
+                padding-top: 0.3em;
+                text-align: center;
+                display: inline-block;
+            }
+
+            .todos .todo:hover {
+                opacity: 0.9;
+                cursor: pointer;
+            }
+
+            .todos .chosen-todo{
+                opacity: 1;
+            }
+
+
+        .list .input{
+            width: 50%;
+            border: none;
+            
+            display: block;
+            margin: 15px 150px;
+            padding: 5px;
+
+            font-size: 20px;
+            border-radius: 10px;
+
+            background-color: #bdbdbd;
+        }    
