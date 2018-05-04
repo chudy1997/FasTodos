@@ -14,15 +14,16 @@ export default class Calendar extends Component {
 
     componentDidMount = () => {
         $.get('http://localhost:8000/todos').then(todos => {
-            const intervals = todos.filter(todo => todo.deadline !== null ).map( (todo) => {
+            const intervals = todos.map( (todo) => {
                 const minute=moment(todo.deadline).format("mm");
-                const hour=moment(todo.deadline).format("hh");
+                const hour=moment(todo.deadline).format("HH");
+                console.log(hour);
                 const day=moment(todo.deadline).format("DD");
                 return {
                     start:moment({ d:day, h:hour-1, m:minute}),
                     end:moment({ d:day, h:hour, m:minute}),
                     value: todo.text,
-                    id: todo.todoId
+                    id: todo.todoId,
                 }
             });
             this.setState({selectedIntervals : this.state.selectedIntervals.concat(intervals)});
@@ -55,11 +56,11 @@ export default class Calendar extends Component {
             <div className='calendar'>
                 <div className="calendar-switch">
                     {this.props.toggle}
-                    <span class='switch'>
-                        <i class="arrow left"></i>
+                    <span className='switch'>
+                        <i className="arrow left"></i>
                     </span>
-                    <span class='switch'>
-                        <i class="arrow right"></i>
+                    <span className='switch'>
+                        <i className="arrow right"></i>
                     </span>
                 </div>
                 <div className='week-calendar'>
