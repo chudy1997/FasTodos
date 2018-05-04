@@ -6,8 +6,12 @@ const moment = require('moment');
 export default class Calendar extends Component {
     state = {
         firstDay: moment().startOf('week').add(1, 'days'),
-        selectedIntervals: []
+        todos: []
     };
+
+    componentDidMount = () => {
+        $.get('http://localhost:8000/todos').then(todos => this.setState({todos: todos}));
+    }
 
     onRightArrowClick = e => {
         this.setState({firstDay: moment(this.state.firstDay).add(1, "week")});
@@ -17,24 +21,27 @@ export default class Calendar extends Component {
         this.setState({firstDay: moment(this.state.firstDay).subtract(1, "week")});
     };
 
-    componentDidMount = () => {
-        $.get('http://localhost:8000/todos').then(todos => {
-            const intervals = todos.map( (todo) => {
-                const minute=moment(todo.deadline).format("mm");
-                const hour=moment(todo.deadline).format("HH");
-                console.log(hour);
-                const day=moment(todo.deadline).format("DD");
+    getSelectedIntervals = () => {
+        const getCategoryId = () => {
+            const category = this.props.categories[this.props.chosenCategoryId];
+            return category ? category.categoryId : 0;
+        } 
 
-                return {
-                    start:moment({ d:day, h:hour-1, m:minute}),
-                    end:moment({ d:day, h:hour, m:minute}),
-                    value: todo.text,
-                    id: todo.todoId,
-                }
-            });
+        const categoryId = getCategoryId();
+        const intervals = this.state.todos.slice().filter(todo => categoryId === 0 || todo.categoryId === categoryId).map(todo => {
+            const minute=moment(todo.deadline).format("mm");
+            const hour=moment(todo.deadline).format("HH");
+            const day=moment(todo.deadline).format("DD");
 
-            this.setState({selectedIntervals : this.state.selectedIntervals.concat(intervals)});
+            return {
+                start:moment({ d:day, h:hour-1, m:minute}),
+                end:moment({ d:day, h:hour, m:minute}),
+                value: todo.text,
+                id: todo.todoId,
+            }
         });
+
+        return intervals;
     }
 
     handleEventRemove = (e) => {
@@ -54,9 +61,10 @@ export default class Calendar extends Component {
         scaleUnit = {30}
         scaleHeaderTitle = 'FasTodos'
         cellHeight = {25}
-        selectedIntervals={this.state.selectedIntervals}
+        selectedIntervals={this.getSelectedIntervals()}
         onIntervalRemove={this.handleEventRemove}
     />;
+    
 
     render = () => {
         return (
