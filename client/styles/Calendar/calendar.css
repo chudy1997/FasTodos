@@ -10,8 +10,6 @@
 
 .calendar-router .toggle .fa-list {
     font-size: 33px;
-    margin-left: 50px;
-    margin-top: 15px;
 }
 
 .calendar .week-calendar {
@@ -28,24 +26,61 @@
         height: 100%;
     }
 
-.calendar .switch {
-    padding: 20px;
-    background-color: white;
+.calendar .calendar-switch {
+    display: flex;
+    align-items: center;
+    margin-left: 50px;
+    margin-top: 15px;
 }
 
-.switch .arrow {
-    border: solid black;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
-}
+    .calendar-switch .switch-left {
+        margin: 0 20px 0 100px;
+    }
 
-.switch .right {
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-}
+    .calendar-switch .switch-right {
+        margin: 0 20px 0 20px;
+    }
 
-.switch .left {
-    transform: rotate(135deg);
-    -webkit-transform: rotate(135deg);
-}
+    .calendar-switch .switch {
+        height: 20px;
+        padding: 3px 7px 3px 8px;
+        background-color: white;
+        cursor: pointer;
+    }
+
+    .calendar-switch .switch:hover {
+        background-color: #ffffc0;
+    }
+
+        .switch .arrow {
+            border: solid black;
+            border-width: 0 3px 3px 0;
+            display: inline-block;
+            padding: 3px;
+        }
+
+        .switch .arrow-right {
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+        }
+
+        .switch .arrow-left {
+            transform: rotate(135deg);
+            -webkit-transform: rotate(135deg);
+        }
+
+    .calendar-switch .date {
+        padding: 5px;
+    }
+
+    .calendar-switch .start {
+
+    }
+    
+    .calendar-switch .end {
+
+    }
+
+    .calendar-switch .hyphen {
+
+    }

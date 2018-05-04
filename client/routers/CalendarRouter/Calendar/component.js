@@ -5,12 +5,17 @@ const moment = require('moment');
 
 export default class Calendar extends Component {
     state = {
-        startTime: moment({h: 6, m: 0}),
-        endTime: moment({h: 18, m: 1}),
+        firstDay: moment().startOf('week').add(1, 'days'),
         selectedIntervals: []
     };
 
-    onChange = date => this.setState({ chosenDate: date });
+    onRightArrowClick = e => {
+        this.setState({firstDay: moment(this.state.firstDay).add(1, "week")});
+    };
+
+    onLeftArrowClick  = e => {
+        this.setState({firstDay: moment(this.state.firstDay).subtract(1, "week")});
+    };
 
     componentDidMount = () => {
         $.get('http://localhost:8000/todos').then(todos => {
@@ -19,6 +24,7 @@ export default class Calendar extends Component {
                 const hour=moment(todo.deadline).format("HH");
                 console.log(hour);
                 const day=moment(todo.deadline).format("DD");
+
                 return {
                     start:moment({ d:day, h:hour-1, m:minute}),
                     end:moment({ d:day, h:hour, m:minute}),
@@ -26,29 +32,30 @@ export default class Calendar extends Component {
                     id: todo.todoId,
                 }
             });
+
             this.setState({selectedIntervals : this.state.selectedIntervals.concat(intervals)});
         });
-
     }
 
-    handleEventRemove = (event) => {
-        const {selectedIntervals} = this.state;
-        const index = selectedIntervals.findIndex((interval) => interval.id === event.id);
+    handleEventRemove = (e) => {
+        const { selectedIntervals } = this.state;
+        const index = selectedIntervals.findIndex((interval) => interval.id === e.id);
         if (index > -1) {
             selectedIntervals.splice(index, 1);
-            this.setState({selectedIntervals});
+            this.setState({ selectedIntervals });
         }
     }
 
-    createWeekCalendar = () => <WeekCalendar
-        dayFormat={'ddd DD.MM'}
-        startTime = {this.state.startTime}
-        endTime = {this.state.endTime}
-        selectedIntervals={this.state.selectedIntervals}
-        onIntervalRemove={this.handleEventRemove}
+    createWeekCalendar = () => <WeekCalendar 
+        dayFormat = {'ddd DD.MM'}
+        firstDay = {this.state.firstDay} 
+        startTime = {moment({h: 6, m: 0})}
+        endTime = {moment({h: 18, m: 1})}
         scaleUnit = {30}
         scaleHeaderTitle = 'FasTodos'
         cellHeight = {25}
+        selectedIntervals={this.state.selectedIntervals}
+        onIntervalRemove={this.handleEventRemove}
     />;
 
     render = () => {
@@ -56,11 +63,14 @@ export default class Calendar extends Component {
             <div className='calendar'>
                 <div className="calendar-switch">
                     {this.props.toggle}
-                    <span className='switch'>
-                        <i className="arrow left"></i>
+                    <span className='switch switch-left' onClick={this.onLeftArrowClick}>
+                        <i className="arrow arrow-left"></i>
                     </span>
-                    <span className='switch'>
-                        <i className="arrow right"></i>
+                    <label className='date start'>{this.state.firstDay.format('ddd DD.MM').toString()}</label>
+                    <label className='hyphen'>-</label>
+                    <label className='date end'>{moment(this.state.firstDay).add(6, 'days').format('ddd DD.MM').toString()}</label>
+                    <span className='switch switch-right' onClick={this.onRightArrowClick}>                    
+                        <i className="arrow arrow-right"></i>
                     </span>
                 </div>
                 <div className='week-calendar'>
