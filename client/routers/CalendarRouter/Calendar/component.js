@@ -37,14 +37,49 @@ export default class Calendar extends Component {
         });
     }
 
+    handleSelect = (newIntervals) => {
+        let text = newIntervals[0].value;
+        if(text.length > 0){
+              let todos = this.props.todos;
+              let deadline = newIntervals[0].end.unix();
+              let categoryId = this.getCategoryId();
+              if(categoryId===0) categoryId=1; //if category not selected, first category in db -> newTask category
+
+              $.post(`http://localhost:8000/todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}`);
+
+              var newTodo = { text: text, categoryId: categoryId };
+              todos.unshift(newTodo);
+              this.props.fetchTodos(todos);
+        }
+
+        const {lastUid, selectedIntervals} = this.state;
+        const intervals = newIntervals.map( (interval, index) => {
+              return {
+                    ...interval,
+                    id: lastUid + index
+              }
+        });
+
+        this.setState({
+              selectedIntervals: selectedIntervals.concat(intervals),
+              lastUid: lastUid + newIntervals.length
+        })
+    };
+
+    getCategoryId = () => {
+        const category = this.props.categories[this.props.chosenCategoryId];
+        return category ? category.categoryId : 0;
+    };
+
     handleEventRemove = (e) => {
+        //TODO remove from database
         const { selectedIntervals } = this.state;
         const index = selectedIntervals.findIndex((interval) => interval.id === e.id);
         if (index > -1) {
             selectedIntervals.splice(index, 1);
             this.setState({ selectedIntervals });
         }
-    }
+    };
 
     createWeekCalendar = () => <WeekCalendar 
         dayFormat = {'ddd DD.MM'}
@@ -56,6 +91,7 @@ export default class Calendar extends Component {
         cellHeight = {25}
         selectedIntervals={this.state.selectedIntervals}
         onIntervalRemove={this.handleEventRemove}
+        onIntervalSelect={this.handleSelect}
     />;
 
     render = () => {
