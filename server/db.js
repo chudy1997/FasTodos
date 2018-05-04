@@ -45,7 +45,8 @@ module.exports = {
                                 todoId: rowDataPacket.todoId,
                                 text: rowDataPacket.text,
                                 finished: rowDataPacket.finished,
-                                categoryId: rowDataPacket.categoryId
+                                categoryId: rowDataPacket.categoryId,
+                                deadline: rowDataPacket.deadline
                             };
                         });
                         resolve(todos);
