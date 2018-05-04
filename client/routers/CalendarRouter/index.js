@@ -12,7 +12,7 @@ export default class CalendarRouter extends Component {
                 <Categories />
                 <Calendar toggle={(
                     <Link className='toggle' data-tip="List view" to='/list' >
-                        <i class="fa fa-list" aria-hidden="true"></i>
+                        <i className="fa fa-list" aria-hidden="true"></i>
                     </Link>)
                 }/>
                 <ReactTooltip />

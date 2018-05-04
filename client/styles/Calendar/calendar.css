@@ -2,3 +2,30 @@
     height: 600px;
     background-color: #e8ecf2;
 }
+
+.calendar-router .calendar {
+    width: 67%;
+    float: left;
+}
+
+.calendar-router .toggle .fa-list {
+    font-size: 33px;
+    margin-left: 50px;
+    margin-top: 15px;
+}
+
+.calendar .week-calendar {
+    height: 505px;
+}
+
+    .week-calendar .weekCalendar {
+        width: 95%;
+        margin: 16px 0;    
+        margin-left: 5%;
+        overflow: auto;
+    }
+
+    .weekCalendar__content {
+        overflow: visible !important;
+    }
+

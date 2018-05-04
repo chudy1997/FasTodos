@@ -68,3 +68,7 @@
 
             background-color: #bdbdbd;
         }    
+
+        .list .input:focus {
+            outline-width: 0;
+        }
