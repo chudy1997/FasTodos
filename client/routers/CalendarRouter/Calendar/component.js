@@ -10,7 +10,8 @@ export default class Calendar extends Component {
 
     onChange = date => this.setState({ chosenDate: date });
 
-    createWeekCalendar = () => <WeekCalendar 
+    createWeekCalendar = () => <WeekCalendar
+        dayFormat={'ddd DD.MM'}
         startTime={ moment({h: 6, m: 0}) }
         endTime={ moment({h: 18, m: 1}) }
         scaleUnit={30}
