@@ -22,10 +22,30 @@
         width: 95%;
         margin: 16px 0;    
         margin-left: 5%;
-        overflow: auto;
     }
 
     .weekCalendar__content {
-        overflow: visible !important;
+        height: 100%;
     }
 
+.calendar .switch {
+    padding: 20px;
+    background-color: white;
+}
+
+.switch .arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.switch .right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.switch .left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
