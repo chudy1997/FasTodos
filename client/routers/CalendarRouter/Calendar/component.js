@@ -5,12 +5,11 @@ const moment = require('moment');
 
 export default class Calendar extends Component {
   state = {
-    firstDay: moment().startOf('week').add(1, 'days'),
-    todos: []
+    firstDay: moment().startOf('week').add(1, 'days')
   };
 
   componentDidMount = () => {
-    $.get('http://localhost:8000/todos').then(todos => this.setState({todos: todos}));
+    $.get('http://localhost:8000/todos').then(todos => this.props.fetchTodos(todos));
   }
 
   onRightArrowClick = e => {
@@ -28,10 +27,10 @@ export default class Calendar extends Component {
 
   getSelectedIntervals = () => {
     const categoryId = this.getCategoryId();
-    const intervals = this.state.todos.slice().filter(todo => categoryId === 0 || todo.categoryId === categoryId).map(todo => {
+    const intervals = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId).map(todo => {
       return {
-        start:moment(todo.deadline).subtract('30',"minute"),
-        end:moment(todo.deadline),
+        start: moment(todo.deadline).subtract('30',"minute"),
+        end: moment(todo.deadline),
         value: todo.text,
         id: todo.todoId,
       }
@@ -42,43 +41,29 @@ export default class Calendar extends Component {
 
   handleEventRemove = (e) => {
     //TODO delete from database
-    const { todos } = this.state;
+    const todos = this.props.todos;
     const index = todos.findIndex((interval) => interval.todoId === e.id);
     if (index > -1) {
       todos.splice(index, 1);
-      this.setState({ todos });
+      this.props.fetchTodos(todos);
     }
   }
 
   handleSelect = (newIntervals) => {
       let text = newIntervals[0].value;
       if(text.length > 0){
-          let todos = this.props.todos;
-          let deadline = newIntervals[0].end.unix();
-          console.log(deadline);
-          let categoryId = this.getCategoryId();
-          if(categoryId===0) categoryId=1; //if category not selected, first category in db -> newTask category
-          $.post(`http://localhost:8000/todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}`);
+        let todos = this.props.todos;
+        let categoryId = this.getCategoryId();
+        let deadline = newIntervals[0].end.unix();
 
-          var newTodo = { text: text, categoryId: categoryId };
-          todos.unshift(newTodo);
-          this.props.fetchTodos(todos);
+        if(categoryId === 0) 
+          categoryId = 1; //if category not selected, first category in db -> newTask category
+
+        $.post(`http://localhost:8000/todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}`);
+
+        todos.unshift({ text: text, categoryId: categoryId, deadline: deadline*1000, todoId: todos[todos.length-1].todoId + 1 });
+        this.props.fetchTodos(todos);
       }
-
-      const {lastUid, todos} = this.state;
-      const intervals = newIntervals.map( (interval, index) => {
-          return {
-            // ...interval,
-            //   value:'ad',
-              id: index +123
-          }
-      });
-      console.log(this.state.todos);
-      // this.setState({
-      //     todos: this.state.todos.slice().concat({'asd'}),
-      // })
-    this.setState({todos: this.state.todos.slice().concat({intervals})});
-      console.log(this.state.todos);
   };
 
   createWeekCalendar = () => <WeekCalendar
@@ -93,7 +78,6 @@ export default class Calendar extends Component {
     onIntervalRemove={this.handleEventRemove}
     onIntervalSelect={this.handleSelect}
   />;
-
 
   render = () => {
     return (
