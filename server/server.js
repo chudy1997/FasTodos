@@ -29,10 +29,10 @@ function createServer(){
 
     server.post('/todos/new', (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
-        var text = req.query.text;
-        var categoryId = req.query.categoryId;
-
-        db.addTodo(text, categoryId).then((todoId) => {
+        const text = req.query.text;
+        const categoryId = req.query.categoryId;
+        const deadline = req.query.deadline != null ? req.query.deadline : null;
+        db.addTodo(text, categoryId, deadline).then((todoId) => {
             res.status(201).send(todoId);
         })
             .catch((err) => {

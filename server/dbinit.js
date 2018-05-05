@@ -35,7 +35,7 @@ p.then(new Promise((resolve) => {
 
 p.then(new Promise((resolve) => {
   executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255)," +
-    " finished BOOL, categoryId INT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
+    " finished BOOL, categoryId INT, deadline DATETIME, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
     (err, result) => {
       if (err) {
         throw err;
@@ -79,8 +79,8 @@ p.then(new Promise((resolve => {
 })));
 
 p.then(new Promise((resolve => {
-  executeSql("INSERT INTO todos(text,finished,categoryId)\n" +
-    " SELECT 'Fix car','0','1' WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Fix car' AND categoryId='1');",
+  executeSql("INSERT INTO todos(text,finished,categoryId,deadline)\n" +
+    " SELECT 'Fix car','0','1',NOW() WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Fix car' AND categoryId='1');",
     (err, result) => {
       if (err) {
         throw err;
@@ -90,8 +90,8 @@ p.then(new Promise((resolve => {
 })));
 
 p.then(new Promise((resolve => {
-  executeSql("INSERT INTO todos(text,finished,categoryId)\n" +
-    " SELECT 'Meet Michael','0','1' WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Meet Michael' AND categoryId='1');",
+  executeSql("INSERT INTO todos(text,finished,categoryId,deadline)\n" +
+    " SELECT 'Meet Michael','0','1',NOW()+INTERVAL 1 DAY WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Meet Michael' AND categoryId='1');",
     (err, result) => {
       if (err) {
         throw err;
@@ -112,8 +112,8 @@ p.then(new Promise((resolve => {
 })));
 
 p.then(new Promise((resolve => {
-  executeSql("INSERT INTO todos(text,finished,categoryId)\n" +
-    " SELECT 'Clean kitchen','0','2' WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Clean kitchen' AND categoryId='2');",
+  executeSql("INSERT INTO todos(text,finished,categoryId,deadline)\n" +
+    " SELECT 'Clean kitchen','0','2',NOW()+INTERVAL 2 DAY WHERE NOT EXISTS(SELECT * FROM todos WHERE text='Clean kitchen' AND categoryId='2');",
     (err, result) => {
       if (err) {
         throw err;
