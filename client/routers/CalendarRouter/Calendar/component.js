@@ -50,11 +50,11 @@ export default class Calendar extends Component {
   }
 
   handleSelect = (newIntervals) => {
-      let text = newIntervals[0].value;
+      const text = newIntervals[0].value;
       if(text.length > 0){
-        let todos = this.props.todos;
-        let categoryId = this.getCategoryId();
-        let deadline = newIntervals[0].end.unix();
+        const todos = this.props.todos;
+        var categoryId = this.getCategoryId();
+        const deadline = newIntervals[0].end.unix();
 
         if(categoryId === 0) 
           categoryId = 1; //if category not selected, first category in db -> newTask category
@@ -85,14 +85,14 @@ export default class Calendar extends Component {
         <div className="calendar-switch">
           {this.props.toggle}
           <span className='switch switch-left' onClick={this.onLeftArrowClick}>
-                        <i className="arrow arrow-left"></i>
-                    </span>
+            <i className="arrow arrow-left"></i>
+          </span>
           <label className='date start'>{this.state.firstDay.format('ddd DD.MM').toString()}</label>
           <label className='hyphen'>-</label>
           <label className='date end'>{moment(this.state.firstDay).add(6, 'days').format('ddd DD.MM').toString()}</label>
           <span className='switch switch-right' onClick={this.onRightArrowClick}>
-                        <i className="arrow arrow-right"></i>
-                    </span>
+            <i className="arrow arrow-right"></i>
+          </span>
         </div>
         <div className='week-calendar'>
           {this.createWeekCalendar()}
