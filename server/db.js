@@ -54,11 +54,11 @@ module.exports = {
             });
         }
 
-        function addTodo(text, categoryId, deadline) {
+        function addTodo(text, categoryId) {
             const defaultCategoryId = 1;
             categoryId = categoryId ? categoryId : defaultCategoryId;
             return new Promise((resolve, reject) => {
-                executeSql(`INSERT INTO todos (text, finished, categoryId, deadline) VALUES ('${text}', 0, ${categoryId}, FROM_UNIXTIME(${deadline}))`,
+                executeSql(`INSERT INTO todos (text, finished, categoryId) VALUES ('${text}', 0, ${categoryId})`,
                     (err, result) => {
                         if (err) reject(err);
                         resolve(result);
