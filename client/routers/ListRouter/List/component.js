@@ -1,71 +1,128 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
 
 class List extends Component {
     state = {
-        input: ''
+      input: ''
     }
 
-    componentDidMount = () => {
-        $.get('http://localhost:8000/todos').then(todos => {
-            this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId))
-            this.todos = todos;
-        });
-    }
+
+  componentDidMount = () => {
+    $.get('http://localhost:8000/todos').then(todos => {
+      this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId));
+      this.todos = todos;
+    });
+  };
+
 
     handleSubmit = (e) => {
-        let text = this.state.input.trim();
-        if(text.length > 0){
-            let todos = this.props.todos;
-            let categoryId = this.getCategoryId();
-            if(categoryId===0) categoryId=1; //if category not selected, first category in db -> newTask category
-            $.post(`http://localhost:8000/todos/new?text=${text}&categoryId=${categoryId}`);
+      let text = this.state.input.trim();
+      if (text.length > 0){
+        let todos = this.props.todos;
+        let categoryId = this.getCategoryId();
+        if (categoryId===0) {categoryId=1;} //if category not selected, first category in db -> newTask category
+        $.post(`http://localhost:8000/todos/new?text=${text}&categoryId=${categoryId}`);
+        let newTodo = { text: text, categoryId: categoryId };
+        todos.unshift(newTodo);
+        this.props.fetchTodos(todos);
     
-            var newTodo = { text: text, categoryId: categoryId };
-            todos.unshift(newTodo);
-            this.props.fetchTodos(todos);
-    
-            this.setState({input: ''});
-        }
-        e.preventDefault();
+        this.setState({ input: '' });
+      }
+      e.preventDefault();
     }
 
     getCategoryId = () => {
-        const category = this.props.categories[this.props.chosenCategoryId];
-        return category ? category.categoryId : 0;
-    } 
-
-    createTodos = () => {
-        let id = -1;
-
-        const categoryId = this.getCategoryId();
-        this.todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId);
-
-        return this.todos.map(todo => {
-            id += 1;
-            const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
-            const className = this.props.chosenTodoId == id ? 'todo chosen-todo': 'todo';
-            return (
-                <li key={id} id={id} onClick={this.chooseTodo} style={{backgroundColor: backgroundColor}} className={className}>
-                    {todo.text}
-                </li>
-            )
-        });
+      const category = this.props.categories[this.props.chosenCategoryId];
+      return category ? category.categoryId : 0;
     }
 
-    handleChange = (e) => this.setState({ input: e.target.value});
+  createTodos = () => {
+    let id = -1;
+    const categoryId = this.getCategoryId();
+    this.todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId);
+
+    return this.todos.map(todo => {
+
+      id += 1;
+      const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
+      const className = this.props.chosenTodoId == id ? 'todo chosen-todo' : 'todo';
+      const buttonStyle = {
+        margin: '10px 10px 10px 10px',
+        fontSize: 'inherit',
+        fontWeight: 'bold',
+        paddingTop: 8,
+        paddingBottom: 8,
+        paddingLeft: 16,
+        paddingRight: 16,
+        //border: 0,
+        color: '#232323',
+        backgroundColor: '#B2B2B2',
+      };
+      return (
+        <form
+          className={className}
+          id={id}
+          key={id}
+          onClick={this.chooseTodo}
+          style={{ backgroundColor: backgroundColor }}
+        >
+          {todo.text}
+          <button
+            onClick={(e) => this.handleCheck(todo.todoId, todo.finished, e)}
+            style={buttonStyle}
+          >
+            {todo.finished ? '✔' : '_'}
+          </button>
+          <button
+            onClick={(e) => this.handleDelete(e)}
+            style={buttonStyle}
+          >
+            {'✘'}
+          </button>
+        </form>
+      );
+    });
+  }
+
+    handleChange = (e) => this.setState({ input: e.target.value });
     chooseTodo = (e) => this.props.chooseTodo(e.target.id);
 
-    render = () => (
-        <div className='list'>
-            <form className="form" onSubmit={this.handleSubmit}>
-                {this.props.toggle}
-                <input className="input" autoFocus="autofocus" type="text" maxLength="50" onChange={this.handleChange} value={this.state.input} placeholder="What are you going TODO ?"/>
-            </form>
-            <ol className='todos'>
-                {this.createTodos()}
-            </ol>
-        </div>
-    );
+    handleCheck = (id, finished, e) => {
+      if (finished !== 1) {
+        $.post(`http://localhost:8000/todos/finish?id=${id}&value=1`);
+      } else {
+        $.post(`http://localhost:8000/todos/finish?id=${id}&value=0`);
+      }
+	  this.setState(this.state);
+    };
+
+     handleDelete = (e) => {
+       e.preventDefault();
+     };
+
+
+  render = () => (
+    <div className='list'>
+      <form
+        className="form"
+        onSubmit={this.handleSubmit}
+      >
+        {this.props.toggle}
+        <input
+          autoFocus="autofocus"
+          className="input"
+          maxLength="50"
+          onChange={this.handleChange}
+          placeholder="What are you going TODO ?"
+          type="text"
+          value={this.state.input}
+        />
+      </form>
+      <ol className='todos'>
+        {this.createTodos()}
+      </ol>
+    </div>
+  );
 }
 
 export default List;
