@@ -54,8 +54,8 @@ export default class CategoriesComponent extends Component {
       const categories = this.props.categories;
       $.post(`http://localhost:8000/categories/delete?categoryId=${categories[this.props.chosenCategoryId].categoryId}`).then(res => {
         categories.splice(this.props.chosenCategoryId,1);
-        console.log(categories);
         this.props.fetchCategories(categories);
+        this.props.chooseCategory(-1);
       });
     }
     e.preventDefault();
