@@ -25,8 +25,6 @@ export default class CategoriesComponent extends Component {
     } else {
       this.props.chooseCategory(e.target.id);
     }
-
-
   }
   handleChange = (e) => this.setState({ input: e.target.value});
 
@@ -47,6 +45,22 @@ export default class CategoriesComponent extends Component {
     e.preventDefault();
 }
 
+  handleDelete = (e) => {
+    if(this.props.chosenCategoryId<0){
+      alert('You need to choose the category to delete!');
+    } else if (this.props.chosenCategoryId==this.props.categories.length-1){
+      alert('Category Other cannot be deleted');
+    } else {
+      const categories = this.props.categories;
+      $.post(`http://localhost:8000/categories/delete?categoryId=${categories[this.props.chosenCategoryId].categoryId}`).then(res => {
+        categories.splice(this.props.chosenCategoryId,1);
+        console.log(categories);
+        this.props.fetchCategories(categories);
+      });
+    }
+    e.preventDefault();
+  }
+
   isInputValid = (categoryName) => categoryName.length > 0 
       && !this.props.categories.some(category => category.categoryName === categoryName);
 
@@ -55,6 +69,9 @@ export default class CategoriesComponent extends Component {
       <div className="categories">
         <form className="form" onSubmit={this.handleSubmit}>
           <input className="input" onChange={this.handleChange} type="text" maxLength="20" value={this.state.input} placeholder="Add new category..."/>
+        </form>
+        <form className="form2">
+          <button className="deleteButton" onClick={this.handleDelete}>Delete</button>
         </form>
         <ol className='categories-list'>
           {this.createCategories()}

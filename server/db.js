@@ -99,6 +99,24 @@ module.exports = {
             });
         }
 
+        function deleteCategory(categoryId) {
+          updateTodosCategory(categoryId);
+          return new Promise((resolve, reject) => {
+                executeSql(`DELETE FROM categories WHERE categoryId = '${categoryId}'`,
+                    (err, result) => {
+                        if (err) reject(err);
+                        resolve(result);
+                    });
+            });
+        }
+
+        function updateTodosCategory(categoryId) {
+          executeSql(`UPDATE todos SET categoryId = 1 WHERE categoryId = '${categoryId}'`,
+            (err, result) => {
+              if (err) throw err;
+            });
+        }
+
         function closeDb() {
             pool.end();
         }
@@ -111,7 +129,9 @@ module.exports = {
             addTodo: addTodo,
             finishTodo: finishTodo,
             getCategories: getCategories,
-            addCategory: addCategory
+            addCategory: addCategory,
+            deleteCategory: deleteCategory,
+            updateTodosCategory: updateTodosCategory
         };
     }
 }
