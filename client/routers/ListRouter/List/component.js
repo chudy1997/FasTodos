@@ -59,7 +59,7 @@ class List extends Component {
         backgroundColor: '#B2B2B2',
       };
       return (
-        <form
+        <li
           className={className}
           id={id}
           key={id}
@@ -68,7 +68,7 @@ class List extends Component {
         >
           {todo.text}
           <button
-            onClick={(e) => this.handleCheck(todo.todoId, todo.finished, e)}
+            onClick={(e) => this.handleCheck(e, todo.todoId)}
             style={buttonStyle}
           >
             {todo.finished ? '✔' : '_'}
@@ -79,7 +79,7 @@ class List extends Component {
           >
             {'✘'}
           </button>
-        </form>
+        </li>
       );
     });
   }
@@ -87,13 +87,21 @@ class List extends Component {
     handleChange = (e) => this.setState({ input: e.target.value });
     chooseTodo = (e) => this.props.chooseTodo(e.target.id);
 
-    handleCheck = (id, finished, e) => {
-      if (finished !== 1) {
-        $.post(`http://localhost:8000/todos/finish?id=${id}&value=1`);
-      } else {
-        $.post(`http://localhost:8000/todos/finish?id=${id}&value=0`);
-      }
-	  this.setState(this.state);
+    handleCheck = (e, todoId) => {
+        const todos = this.props.todos;
+        const todo = todos.find(todo => todo.todoId === todoId);
+        if (todo.finished !== 1) {
+            $.post(`http://localhost:8000/todos/finish?id=${todo.todoId}&value=1`);
+            todo.finished = 1;
+        } else {
+            $.post(`http://localhost:8000/todos/finish?id=${todo.todoId}&value=0`);
+            todo.finished = 0;
+        }
+
+        const index = todos.findIndex(t => t.todoId === todoId);
+        const newTodo = todo.assign();
+        todos[index] = newTodo;
+        this.props.fetchTodos(this.props.todos);
     };
 
      handleDelete = (e) => {
