@@ -28,19 +28,20 @@
                 counter-increment: item;
                 margin-bottom: 5px;
                 padding: 10px;
-                border-radius : 25px;
+                border-radius : 20px;
                 opacity: 0.75;
             }
 
             .todos .todo:before {
                 content: counter(item);
-                margin-right: 10px;
-                background: lightblue;
-                color: white;
+                box-shadow:  0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+                margin-right: 8px;
+                background-color: white;
+                color: #333333;
                 border-radius: 100%;
                 width: 2.0em;
                 height: 1.7em;
-                padding-top: 0.3em;
+                padding-top: 0.4em;
                 text-align: center;
                 display: inline-block;
             }
@@ -54,8 +55,26 @@
                 opacity: 1;
             }
 
+            .todos .todo .button{
+                height: 40px;
+                width: 40px;
 
-        .list .input{
+                color: #232323;
+                background: #dedcef;
+                margin: 2px 15px 5px 15px;
+                border-radius : 5px;
+                padding: 6px 12px;
+                box-shadow:  0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+                float: right;
+                border: 2px solid #d5d3ea;
+                display: inline-block;
+                font-family: "Helvetica";
+                font-weight: 800;
+            }
+
+
+.list .input{
+            font-family: "Helvetica";
             width: 50%;
             border: none;
             
@@ -66,7 +85,7 @@
             font-size: 20px;
             border-radius: 10px;
 
-            background-color: #bdbdbd;
+            background-color: #dedcef;
         }    
 
         .list .input:focus {

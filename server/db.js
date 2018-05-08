@@ -18,7 +18,7 @@ module.exports = {
         (err, result) => {
           if (err) {throw err;}
         });
-      executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL, categoryId INT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
+      executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL, deadline DATETIME, categoryId INT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
         (err, result) => {
           if (err) {throw err;}
         });
@@ -45,7 +45,8 @@ module.exports = {
                 todoId: rowDataPacket.todoId,
                 text: rowDataPacket.text,
                 finished: rowDataPacket.finished,
-                categoryId: rowDataPacket.categoryId
+                categoryId: rowDataPacket.categoryId,
+                deadline: rowDataPacket.deadline
               };
             });
             resolve(todos);
@@ -53,11 +54,11 @@ module.exports = {
       });
     }
 
-    function addTodo(text, categoryId) {
+    function addTodo(text, categoryId, deadline) {
       const defaultCategoryId = 1;
       categoryId = categoryId ? categoryId : defaultCategoryId;
       return new Promise((resolve, reject) => {
-        executeSql(`INSERT INTO todos (text, finished, categoryId) VALUES ('${text}', 0, ${categoryId})`,
+        executeSql(`INSERT INTO todos (text, finished, categoryId, deadline) VALUES ('${text}', 0, ${categoryId}, FROM_UNIXTIME(${deadline}))`,
           (err, result) => {
             if (err) {reject(err);}
             resolve(result);
@@ -69,7 +70,6 @@ module.exports = {
       executeSql(`UPDATE todos SET finished=${value} WHERE todoId=${todoId}`,
         (err, result) => {
           if (err) {throw err;}
-          //resolve(result);
         });
     }
 

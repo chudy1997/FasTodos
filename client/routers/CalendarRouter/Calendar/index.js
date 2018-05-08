@@ -1,3 +1,6 @@
-import Calendar from './component';
+import { connect } from 'react-redux';
 
-export default Calendar;
+import Calendar from './component';
+import container from './container';
+
+export default connect(container.mapStateToProps, container.matchDispatchToProps)(Calendar);

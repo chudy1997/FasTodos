@@ -1,5 +1,5 @@
 .categories {
-    background-color: #ADADAD;
+    background-color: #8B7A7A;
     float: left;
     width: 30%;
     height: 600px;
@@ -15,37 +15,40 @@
 
         .categories-list .category {
             counter-increment: item;
+            box-shadow:  0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
             float: left;
-            margin: 3px;
+            margin: 8px;
             padding: 8px;
-            border-radius : 25px;
+            border-radius : 15px;
             opacity: 0.5;
-            font-size: 24px;
+            font-size: 18px;
         }
 
         .categories-list .category:before {
             content: counter(item);
-            margin-right: 10px;
-            background-color: lightblue;
-            color: white;
+            box-shadow:  0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            margin-right: 8px;
+            background-color: white;
+            color: #333333;
             border-radius: 100%;
-            width: 2.0em;
-            height: 1.7em;
-            padding-top: 0.3em;
+            width: 1.6em;
+            height: 1.4em;
+            padding-top: 0.1em;
             text-align: center;
             display: inline-block;
         }
 
         .categories-list .category:hover {
-            opacity: 0.7;
+            opacity: 0.8;
             cursor: pointer;
         }
 
         .categories-list .chosen-category{
-            opacity:1;
+            opacity: 1;
         }
 
     .categories .input {
+        font-family: "Helvetica";
         width: 80%;
         border: none;
 
@@ -55,4 +58,7 @@
 
         font-size: 20px;
         border-radius: 10px;
+
+        background-color: #c1c0ba;
+
     }
