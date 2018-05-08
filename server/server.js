@@ -49,6 +49,14 @@ function createServer(){
         res.status(200).send('Ok');
     });
 
+    server.post('/todos/delete', (req, res) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        const todoId = req.query.id;
+
+        db.deleteTodo(todoId);
+        res.status(200).send('OK');
+    });
+
   server.get('/categories', (req,res) =>{
     res.setHeader('Access-Control-Allow-Origin', '*');
 

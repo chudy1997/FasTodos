@@ -73,6 +73,16 @@ module.exports = {
         });
     }
 
+    function deleteTodo(todoId) {
+          return new Promise((resolve, reject) => {
+              executeSql(`DELETE FROM todos WHERE todoId = '${todoId}'`,
+                  (err, result) => {
+                      if (err) reject(err);
+                      resolve(result);
+                  });
+          });
+    }
+
     function getCategories() {
       return new Promise((resolve, reject) => {
         executeSql('SELECT * FROM categories',
@@ -111,7 +121,8 @@ module.exports = {
       addTodo: addTodo,
       finishTodo: finishTodo,
       getCategories: getCategories,
-      addCategory: addCategory
+      addCategory: addCategory,
+      deleteTodo: deleteTodo
     };
   }
 };

@@ -74,7 +74,7 @@ class List extends Component {
             {todo.finished ? '✔' : '_'}
           </button>
           <button
-            onClick={(e) => this.handleDelete(e)}
+            onClick={(e) => this.handleDelete(e, todo.todoId)}
             style={buttonStyle}
           >
             {'✘'}
@@ -101,11 +101,21 @@ class List extends Component {
         const index = todos.findIndex(t => t.todoId === todoId);
         const newTodo = todo.assign();
         todos[index] = newTodo;
-        this.props.fetchTodos(this.props.todos);
+        this.props.fetchTodos(todos);
     };
 
-     handleDelete = (e) => {
-       e.preventDefault();
+     handleDelete = (e,todoId) => {
+          if (confirm("Are you going to delete this todo")) {
+              const todos = this.props.todos;
+              const todo = todos.find(todo => todo.todoId === todoId);
+              $.post(`http://localhost:8000/todos/delete?id=${todo.todoId}`);
+
+              const index = todos.findIndex(t => t.todoId === todoId);
+              todos.splice(index,1);
+              const newTodo = todo.assign();
+              todos[index] = newTodo;
+              this.props.fetchTodos(todos);
+          }
      };
 
 
