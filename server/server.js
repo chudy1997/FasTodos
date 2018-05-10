@@ -53,8 +53,12 @@ function createServer(){
         res.setHeader('Access-Control-Allow-Origin', '*');
         const todoId = req.query.id;
 
-        db.deleteTodo(todoId);
-        res.status(200).send('OK');
+        db.deleteTodo(todoId).then(() => {
+            res.status(200).send();
+        })
+            .catch((err) => {
+                res.status(500).send('Problem occured when deleting todo');
+            });
     });
 
   server.get('/categories', (req,res) =>{

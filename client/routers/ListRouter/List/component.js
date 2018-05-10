@@ -46,46 +46,86 @@ class List extends Component {
       id += 1;
       const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
       const className = this.props.chosenTodoId == id ? 'todo chosen-todo' : 'todo';
-      const buttonStyle = {
-        margin: '10px 10px 10px 10px',
-        fontSize: 'inherit',
-        fontWeight: 'bold',
-        paddingTop: 8,
-        paddingBottom: 8,
-        paddingLeft: 16,
-        paddingRight: 16,
-        //border: 0,
-        color: '#232323',
-        backgroundColor: '#B2B2B2',
-      };
-      return (
-        <li
-          className={className}
-          id={id}
-          key={id}
-          onClick={this.chooseTodo}
-          style={{ backgroundColor: backgroundColor }}
+
+        return <li
+            className={className}
+            id={id}
+            key={id}
+            onClick={this.chooseTodo}
+            style={{backgroundColor: backgroundColor}}
         >
-          {todo.text}
-          <button
-            onClick={(e) => this.handleCheck(e, todo.todoId)}
-            style={buttonStyle}
-          >
-            {todo.finished ? '✔' : '_'}
-          </button>
-          <button
-            onClick={(e) => this.handleDelete(e, todo.todoId)}
-            style={buttonStyle}
-          >
-            {'✘'}
-          </button>
-        </li>
-      );
+            {todo.text}
+            <button
+                onClick={(e) => this.handleDelete(e, todo.todoId)}
+                className="buttonstyle"
+            >
+                {'✘'}
+            </button>
+            <button
+                onClick={(e) => this.handleExpand(e, todo.todoId)}
+                className="buttonstyle"
+            >
+                {'▼'}
+            </button>
+            <button
+                onClick={(e) => this.handleCheck(e, todo.todoId)}
+                className="buttonstyle"
+            >
+                {todo.finished ? '✔' : '-'}
+            </button>
+            <div className="panel">
+                <p className={todo.clicked == 1 ? 'view' : 'noview'}>
+                    <form
+                        className="form"
+
+                    >
+                        {this.props.toggle}
+                        <input
+                            autoFocus="autofocus"
+                            className="input"
+                            maxLength="50"
+                            onChange={this.handleChange}
+                            placeholder="date"
+                            type="text"
+                            value={this.state.input}
+                        />
+                        <input
+                            autoFocus="autofocus"
+                            className="input"
+                            maxLength="50"
+                            onChange={this.handleChange}
+                            placeholder="categorie"
+                            type="text"
+                            value={this.state.input}
+                        />
+                    </form>
+                </p>
+            </div>
+
+
+        </li>;
     });
   }
 
     handleChange = (e) => this.setState({ input: e.target.value });
     chooseTodo = (e) => this.props.chooseTodo(e.target.id);
+
+    handleExpand= (e, todoId) => {
+
+        const todos = this.props.todos;
+        const todo = todos.find(todo => todo.todoId === todoId);
+        if (todo.clicked !== 1) {
+            todo.clicked = 1;
+        } else {
+            todo.clicked = 0;
+        }
+
+        const index = todos.findIndex(t => t.todoId === todoId);
+        const newTodo = todo.assign();
+        todos[index] = newTodo;
+        this.props.fetchTodos(todos);
+
+    };
 
     handleCheck = (e, todoId) => {
         const todos = this.props.todos;
