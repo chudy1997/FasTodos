@@ -26,13 +26,13 @@ export default class Calendar extends Component {
   }
 
   getSelectedIntervals = () => {
-    const categoryId = this.getCategoryId();
-    const intervals = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId).map(todo => {
+    const intervals = this.props.todos.map(todo => {
       return {
         start: moment(todo.deadline).subtract('30',"minute"),
         end: moment(todo.deadline),
         value: todo.text,
         id: todo.todoId,
+        categoryId: todo.categoryId,
       }
     });
 
@@ -66,6 +66,16 @@ export default class Calendar extends Component {
       }
   };
 
+  customEvent = (props) => {
+    let classes = "customEvent" + " ";
+    if(props.categoryId === this.getCategoryId()) {
+      classes+=("matchChosenCategory");
+    }else{
+      classes+=("notMatchChosenCategory");
+    }
+    return <div className={classes} style={{ backgroundColor: this.props.colorMap[props.categoryId] }}>{props.value}</div>;
+  };
+
   createWeekCalendar = () => <WeekCalendar
     dayFormat = {'ddd DD.MM'}
     firstDay = {this.state.firstDay}
@@ -77,6 +87,7 @@ export default class Calendar extends Component {
     selectedIntervals={this.getSelectedIntervals()}
     onIntervalRemove={this.handleEventRemove}
     onIntervalSelect={this.handleSelect}
+    eventComponent={this.customEvent}
   />;
 
   render = () => {

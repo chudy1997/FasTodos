@@ -84,3 +84,19 @@
     .calendar-switch .hyphen {
 
     }
+
+.customEvent{
+    color:black;
+    border-radius: 4px;
+    padding-left: 4px;
+    font-size: 15pt;
+    overflow: hidden;
+}
+
+.MatchChosenCategory{
+    opacity: 1;
+}
+
+.notMatchChosenCategory{
+    opacity: 0.75;
+}
