@@ -10,6 +10,8 @@
 
 .calendar-router .toggle .fa-list {
     font-size: 33px;
+    margin-left: 50px;
+    margin-top: 15px;
 }
 
 .calendar .week-calendar {
@@ -20,11 +22,13 @@
         width: 95%;
         margin: 16px 0;    
         margin-left: 5%;
+        overflow: auto;
     }
 
     .weekCalendar__content {
-        height: 100%;
+        overflow: visible !important;
     }
+
 
 .calendar .calendar-switch {
     display: flex;

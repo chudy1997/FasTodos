@@ -87,12 +87,15 @@ function addTodoTest() {
         text: todo.text,
         finished: todo.finished
       }});
+
+
       
       assert.deepEqual(todos, testTodos);
       resolve('passed');
     });
   });
 }
+
 
 function getCategoriesTest(){
   return new Promise((resolve, reject) => {
@@ -140,6 +143,6 @@ function getCategoriesTest(){
   });
 }
 
-const tests = [getTodosTest, addTodoTest, getCategoriesTest];
+const tests = [getTodosTest, addTodoTest, getCategoriesTest,deleteTodoTest];
 
 runTests(tests);
