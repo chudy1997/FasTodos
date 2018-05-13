@@ -61,13 +61,23 @@ function createServer(){
 
   server.post('/categories/new', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    var categoryName = req.query.categoryName;
+    const categoryName = req.query.categoryName;
 
     db.addCategory(categoryName).then((categoryId) => {
       res.status(201).send(categoryId);
     })
     .catch((err) => {
         res.status(500).send('Problem occured when adding new category');
+    });
+  });
+
+  server.post('/categories/delete', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const categoryId = req.query.categoryId;
+
+    db.deleteCategory(categoryId).then(res.status(200).send('Category deleted successfully'))
+    .catch((err) => {
+        res.status(500).send('Problem occured when deleting category');
     });
   });
 
