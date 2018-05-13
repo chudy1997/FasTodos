@@ -25,8 +25,6 @@ export default class CategoriesComponent extends Component {
     } else {
       this.props.chooseCategory(e.target.id);
     }
-
-
   }
   handleChange = (e) => this.setState({ input: e.target.value});
 
@@ -47,14 +45,41 @@ export default class CategoriesComponent extends Component {
     e.preventDefault();
 }
 
-  isInputValid = (categoryName) => categoryName.length > 0 
+  handleDelete = (e) => {
+    if(this.props.chosenCategoryId<0){
+      alert('You need to choose the category to delete!');
+    } else if (this.props.chosenCategoryId===this.props.categories.length-1){
+      alert('Category Other cannot be deleted');
+    } else {
+      const categories = this.props.categories;
+      const todos = this.props.todos;
+      const deletedCategoryId=categories[this.props.chosenCategoryId].categoryId;
+      $.post(`http://localhost:8000/categories/delete?categoryId=${categories[this.props.chosenCategoryId].categoryId}`).then(res => {
+        categories.splice(this.props.chosenCategoryId,1);
+        this.props.fetchCategories(categories);
+        for(var t in todos){
+          if(todos[t].categoryId===deletedCategoryId){
+            todos[t].categoryId=1;
+          }
+        }
+        this.props.fetchTodos(todos);
+        this.props.chooseCategory(-1);
+      });
+    }
+    e.preventDefault();
+  }
+
+  isInputValid = (categoryName) => categoryName.length > 0
       && !this.props.categories.some(category => category.categoryName === categoryName);
 
   render = () => {
     return (
       <div className="categories">
-        <form className="form" onSubmit={this.handleSubmit}>
+        <form className="inputForm" onSubmit={this.handleSubmit}>
           <input className="input" onChange={this.handleChange} type="text" maxLength="20" value={this.state.input} placeholder="Add new category..."/>
+        </form>
+        <form className="buttonForm">
+          <button className="deleteButton" onClick={this.handleDelete}>Delete</button>
         </form>
         <ol className='categories-list'>
           {this.createCategories()}

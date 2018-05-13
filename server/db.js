@@ -99,6 +99,7 @@ module.exports = {
       });
     }
 
+
     function addCategory(categoryName) {
       return new Promise((resolve, reject) => {
         executeSql(`INSERT INTO categories (categoryName) VALUES ('${categoryName}')`,
@@ -126,3 +127,39 @@ module.exports = {
     };
   }
 };
+        function deleteCategory(categoryId) {
+          updateTodosCategory(categoryId);
+          return new Promise((resolve, reject) => {
+                executeSql(`DELETE FROM categories WHERE categoryId = '${categoryId}'`,
+                    (err, result) => {
+                        if (err) reject(err);
+                        resolve(result);
+                    });
+            });
+        }
+
+        function updateTodosCategory(categoryId) {
+          executeSql(`UPDATE todos SET categoryId = 1 WHERE categoryId = '${categoryId}'`,
+            (err, result) => {
+              if (err) throw err;
+            });
+        }
+
+        function closeDb() {
+            pool.end();
+        }
+
+        return {
+            executeSql: executeSql,
+            clearDb: clearDb,
+            closeDb: closeDb,
+            getTodos: getTodos,
+            addTodo: addTodo,
+            finishTodo: finishTodo,
+            getCategories: getCategories,
+            addCategory: addCategory,
+            deleteCategory: deleteCategory,
+            updateTodosCategory: updateTodosCategory
+        };
+    }
+}
