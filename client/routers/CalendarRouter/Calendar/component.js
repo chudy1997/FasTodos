@@ -6,34 +6,9 @@ const moment = require('moment');
 var CONFIG = require('client/components/App/config.json');
 
 export default class Calendar extends Component {
-
-    state = {
-        chosenDate: new Date()
-    };
-
-    onChange = date => this.setState({ chosenDate: date });
-
-    // createWeekCalendar = () => <WeekCalendar
-    //     startTime={ moment({h: 6, m: 0}) }
-    //     endTime={ moment({h: 18, m: 1}) }
-    //     scaleUnit={30}
-    //     scaleHeaderTitle='FasTodos'
-    //     cellHeight={25}
-    // />;
-
-  //   render = () => {
-  //       return (
-  //           <div className='calendar'>
-  //               {this.props.toggle}
-  //               <div className='week-calendar'>
-  //                   {this.createWeekCalendar()}
-  //               </div>
-  //           </div>
-  //       );
-  //   }
-  // state = {
-  //   firstDay: moment().startOf('week').add(1, 'days')
-  // };
+  state = {
+    firstDay: moment().startOf('week').add(1, 'days')
+  };
 
   componentDidMount = () => {
     $.get(CONFIG.serverUrl+'/todos').then(todos => this.props.fetchTodos(todos));
@@ -77,20 +52,20 @@ export default class Calendar extends Component {
   }
 
   handleSelect = (newIntervals) => {
-      const text = newIntervals[0].value;
-      if(text.length > 0){
-        const todos = this.props.todos;
-        var categoryId = this.getCategoryId();
-        const deadline = newIntervals[0].end.unix();
+    const text = newIntervals[0].value;
+    if(text.length > 0){
+      const todos = this.props.todos;
+      var categoryId = this.getCategoryId();
+      const deadline = newIntervals[0].end.unix();
 
-        if(categoryId === 0) 
-          categoryId = 1; //if category not selected, first category in db -> newTask category
+      if(categoryId === 0)
+        categoryId = 1; //if category not selected, first category in db -> newTask category
 
-        $.post(`${CONFIG.serverUrl}/todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}`);
+      $.post(`${CONFIG.serverUrl}/todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}`);
 
-        todos.unshift({ text: text, categoryId: categoryId, deadline: deadline*1000, todoId: todos[todos.length-1].todoId + 1 });
-        this.props.fetchTodos(todos);
-      }
+      todos.unshift({ text: text, categoryId: categoryId, deadline: deadline*1000, todoId: todos[todos.length-1].todoId + 1 });
+      this.props.fetchTodos(todos);
+    }
   };
 
   customEvent = (props) => {

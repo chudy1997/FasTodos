@@ -152,7 +152,8 @@ class List extends Component {
         }
 
         const index = todos.findIndex(t => t.todoId === todoId);
-        const newTodo = todo.assign();
+        let newTodo={};
+        Object.assign(newTodo,todo);
         todos[index] = newTodo;
         this.props.fetchTodos(todos);
 
@@ -170,8 +171,9 @@ class List extends Component {
         }
 
         const index = todos.findIndex(t => t.todoId === todoId);
-        const newTodo = todo.assign();
-        todos[index] = newTodo;
+      let newTodo={};
+      Object.assign(newTodo,todo);
+      todos[index] = newTodo;
         this.props.fetchTodos(todos);
     };
 
@@ -183,8 +185,9 @@ class List extends Component {
 
               const index = todos.findIndex(t => t.todoId === todoId);
               todos.splice(index,1);
-              const newTodo = todo.assign();
-              todos[index] = newTodo;
+            let newTodo={};
+            Object.assign(newTodo,todo);
+            todos[index] = newTodo;
               this.props.fetchTodos(todos);
           }
      };

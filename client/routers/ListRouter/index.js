@@ -12,7 +12,7 @@ export default class ListRouter extends Component {
                 <Categories />
                 <List toggle={(
                     <Link className='toggle' data-tip="Calendar view" to='/calendar' >
-                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                        <i className="fa fa-calendar" aria-hidden="true"></i>
                     </Link>)
                 }/>
                 <ReactTooltip />

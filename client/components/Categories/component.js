@@ -59,7 +59,7 @@ export default class CategoriesComponent extends Component {
       $.post(`${CONFIG.serverUrl}/categories/delete?categoryId=${categories[this.props.chosenCategoryId].categoryId}`).then(res => {
         categories.splice(this.props.chosenCategoryId,1);
         this.props.fetchCategories(categories);
-        for(var t in todos){
+        for(let t in todos){
           if(todos[t].categoryId===deletedCategoryId){
             todos[t].categoryId=1;
           }
