@@ -9,13 +9,14 @@ export default class Footer extends Component {
   };
 
   componentDidMount() {
-    $.getJSON(CONFIG.serverUrl+'/authors').then((res) => this.setState({ authors: res }));
+    $.getJSON(CONFIG.serverUrl+'/authors').then((res) => this.setState({ authors: res }),
+      function () {alert("could not get authors from database");});
   }
 
   render() {
     return (
       <footer className='footer'>
-        {/* Authors: [ {this.state.authors.join(', ')} ] */}
+        Authors: [ {this.state.authors.join(', ')} ]
       </footer>
     );
   }
