@@ -10,6 +10,7 @@ module.exports = {
       pool.getConnection((err, con) => {
         if (err) {throw err;}
         con.query(query, callback);
+        con.release();//extremally important
       });
     }
 
