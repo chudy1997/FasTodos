@@ -21,6 +21,7 @@ module.exports = {
           executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL, categoryId INT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
             (err, result) => {
               if (err) {throw err;}
+              addCategory("default")
             });
         });
     }
