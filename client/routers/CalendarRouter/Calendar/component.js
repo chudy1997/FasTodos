@@ -3,6 +3,8 @@ import WeekCalendar from 'react-week-calendar';
 import 'react-week-calendar/dist/style.css';
 const moment = require('moment');
 
+var CONFIG = require('client/components/App/config.json');
+
 export default class Calendar extends Component {
 
     state = {
@@ -11,30 +13,30 @@ export default class Calendar extends Component {
 
     onChange = date => this.setState({ chosenDate: date });
 
-    createWeekCalendar = () => <WeekCalendar 
-        startTime={ moment({h: 6, m: 0}) }
-        endTime={ moment({h: 18, m: 1}) }
-        scaleUnit={30}
-        scaleHeaderTitle='FasTodos'
-        cellHeight={25}
-    />;
+    // createWeekCalendar = () => <WeekCalendar
+    //     startTime={ moment({h: 6, m: 0}) }
+    //     endTime={ moment({h: 18, m: 1}) }
+    //     scaleUnit={30}
+    //     scaleHeaderTitle='FasTodos'
+    //     cellHeight={25}
+    // />;
 
-    render = () => {
-        return (
-            <div className='calendar'>
-                {this.props.toggle}
-                <div className='week-calendar'>
-                    {this.createWeekCalendar()}
-                </div>
-            </div>
-        );
-    }
-  state = {
-    firstDay: moment().startOf('week').add(1, 'days')
-  };
+  //   render = () => {
+  //       return (
+  //           <div className='calendar'>
+  //               {this.props.toggle}
+  //               <div className='week-calendar'>
+  //                   {this.createWeekCalendar()}
+  //               </div>
+  //           </div>
+  //       );
+  //   }
+  // state = {
+  //   firstDay: moment().startOf('week').add(1, 'days')
+  // };
 
   componentDidMount = () => {
-    $.get('http://localhost:8000/todos').then(todos => this.props.fetchTodos(todos));
+    $.get(CONFIG.serverUrl+'/todos').then(todos => this.props.fetchTodos(todos));
   }
 
   onRightArrowClick = e => {
@@ -84,7 +86,7 @@ export default class Calendar extends Component {
         if(categoryId === 0) 
           categoryId = 1; //if category not selected, first category in db -> newTask category
 
-        $.post(`http://localhost:8000/todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}`);
+        $.post(`${CONFIG.serverUrl}/todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}`);
 
         todos.unshift({ text: text, categoryId: categoryId, deadline: deadline*1000, todoId: todos[todos.length-1].todoId + 1 });
         this.props.fetchTodos(todos);

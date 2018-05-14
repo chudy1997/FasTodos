@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 
+var CONFIG = require('client/components/App/config.json');
+
 class List extends Component {
   state = {
     input: ''
@@ -11,7 +13,7 @@ class List extends Component {
     let thisOut = this;
     $.ajax({
       type: 'GET',
-      url: 'http://localhost:8000/todos',
+      url: CONFIG.serverUrl+'/todos',
       timeout: timeout,
       success: todos => {
         thisOut.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId));
@@ -50,7 +52,7 @@ class List extends Component {
         let todos = this.props.todos;
         let categoryId = this.getCategoryId();
         if (categoryId===0) {categoryId=1;} //if category not selected, first category in db -> newTask category
-        $.post(`http://localhost:8000/todos/new?text=${text}&categoryId=${categoryId}`);
+        $.post(`${CONFIG.serverUrl}/todos/new?text=${text}&categoryId=${categoryId}`);
         let newTodo = { text: text, categoryId: categoryId };
         todos.unshift(newTodo);
         this.props.fetchTodos(todos);
@@ -160,10 +162,10 @@ class List extends Component {
         const todos = this.props.todos;
         const todo = todos.find(todo => todo.todoId === todoId);
         if (todo.finished !== 1) {
-            $.post(`http://localhost:8000/todos/finish?id=${todo.todoId}&value=1`);
+            $.post(`${CONFIG.serverUrl}/todos/finish?id=${todo.todoId}&value=1`);
             todo.finished = 1;
         } else {
-            $.post(`http://localhost:8000/todos/finish?id=${todo.todoId}&value=0`);
+            $.post(`${CONFIG.serverUrl}/todos/finish?id=${todo.todoId}&value=0`);
             todo.finished = 0;
         }
 
@@ -177,7 +179,7 @@ class List extends Component {
           if (confirm("Are you going to delete this todo")) {
               const todos = this.props.todos;
               const todo = todos.find(todo => todo.todoId === todoId);
-              $.post(`http://localhost:8000/todos/delete?id=${todo.todoId}`);
+              $.post(`${CONFIG.serverUrl}/todos/delete?id=${todo.todoId}`);
 
               const index = todos.findIndex(t => t.todoId === todoId);
               todos.splice(index,1);

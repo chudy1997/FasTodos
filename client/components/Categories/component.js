@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 
+var CONFIG = require('client/components/App/config.json');
+
 export default class CategoriesComponent extends Component {
   state = {
     input: ''
   };
 
   componentDidMount = () => {
-    $.get('http://localhost:8000/categories').then(categories => this.props.fetchCategories(categories.sort((a, b) => b.categoryId - a.categoryId)));
+    $.get(CONFIG.serverUrl+'/categories').then(categories => this.props.fetchCategories(categories.sort((a, b) => b.categoryId - a.categoryId)));
   }
 
   createCategories = () => {
@@ -33,7 +35,7 @@ export default class CategoriesComponent extends Component {
     if(this.isInputValid(categoryName)){
         let categories = this.props.categories;
     
-        $.post(`http://localhost:8000/categories/new?categoryName=${categoryName}`).then(res => {
+        $.post(`${CONFIG.serverUrl}/categories/new?categoryName=${categoryName}`).then(res => {
           var newCategory = { categoryId: res.insertId, categoryName: categoryName };
           categories.unshift(newCategory);
           this.props.fetchCategories(categories);
@@ -54,7 +56,7 @@ export default class CategoriesComponent extends Component {
       const categories = this.props.categories;
       const todos = this.props.todos;
       const deletedCategoryId=categories[this.props.chosenCategoryId].categoryId;
-      $.post(`http://localhost:8000/categories/delete?categoryId=${categories[this.props.chosenCategoryId].categoryId}`).then(res => {
+      $.post(`${CONFIG.serverUrl}/categories/delete?categoryId=${categories[this.props.chosenCategoryId].categoryId}`).then(res => {
         categories.splice(this.props.chosenCategoryId,1);
         this.props.fetchCategories(categories);
         for(var t in todos){
