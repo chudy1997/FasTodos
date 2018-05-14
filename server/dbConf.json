@@ -3,5 +3,5 @@
     "user": "karol",
     "password": "password",
     "database": "fastodos",
-    "connectionLimit" : 9
+    "connectionLimit" : 10
 }
