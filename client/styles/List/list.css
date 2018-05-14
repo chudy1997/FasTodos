@@ -77,8 +77,14 @@
             .todos .panel .view{
 
                 padding: 0 9px;
-                display: inline-block;
+                display: inline-block ;
                 overflow: hidden;
+            }
+            .todos .panel .view .Select{
+               display: block;
+                padding: 6px;
+                margin: 6px;
+                margin-left: auto;
             }
 
         .list .input{

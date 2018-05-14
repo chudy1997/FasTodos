@@ -66,6 +66,19 @@ function createServer() {
       });
   });
 
+    server.post('/todos/changeCategory', (req, res) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        var todoId = req.query.todoId;
+        var categoryId = req.query.categoryId;
+
+        db.changeCategory(todoId, categoryId).then((todoId) => {
+            res.status(201).send(todoId);
+        })
+            .catch((err) => {
+                res.status(500).send('Problem occured when changing category');
+            });
+    });
+
   server.get('/categories', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -76,6 +89,7 @@ function createServer() {
         res.status(500).send('Problem occured when fetching categories');
       });
   });
+
 
   server.post('/categories/new', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');

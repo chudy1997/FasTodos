@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import 'react-datepicker/dist/react-datepicker.css';
 import $ from 'jquery';
-
 var CONFIG = require('client/components/App/config.json');
 
+
 class List extends Component {
-  state = {
-    input: ''
-  };
+    state = {
+        input: '',
+        date: moment()
+    }
+
 
   ajaxGetTodos = (triesLeft,timeout,errCallback) => {
     // alert("start ajax try"+triesLeft+'with timeout'+timeout);
@@ -69,6 +74,7 @@ class List extends Component {
 
   createTodos = () => {
     let id = -1;
+    let newCategoryId = this.getCategoryId();
     const categoryId = this.getCategoryId();
     this.todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId);
 
@@ -106,30 +112,25 @@ class List extends Component {
             </button>
             <div className="panel">
                 <p className={todo.clicked == 1 ? 'view' : 'noview'}>
-                    <form
-                        className="form"
-
-                    >
-                        {this.props.toggle}
-                        <input
-                            autoFocus="autofocus"
-                            className="input"
-                            maxLength="50"
-                            onChange={this.handleChange}
-                            placeholder="date"
-                            type="text"
-                            value={this.state.input}
-                        />
-                        <input
-                            autoFocus="autofocus"
-                            className="input"
-                            maxLength="50"
-                            onChange={this.handleChange}
-                            placeholder="categorie"
-                            type="text"
-                            value={this.state.input}
+                    <form >
+                        <DatePicker className="Select"
+                            selected={this.state.date}
+                            onChange={this.handleChangeDate}
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={15}
+                            dateFormat="LLL"
+                            timeCaption="time"
                         />
                     </form>
+                        <select  className="Select" onChange={(e) => this.selectCategory( e,todo.todoId, newCategoryId)}>
+                            { this.props.categories.map(category => {
+
+                                   return <option  >{ category.categoryName }</option>
+                              })
+                            }
+                        </select>
+
                 </p>
             </div>
 
@@ -138,7 +139,24 @@ class List extends Component {
     });
   }
 
+
+    addDate = (e,todoId) => {
+        const todos = this.props.todos;
+        const todo = todos.find(todo => todo.todoId === todoId);
+        let text = this.state.date.trim();
+        $.post(`${CONFIG.serverUrl}/todos/changeDate?id=${todo.todoId}&date=${text}`);
+        this.state.date=' ';
+
+    };
+
+    selectCategory = (e,todoId, categoryId) =>{
+
+        $.post(`${CONFIG.serverUrl}/todos/cahngeCategory?todoId=${todoId}&categoryId=${categoryId}`);
+
+    };
+
     handleChange = (e) => this.setState({ input: e.target.value });
+    handleChangeDate = (e) => this.setState({ date: e.target.date });
     chooseTodo = (e) => this.props.chooseTodo(e.target.id);
 
     handleExpand= (e, todoId) => {
@@ -171,9 +189,9 @@ class List extends Component {
         }
 
         const index = todos.findIndex(t => t.todoId === todoId);
-      let newTodo={};
-      Object.assign(newTodo,todo);
-      todos[index] = newTodo;
+        let newTodo={};
+        Object.assign(newTodo,todo);
+        todos[index] = newTodo;
         this.props.fetchTodos(todos);
     };
 

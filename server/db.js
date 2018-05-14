@@ -146,6 +146,17 @@ module.exports = {
       });
     }
 
+
+      function changeCategory(todoId, categoryId) {
+          return new Promise((resolve, reject) => {
+              executeSql(`UPDATE todos SET categoryId=${categoryId} WHERE todoId=${todoId}`,
+                  (err, result) => {
+                      if (err) reject(err);
+                      resolve(result);
+                  });
+          });
+      }
+
     function closeDb() {
       pool.end();
     }
@@ -189,6 +200,8 @@ module.exports = {
       addCategory: addCategory,
       deleteCategory: deleteCategory,
       updateTodosCategory: updateTodosCategory,
+      changeCategory: changeCategory
+
     };
   }
 }
