@@ -2,15 +2,44 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 
 class List extends Component {
-    state = {
-      input: ''
-    }
+  state = {
+    input: ''
+  };
 
+  ajaxGetTodos = (triesLeft,timeout,errCallback) => {
+    // alert("start ajax try"+triesLeft+'with timeout'+timeout);
+    let thisOut = this;
+    $.ajax({
+      type: 'GET',
+      url: 'http://localhost:8000/todos',
+      timeout: timeout,
+      success: todos => {
+        thisOut.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId));
+        thisOut.todos = todos;
+      },
+      error: function(xhr, textStatus, errorThrown){
+        // alert('request failed:'+xhr+','+textStatus+','+errorThrown);
+        if (triesLeft > 0){
+          thisOut.ajaxGetTodos(triesLeft-1,timeout+1000);
+        }
+        else{
+          errCallback();
+        }
+      }
+    });
+
+  };
 
   componentDidMount = () => {
-    $.get('http://localhost:8000/todos').then(todos => {
-      this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId));
-      this.todos = todos;
+    // previous version:
+    // $.get('http://localhost:8000/todos').then(todos => {
+    //   this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId));
+    //   this.todos = todos;
+    // });
+
+    //try 5 times starting at 1000ms timeout
+    this.ajaxGetTodos(5,1000,() => {
+      alert('could not fetch todos from db with 5 tries at maximum 6 sec');
     });
   };
 
