@@ -29,7 +29,6 @@ export default class Calendar extends Component {
             </div>
         );
     }
-=======
   state = {
     firstDay: moment().startOf('week').add(1, 'days')
   };
