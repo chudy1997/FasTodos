@@ -66,11 +66,13 @@ module.exports = {
     }
 
     function finishTodo(todoId, value) {
-      executeSql(`UPDATE todos SET finished=${value} WHERE todoId=${todoId}`,
-        (err, result) => {
-          if (err) {throw err;}
-          //resolve(result);
-        });
+      return new Promise((resolve, reject) => {
+        executeSql(`UPDATE todos SET finished=${value} WHERE todoId=${todoId}`,
+          (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+          });
+      });
     }
 
     function deleteTodo(todoId) {
@@ -125,8 +127,6 @@ module.exports = {
       addCategory: addCategory,
       deleteTodo: deleteTodo
     };
-  }
-};
         function deleteCategory(categoryId) {
           updateTodosCategory(categoryId);
           return new Promise((resolve, reject) => {
