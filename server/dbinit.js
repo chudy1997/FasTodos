@@ -163,5 +163,6 @@ function executeSql(query, callback) {
       throw err;
     }
     con.query(query, callback);
+    con.release();
   });
 }
