@@ -68,6 +68,7 @@ module.exports = {
                 todoId: rowDataPacket.todoId,
                 text: rowDataPacket.text,
                 finished: rowDataPacket.finished,
+                deadline: rowDataPacket.deadline,
                 categoryId: rowDataPacket.categoryId
               };
             });
@@ -182,6 +183,7 @@ module.exports = {
       closeDb: closeDb,
       getTodos: getTodos,
       addTodo: addTodo,
+      deleteTodo: deleteTodo,
       finishTodo: finishTodo,
       getCategories: getCategories,
       addCategory: addCategory,

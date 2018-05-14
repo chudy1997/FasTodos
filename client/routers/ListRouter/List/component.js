@@ -185,9 +185,6 @@ class List extends Component {
 
               const index = todos.findIndex(t => t.todoId === todoId);
               todos.splice(index,1);
-            let newTodo={};
-            Object.assign(newTodo,todo);
-            todos[index] = newTodo;
               this.props.fetchTodos(todos);
           }
      };
