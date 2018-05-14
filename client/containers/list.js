@@ -1,79 +1,59 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-var CONFIG = require('client/components/App/config.json');
+import fetchTodos from './../actions/fetchTodos'
+import chooseTodo from './../actions/chooseTodo';
+
+import ajax from './../ajax';
 
 class List extends Component {
-  state = {
-    input: ''
-  };
+    state = {
+        input: ''
+    }
 
-  ajaxGetTodos = (triesLeft,timeout,errCallback) => {
-    // alert("start ajax try"+triesLeft+'with timeout'+timeout);
-    let thisOut = this;
-    $.ajax({
-      type: 'GET',
-      url: CONFIG.serverUrl+'/todos',
-      timeout: timeout,
-      success: todos => {
-        thisOut.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId));
-        thisOut.todos = todos;
-      },
-      error: function(xhr, textStatus, errorThrown){
-        // alert('request failed:'+xhr+','+textStatus+','+errorThrown);
-        if (triesLeft > 0){
-          thisOut.ajaxGetTodos(triesLeft-1,timeout+1000);
-        }
-        else{
-          errCallback();
-        }
-      }
-    });
-
-  };
-
-  componentDidMount = () => {
-    // previous version:
-    // $.get('http://localhost:8000/todos').then(todos => {
-    //   this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId));
-    //   this.todos = todos;
-    // });
-
-    //try 5 times starting at 1000ms timeout
-    this.ajaxGetTodos(5,1000,() => {
-      alert('could not fetch todos from db with 5 tries at maximum 6 sec');
-    });
-  };
-
+    componentDidMount = () => {
+        ajax('GET', 'todos', 5, 1000, todos => {
+            this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId));
+        }, 
+        () => {
+            alert('Could not fetch todos from db with 5 tries at maximum 6 sec...');
+        });
+    };
 
     handleSubmit = (e) => {
-      let text = this.state.input.trim();
-      if (text.length > 0){
-        let todos = this.props.todos;
-        let categoryId = this.getCategoryId();
-        if (categoryId===0) {categoryId=1;} //if category not selected, first category in db -> newTask category
-        $.post(`${CONFIG.serverUrl}/todos/new?text=${text}&categoryId=${categoryId}`);
-        let newTodo = { text: text, categoryId: categoryId };
-        todos.unshift(newTodo);
-        this.props.fetchTodos(todos);
-    
-        this.setState({ input: '' });
-      }
-      e.preventDefault();
+        const text = this.state.input.trim();
+        if (text.length > 0){
+            const todos = this.props.todos;
+            let categoryId = this.getCategoryId();
+            if (categoryId===0) 
+                categoryId=1;
+
+            ajax('POST', `todos/new?text=${text}&categoryId=${categoryId}`, 5, 1000, res => {
+                const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId };
+                todos.unshift(newTodo);
+                this.props.fetchTodos(todos);
+            }, 
+            () => {
+                alert('Could not add new todo to db with 5 tries at maximum 6 sec...');
+            });
+
+            this.setState({ input: '' });
+        }
+        e.preventDefault();
     }
 
     getCategoryId = () => {
-      const category = this.props.categories[this.props.chosenCategoryId];
-      return category ? category.categoryId : 0;
+        const category = this.props.categories[this.props.chosenCategoryId];
+        return category ? category.categoryId : 0;
     }
 
-  createTodos = () => {
-    let id = -1;
-    const categoryId = this.getCategoryId();
-    this.todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId);
+    createTodos = () => {
+        let id = -1;
+        const categoryId = this.getCategoryId();
+        const todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId);
 
-    return this.todos.map(todo => {
-
+    return todos.map(todo => {
       id += 1;
       const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
       const className = this.props.chosenTodoId == id ? 'todo chosen-todo' : 'todo';
@@ -162,26 +142,29 @@ class List extends Component {
     handleCheck = (e, todoId) => {
         const todos = this.props.todos;
         const todo = todos.find(todo => todo.todoId === todoId);
-        if (todo.finished !== 1) {
-            $.post(`${CONFIG.serverUrl}/todos/finish?id=${todo.todoId}&value=1`);
-            todo.finished = 1;
-        } else {
-            $.post(`${CONFIG.serverUrl}/todos/finish?id=${todo.todoId}&value=0`);
-            todo.finished = 0;
-        }
+        const newFinishedValue = todo.finished ? 0 : 1;
+        todo.finished = newFinishedValue;
+        ajax('POST', `todos/finish?id=${todo.todoId}&value=${newFinishedValue}`, 5, 1000, () => {}, 
+        () => {
+            alert('Could not check todo in db with 5 tries at maximum 6 sec...');
+        });
 
         const index = todos.findIndex(t => t.todoId === todoId);
-      let newTodo={};
-      Object.assign(newTodo,todo);
-      todos[index] = newTodo;
+        let newTodo={};
+        Object.assign(newTodo,todo);
+        todos[index] = newTodo;
         this.props.fetchTodos(todos);
     };
 
      handleDelete = (e,todoId) => {
-          if (confirm("Are you going to delete this todo")) {
+          if (confirm("Are you sure that you want to delete this todo?")) {
               const todos = this.props.todos;
               const todo = todos.find(todo => todo.todoId === todoId);
-              $.post(`${CONFIG.serverUrl}/todos/delete?id=${todo.todoId}`);
+
+              ajax('POST', `todos/delete?id=${todo.todoId}`, 5, 1000, () => {}, 
+              () => {
+                  alert('Could not delete todo from db with 5 tries at maximum 6 sec...');
+              });
 
               const index = todos.findIndex(t => t.todoId === todoId);
               todos.splice(index,1);
@@ -214,4 +197,25 @@ class List extends Component {
   );
 }
 
-export default List;
+
+
+function mapStateToProps(state){
+  return {
+    todos: state.todos,
+    chosenTodoId: state.chosenTodoId,
+  };
+}
+
+function matchDispatchToProps(dispatch){
+  return bindActionCreators(
+    {
+      fetchTodos: fetchTodos,
+      chooseTodo: chooseTodo
+    }, 
+    dispatch
+  );
+}
+
+
+
+export default connect(mapStateToProps, matchDispatchToProps)(List);
