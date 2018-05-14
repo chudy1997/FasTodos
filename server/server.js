@@ -45,8 +45,12 @@ function createServer(){
         const todoId = req.query.id;
         const value = req.query.value;
 
-        db.finishTodo(todoId, value);
-        res.status(200).send('Ok');
+        db.finishTodo(todoId, value).then(() => {
+          res.status(200).send();
+        })
+          .catch((err) => {
+              res.status(500).send('Problem occured when toggling finished todo');
+          });
     });
 
     server.post('/todos/delete', (req, res) => {
