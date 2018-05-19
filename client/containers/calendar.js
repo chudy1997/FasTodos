@@ -95,9 +95,7 @@ class Calendar extends Component {
     };
 
     customDayCell = (props) =>{
-        console.log(props.endTime.unix()*1000<Date.now());
         const classes = `customDayCell ${props.endTime.unix()*1000 < Date.now() ? 'beforeNow' : 'afterNow' }`;
-        console.log(classes);
         return <div className={classes} onMouseDown={props.startSelection}/>;
     };
 
