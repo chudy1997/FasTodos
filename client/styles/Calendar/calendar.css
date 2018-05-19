@@ -95,6 +95,7 @@
     padding-left: 4px;
     font-size: 15pt;
     overflow: hidden;
+    text-align: center;
 }
 
 .MatchChosenCategory{
@@ -103,4 +104,19 @@
 
 .notMatchChosenCategory{
     opacity: 0.75;
+}
+
+.customDayCell{
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+
+
+.beforeNow{
+    background-color: lightgray;
+}
+
+.afterNow{
+    background-color: white;
 }

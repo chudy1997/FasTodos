@@ -94,6 +94,13 @@ class Calendar extends Component {
         return <div className={classes} style={{ backgroundColor: this.props.colorMap[props.categoryId] }}>{props.value}</div>;
     };
 
+    customDayCell = (props) =>{
+        console.log(props.endTime.unix()*1000<Date.now());
+        const classes = `customDayCell ${props.endTime.unix()*1000 < Date.now() ? 'beforeNow' : 'afterNow' }`;
+        console.log(classes);
+        return <div className={classes} onMouseDown={props.startSelection}/>;
+    };
+
     createWeekCalendar = () => <WeekCalendar
         dayFormat = {'ddd DD.MM'}
         firstDay = {this.state.firstDay}
@@ -106,6 +113,7 @@ class Calendar extends Component {
         onIntervalRemove={this.handleEventRemove}
         onIntervalSelect={this.handleSelect}
         eventComponent={this.customEvent}
+        dayCellComponent={this.customDayCell}
     />;
 
     render = () => {
