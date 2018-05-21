@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import ajax from './../ajax';
 
 import fetchCategories from './../actions/fetchCategories';
+import fetchTodos from './../actions/fetchTodos';
 import chooseCategory from './../actions/chooseCategory';
 
 class Categories extends Component {
@@ -51,7 +52,7 @@ class Categories extends Component {
                 this.props.fetchCategories(categories);
             }, 
             () => {
-                alert('Could not fetch todos from db with 5 tries at maximum 6 sec...');
+                alert('Could not fetch categories from db with 5 tries at maximum 6 sec...');
             });
 
             this.setState({input: ''});
@@ -64,27 +65,28 @@ class Categories extends Component {
         if(this.props.chosenCategoryId<0){
             alert('You need to choose the category to delete!');
         } 
-        else if (this.props.chosenCategoryId===this.props.categories.length-1){
+        else if (this.props.chosenCategoryId==this.props.categories.length-1){
             alert('Category Other cannot be deleted');
         } 
         else {
             const categories = this.props.categories;
             const todos = this.props.todos;
             const deletedCategoryId=categories[this.props.chosenCategoryId].categoryId;
+            const defaultCategoryId=categories[this.props.categories.length-1].categoryId;
 
-            ajax('POST', `categories/new?categoryName=${categoryName}`, 5, 1000, res => {
+            ajax('POST', `categories/delete?categoryId=${deletedCategoryId}`, 5, 1000, res => {
                 categories.splice(this.props.chosenCategoryId,1);
                 this.props.fetchCategories(categories);
                 for(let t in todos){
                     if(todos[t].categoryId===deletedCategoryId){
-                        todos[t].categoryId=1;
+                        todos[t].categoryId=defaultCategoryId;
                     }
                 }
                 this.props.fetchTodos(todos);
                 this.props.chooseCategory(-1);
             }, 
             () => {
-                alert('Could not fetch todos from db with 5 tries at maximum 6 sec...');
+                alert('Could not fetch categories from db with 5 tries at maximum 6 sec...');
             });
         }
         e.preventDefault();
@@ -110,12 +112,19 @@ class Categories extends Component {
     }
 }
 
-
+function mapStateToProps(state){
+  return {
+    categories: state.categories,
+    todos: state.todos,
+    chosenCategoryId: state.chosenCategoryId,
+  };
+}
 
 function matchDispatchToProps(dispatch){
     return bindActionCreators(
         {
             fetchCategories: fetchCategories, 
+            fetchTodos: fetchTodos,
             chooseCategory: chooseCategory
         }, 
         dispatch
@@ -124,4 +133,4 @@ function matchDispatchToProps(dispatch){
 
 
 
-export default connect(null, matchDispatchToProps)(Categories);
+export default connect(mapStateToProps, matchDispatchToProps)(Categories);

@@ -165,7 +165,8 @@ module.exports = {
     }
 
     function updateTodosCategory(categoryId) {
-      executeSql(`UPDATE todos SET categoryId = 1 WHERE categoryId = '${categoryId}'`,
+      const defaultCategoryId = 1;
+      executeSql(`UPDATE todos SET categoryId = '${defaultCategoryId}' WHERE categoryId = '${categoryId}'`,
         (err, result) => {
           if (err) {
             throw err;
