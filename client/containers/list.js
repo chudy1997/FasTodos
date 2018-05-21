@@ -14,7 +14,7 @@ class List extends Component {
 
     componentDidMount = () => {
         ajax('GET', 'todos', 5, 1000, todos => {
-            this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId));
+            this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId).sort((a, b) => a.finished < b.finished ? -1 : 1));
         }, 
         () => {
             alert('Could not fetch todos from db with 5 tries at maximum 6 sec...');
