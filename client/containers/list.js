@@ -110,18 +110,18 @@ class List extends Component {
                 onClick={() => this.handleExpand(todo)}
                 style={{backgroundColor: backgroundColor}}
             >
+                <input 
+                    type='checkbox' 
+                    className='check' 
+                    checked={todo.finished ? 'checked' : ''}
+                    onClick={(e) => this.handleCheck(e, todo)} 
+                />
                 {todo.text}
                 <button
                     onClick={() => this.handleDelete(e, todo)}
                     className="buttonstyle"
                 >
                     {'✘'}
-                </button>
-                <button
-                    onClick={(e) => this.handleCheck(e, todo)}
-                    className="buttonstyle"
-                >
-                    {todo.finished ? '✔' : '-'}
                 </button>
                 <div className="panel">
                     <p className={this.props.chosenTodoId == todo.todoId ? 'view' : 'noview'}>
@@ -171,9 +171,9 @@ class List extends Component {
                     value={this.state.input}
                 />
             </form>
-            <ol className='todos'>
+            <ul className='todos'>
                 {this.createTodos()}
-            </ol>
+            </ul>
         </div>
     );
 }
