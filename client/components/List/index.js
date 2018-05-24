@@ -5,10 +5,12 @@ import { confirmAlert } from 'react-confirm-alert';
 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import fetchTodos from './../actions/fetchTodos';
-import chooseTodo from './../actions/chooseTodo';
+import fetchTodos from './../../actions/fetchTodos';
+import chooseTodo from './../../actions/chooseTodo';
 
-import ajax from './../ajax';
+import ajax from './../../ajax';
+
+import './index.css';
 
 class List extends Component {
     state = {
@@ -186,9 +188,11 @@ class List extends Component {
             value={this.state.input}
           />
         </form>
-        <ul className='todos'>
-          {this.createTodos()}
-        </ul>
+        <div className='todos-wrapper'>
+          <ul className='todos'>
+            {this.createTodos()}
+          </ul>
+        </div>
       </div>
     );
 }

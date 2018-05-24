@@ -1,0 +1,19 @@
+.app {
+    font-family: "Tahoma";
+    font-weight: 200;
+}
+
+.app-router{
+    height: 97vh;
+    margin: 0.5vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.main {
+    flex: auto;
+    display: flex;
+    height: 80%;
+    flex-direction: row;
+}

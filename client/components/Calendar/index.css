@@ -1,0 +1,114 @@
+.calendar-router {
+    background-color: #e8ecf2;
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-router .calendar {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.calendar-router .toggle{
+    margin-left: 10px;
+}
+
+.calendar-router .toggle .fa-list {
+    font-size: 33px;
+}
+
+.calendar-router .calendar-switch {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.calendar-router .switch-left {
+    margin: 0 20px 0 100px;
+}
+
+.calendar-router .switch-right {
+    margin: 0 20px 0 20px;
+}
+
+.calendar-router .switch {
+    margin: 15px auto;
+    height: 20px;
+    padding: 3px 7px 3px 8px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.calendar-router .switch:hover {
+    background-color: #ffffc0;
+}
+
+.calendar-router .date {
+    padding: 5px;
+}
+
+.calendar-router .arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.calendar-router .arrow-right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.calendar-router .arrow-left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.calendar-router .week-calendar {
+    overflow: auto;
+    flex: auto;
+    margin-bottom: 10px;
+}
+
+.week-calendar .weekCalendar {
+    width: 95%;
+    margin-left: 5%;
+    overflow: auto;
+}
+
+.weekCalendar__content {
+    overflow: visible !important;
+}
+
+.calendar-router .custom-event{
+    color:black;
+    border-radius: 4px;
+    padding-left: 4px;
+    font-size: 15pt;
+    overflow: hidden;
+    text-align: center;
+}
+
+.calendar-router .match-chosen-category{
+    opacity: 1;
+}
+
+.calendar-router .not-match-chosen-category{
+    opacity: 0.75;
+}
+
+.calendar-router .custom-day-cell{
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+
+.beforeNow{
+    background-color: lightgray;
+}
+
+.afterNow{
+    background-color: white;
+}

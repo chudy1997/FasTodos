@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 import WeekCalendar from 'react-week-calendar';
 import 'react-week-calendar/dist/style.css';
 
-import ajax from './../ajax';
-
 const moment = require('moment');
 
-import fetchTodos from './../actions/fetchTodos';
-import chooseTodo from './../actions/chooseTodo';
+import ajax from './../../ajax';
+
+import fetchTodos from './../../actions/fetchTodos';
+import chooseTodo from './../../actions/chooseTodo';
+
+import './index.css';
 
 class Calendar extends Component {
     state = {
@@ -90,7 +92,7 @@ class Calendar extends Component {
     };
 
     customEvent = (props) => {
-      const classes = `customEvent ${props.categoryId === this.getCategoryId() ? 'matchChosenCategory' : 'notMatchChosenCategory' }`;
+      const classes = `custom-event ${props.categoryId === this.getCategoryId() ? 'match-chosen-category' : 'not-match-chosen-category' }`;
       return (
         <div 
           className={classes}
@@ -101,7 +103,7 @@ class Calendar extends Component {
     };
 
     customDayCell = (props) =>{
-      const classes = `customDayCell ${props.endTime.unix()*1000 < Date.now() ? 'beforeNow' : 'afterNow' }`;
+      const classes = `custom-day-cell ${props.endTime.unix()*1000 < Date.now() ? 'beforeNow' : 'afterNow' }`;
       return (
         <div 
           className={classes}

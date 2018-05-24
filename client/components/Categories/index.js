@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import ajax from './../ajax';
+import ajax from './../../ajax';
 
-import fetchCategories from './../actions/fetchCategories';
-import fetchTodos from './../actions/fetchTodos';
-import chooseCategory from './../actions/chooseCategory';
+import fetchCategories from './../../actions/fetchCategories';
+import fetchTodos from './../../actions/fetchTodos';
+import chooseCategory from './../../actions/chooseCategory';
+
+import './index.css';
 
 class Categories extends Component {
     state = {
@@ -21,7 +23,7 @@ class Categories extends Component {
     }
 
     createCategories = () => {
-      let id = -1;
+      let id = 0;
       return this.props.categories.map(category =>
         (
           <li 
@@ -102,23 +104,27 @@ class Categories extends Component {
         <div className="categories">
           <form  
             className="inputForm"
-            onSubmit={this.handleSubmit}>
+            onSubmit={this.handleSubmit}
+          >
             <input 
               className="input"
               maxLength="20"
               onChange={this.handleChange}
-              placeholder="Add new category..." />
+              placeholder="Add new category..."
               type="text"
               value={this.state.input}
+            />
           </form>
           <form className="buttonForm">
             <button  
               className="deleteButton"
               onClick={this.handleDelete}>Delete</button>
           </form>
-          <ol className='categories-list'>
-            {this.createCategories()}
-          </ol>
+          <div className='categories-list-wrapper'>
+            <ol className='categories-list'>
+              {this.createCategories()}
+            </ol>
+          </div>
         </div>
       );
     }

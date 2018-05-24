@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 
+import './index.css';
+
 export default function Welcome() {
   return (
     <div className='welcome'>

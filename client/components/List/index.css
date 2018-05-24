@@ -1,0 +1,105 @@
+.list-router {
+    background-color: #e8ecf2;
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-router .list {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.list-router .toggle {
+    margin-left: 10px;
+}
+
+.list-router .fa-calendar {
+    font-size: 33px;
+}
+
+.list-router .form {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.list-router .input{
+    width: 50%;
+    border: none;
+    margin: 15px auto;
+
+    padding: 5px;
+    font-size: 20px;
+    border-radius: 10px;
+    background-color: #bdbdbd;
+}    
+
+.list-router .input:focus {
+    outline-width: 0;
+}
+
+.list-router .todos-wrapper {
+    overflow: auto;
+    flex: auto;
+    margin-bottom: 10px;
+}
+
+.list-router .todos {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin: 10px;
+    padding: 0;
+}
+
+.list-router .todo {
+    font-size: 18px;
+    counter-increment: item;
+    margin-bottom: 5px;
+    padding: 15px 15px 20px 15px;
+    border-radius : 25px;
+    opacity: 0.75;
+}
+
+.list-router .todo:hover {
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+.list-router .check {
+    transform: scale(1.5);
+    margin-right: 10px;
+}
+
+.list-router .chosen-todo{
+    opacity: 1;
+}
+
+.list-router .buttonstyle {
+    margin: 0px 10px 10px 10px;
+    float: right;
+    border-radius: 70%;
+    background-color:#599bb3;
+    cursor:pointer;
+    color:#ffffff;
+    font-size:10px;
+    font-weight:bold;
+    padding:7px 16px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #3d768a;
+    outline: 0;
+}
+
+.list-router .panel .noview{
+    padding: 0 9px;
+    display: none;
+    overflow: hidden;
+}
+.list-router .panel .view{
+    padding: 0 9px;
+    display: inline-block;
+    overflow: hidden;
+}

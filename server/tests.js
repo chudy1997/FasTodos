@@ -145,4 +145,4 @@ function getCategoriesTest(){
 
 const tests = [getTodosTest, addTodoTest, getCategoriesTest, deleteTodoTest];
 
-runTests(tests);
+runTests(tests);  
