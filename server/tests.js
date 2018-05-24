@@ -1,5 +1,5 @@
-const setTimeout = require('timers').setTimeout;
-const assert = require('assert');
+import { deepEqual, deepStrictEqual } from "assert";
+
 var passed = 0, failed = 0;
 const db = require('./db').initDb('./testdbConf.json');
 
@@ -26,8 +26,8 @@ function tearUp() {
 }
 
 function runTests(tests) {
-  if(tests.length === 0)
-    tearUp();
+  if (tests.length === 0)
+  {tearUp();}
 
   runTest(tests[0]).then(() => runTests(tests.slice(1)));
 }
@@ -66,7 +66,7 @@ function getTodosTest() {
       .then(expectedTodos => {
         db.getTodos()
           .then((todos) => {
-            assert.deepEqual(todos, expectedTodos);
+            deepEqual(todos, expectedTodos);
             resolve('passed');
           })
           .catch(error => reject(error));
@@ -86,11 +86,11 @@ function addTodoTest() {
       const todos = fullTodos.map(todo => { return {
         text: todo.text,
         finished: todo.finished
-      }});
+      };});
 
 
       
-      assert.deepEqual(todos, testTodos);
+      deepEqual(todos, testTodos);
       resolve('passed');
     });
   });
@@ -103,18 +103,18 @@ function getCategoriesTest(){
     db.clearDb();
 
     const testCategories = [
-      {categoryName: 'category1'},
-      {categoryName: 'category2'},
-      {categoryName: 'category3'},
-      {categoryName: 'category4'},
-      {categoryName: 'category5'},
+      { categoryName: 'category1' },
+      { categoryName: 'category2' },
+      { categoryName: 'category3' },
+      { categoryName: 'category4' },
+      { categoryName: 'category5' },
     ];
 
     Promise.all(
       testCategories.map(category => {
         return new Promise((resolve, reject) => {
           db.executeSql(`INSERT INTO categories (categoryName) VALUES ('${category.categoryName}')`, (err, result) => {
-            if(err) reject(err);
+            if (err) {reject(err);}
             resolve({
               categoryId: result.insertId,
               categoryName: category.categoryName,
@@ -132,9 +132,9 @@ function getCategoriesTest(){
               return {
                 categoryId: rowDataPacket.categoryId,
                 categoryName: rowDataPacket.categoryName,
-              }
+              };
             });
-            assert.deepStrictEqual(categories, expectedCategories);
+            deepStrictEqual(categories, expectedCategories);
             resolve('passed');
           })
           .catch(error => reject(error));
@@ -143,6 +143,6 @@ function getCategoriesTest(){
   });
 }
 
-const tests = [getTodosTest, addTodoTest, getCategoriesTest,deleteTodoTest];
+const tests = [getTodosTest, addTodoTest, getCategoriesTest, deleteTodoTest];
 
 runTests(tests);

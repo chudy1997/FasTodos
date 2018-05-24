@@ -16,52 +16,80 @@ import fetchTodos from './../actions/fetchTodos'
 import chooseTodo from './../actions/chooseTodo';
 
 function App(props){
-    return (
-        <div className="app max-size">
-            <BrowserRouter history={browserHistory} >
-                <div className="app-router max-size">
-                    <Header />
-                    <Route exact path='/' component={Welcome} />
-                    <Route path={pathToRegexp('/:toggle')} render = {() => (
-                        <Categories 
-                            categories = {props.categories} 
-                            chosenCategoryId = {props.chosenCategoryId} 
-                            colorMap = {props.colorMap} 
-                        />
-                    )} />
-                    <Route exact path='/list' render = {() => (
-                        <div className='list-router'>
-                            <List 
-                                toggle={(
-                                    <Link className='toggle' data-tip="Calendar view" to='calendar' >
-                                        <i className="fa fa-calendar" aria-hidden="true"></i>
-                                    </Link>
-                                )}
-                                categories = {props.categories} 
-                                chosenCategoryId = {props.chosenCategoryId} 
-                                colorMap = {props.colorMap}
-                            />
-                        </div>
-                    )}/>
-                    <Route exact path='/calendar' render = {() => (
-                        <div className='calendar-router'>
-                            <Calendar
-                                toggle={(
-                                    <Link className='toggle' data-tip="List view" to='/list' >
-                                        <i className="fa fa-list" aria-hidden="true"></i>
-                                    </Link>
-                                )}
-                                categories = {props.categories} 
-                                chosenCategoryId = {props.chosenCategoryId} 
-                                colorMap = {props.colorMap}
-                            />
-                        </div>
-                    )}/>
-                    <Footer />
-                </div>
-            </BrowserRouter>
+  return (
+    <div className="app max-size">
+      <BrowserRouter history={browserHistory} >
+        <div className="app-router max-size">
+          <Header />
+          <Route 
+            component={Welcome} 
+            exact 
+            path='/' 
+          />
+          <Route 
+            path={pathToRegexp('/:toggle')} 
+            render={() => (
+              <Categories 
+                categories={props.categories} 
+                chosenCategoryId={props.chosenCategoryId} 
+                colorMap={props.colorMap}
+              />
+            )} 
+          />
+          <Route exact 
+            path='/list' 
+            render={() => (
+              <div className='list-router'>
+                <List 
+                  categories={props.categories} 
+                  chosenCategoryId={props.chosenCategoryId} 
+                  colorMap={props.colorMap}
+                  toggle={(
+                    <Link 
+                      className='toggle' 
+                      data-tip="Calendar view" 
+                      to='calendar' 
+                    >
+                      <i 
+                        aria-hidden="true"
+                        className="fa fa-calendar"
+                      />
+                    </Link>
+                  )}
+                />
+              </div>
+            )}
+          />
+          <Route 
+            exact 
+            path='/calendar' 
+            render={() => (
+              <div className='calendar-router'>
+                <Calendar
+                  categories={props.categories} 
+                  chosenCategoryId={props.chosenCategoryId} 
+                  colorMap={props.colorMap}
+                  toggle={(
+                    <Link 
+                      className='toggle' 
+                      data-tip="List view" 
+                      to='/list' 
+                    >
+                      <i 
+                        aria-hidden="true"
+                        className="fa fa-list" 
+                      />
+                    </Link>
+                  )}
+                />
+              </div>
+            )}
+          />
+          <Footer />
         </div>
-    );
+      </BrowserRouter>
+    </div>
+  );
 }
 
 

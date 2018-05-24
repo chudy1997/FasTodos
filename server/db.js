@@ -174,10 +174,6 @@ module.exports = {
         });
     }
 
-    function closeDb() {
-      pool.end();
-    }
-
     return {
       executeSql: executeSql,
       clearDb: clearDb,
