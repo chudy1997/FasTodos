@@ -22,19 +22,19 @@ module.exports = {
           if (err) {
             throw err;
           }
-          executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL, categoryId INT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
+          executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL, deadline DATETIME, categoryId INT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
             (err, result) => {
               if (err) {
                 throw err;
               }
-              executeSql('SELECT * FROM categories WHERE categoryName = \'default\'',
+              executeSql('SELECT * FROM categories WHERE categoryName = \'Default\'',
                 (err, result) => {
                   if (err) {
                     throw err;
                   }
                   if (result.length < 1) {
                     console.log("adding default cat");
-                    addCategory("default");
+                    addCategory("Default");
                   }
                 });
             });
@@ -146,17 +146,6 @@ module.exports = {
       });
     }
 
-
-      function changeCategory(todoId, categoryId) {
-          return new Promise((resolve, reject) => {
-              executeSql(`UPDATE todos SET categoryId=${categoryId} WHERE todoId=${todoId}`,
-                  (err, result) => {
-                      if (err) reject(err);
-                      resolve(result);
-                  });
-          });
-      }
-
     function closeDb() {
       pool.end();
     }
@@ -184,6 +173,16 @@ module.exports = {
         });
     }
 
+      function changeCategory(todoId, categoryId) {
+          return new Promise((resolve, reject) => {
+              executeSql(`UPDATE todos SET categoryId=${categoryId} WHERE todoId=${todoId}`,
+                  (err, result) => {
+                      if (err) reject(err);
+                      resolve(result);
+                  });
+          });
+      }
+
     function closeDb() {
       pool.end();
     }
@@ -201,7 +200,6 @@ module.exports = {
       deleteCategory: deleteCategory,
       updateTodosCategory: updateTodosCategory,
       changeCategory: changeCategory
-
     };
   }
 }

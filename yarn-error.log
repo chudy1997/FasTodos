@@ -1,17 +1,17 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\Karol\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js dev
+  /usr/bin/node /usr/bin/yarn dev
 
 PATH: 
-  C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Lenovo\FusionEngine;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Common Files\lenovo\easyplussdk\bin;C:\Program Files (x86)\Skype\Phone\;C:\Program Files\SQL Server\Client SDK\ODBC\110\Tools\Binn\;C:\Program Files (x86)\SQL Server\120\Tools\Binn\ManagementStudio\;C:\Program Files (x86)\SQL Server\120\Tools\Binn\;C:\Program Files\SQL Server\120\Tools\Binn\;C:\Program Files (x86)\SQL Server\120\DTS\Binn\;C:\Program Files\SQL Server\120\DTS\Binn\;%QUARTUS_ROOTDIR%\bin;C:\Program Files (x86)\scala\bin;C:\Users\Karol\AppData\Local\Julia-0.5.2\bin;C:\Program Files\Git\cmd;C:\Program Files\SQL Server\130\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\sbt\bin;C:\Program Files\nodejs\;C:\Program Files\MySQL\MySQL Utilities 1.6\;C:\Users\Karol\Desktop\INFORMATYKA\3 rok\6 semestr\Kompilatory\Laby\bin\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\ZeroC\Ice-3.7.1\bin;C:\ProgramData\chocolatey\bin;C:\Users\Karol\Anaconda;C:\Users\Karol\Anaconda\Scripts;C:\Users\Karol\Anaconda\Library\bin;C:\Users\Karol\Anaconda3;C:\Users\Karol\Anaconda3\Scripts;C:\Users\Karol\Anaconda3\Library\bin;C:\Users\Karol\AppData\Local\Programs\Python\Python35\Scripts\;C:\Users\Karol\AppData\Local\Programs\Python\Python35\;C:\Program Files\Java\jdk1.8.0_111\bin;C:\MinGW\bin;C:\Program Files (x86)\scala\bin;C:\Users\Karol\AppData\Local\atom\bin;C:\Users\Karol\AppData\Local\Julia-0.5.2\bin;C:\bin\pkg-config\pkg-config-lite-0.28-1\bin\pkg-config.exe;C:\Program Files (x86)\Microsoft VS Code\bin;C:\Program Files (x86)\sbt\bin;C:\Users\Karol\AppData\Roaming\npm;C:\Program Files\heroku\bin
+  /usr/local/sbin:/usr/local/bin:/usr/bin:/var/lib/flatpak/exports/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
 
 Yarn version: 
   1.5.1
 
 Node version: 
-  9.2.0
+  9.9.0
 
 Platform: 
-  win32 x64
+  linux x64
 
 npm manifest: 
   {
@@ -21,7 +21,7 @@ npm manifest:
     "main": "server/server.js",
     "scripts": {
       "build": "webpack --config webpack.prod.config.js",
-      "dev": "webpack-dev-server --history-api-fallback --port 8080 --hot --host 127.0.0.1 --inline",
+      "dev": "webpack-dev-server --history-api-fallback --port 8081 --hot --host 127.0.0.1 --inline",
       "lint": "eslint client/**",
       "lint:watch": "esw -w client/**",
       "review": "npm run lint && npm test",
@@ -51,10 +51,12 @@ npm manifest:
       "mysql": "^2.15.0",
       "node-sass": "^4.5.3",
       "npm": "^6.0.0",
+      "path-to-regexp": "^2.2.1",
       "prop-types": "^15.6.0",
       "raf": "^3.3.2",
       "react": "^16.0.0",
       "react-calendar": "^2.14.0",
+      "react-datepicker": "^1.4.1",
       "react-dom": "^16.0.0",
       "react-redux": "^5.0.7",
       "react-router": "^4.2.0",
@@ -7469,14 +7471,14 @@ Lockfile:
 Trace: 
   Error: Command failed.
   Exit code: 1
-  Command: C:\WINDOWS\system32\cmd.exe
-  Arguments: /d /s /c webpack-dev-server --history-api-fallback --port 8080 --hot --host 127.0.0.1 --inline
-  Directory: C:\Users\Karol\Desktop\Git\FasTodos
+  Command: sh
+  Arguments: -c webpack-dev-server --history-api-fallback --port 8081 --hot --host 127.0.0.1 --inline
+  Directory: /home/werka/WebstormProjects/iotodo/FasTodos
   Output:
   
-      at ProcessTermError.MessageError (C:\Users\Karol\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:186:110)
-      at new ProcessTermError (C:\Users\Karol\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:226:113)
-      at ChildProcess.<anonymous> (C:\Users\Karol\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:30281:17)
-      at ChildProcess.emit (events.js:159:13)
-      at maybeClose (internal/child_process.js:943:16)
+      at ProcessTermError.MessageError (/usr/lib/node_modules/yarn/lib/cli.js:186:110)
+      at new ProcessTermError (/usr/lib/node_modules/yarn/lib/cli.js:226:113)
+      at ChildProcess.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:30281:17)
+      at ChildProcess.emit (events.js:180:13)
+      at maybeClose (internal/child_process.js:936:16)
       at Process.ChildProcess._handle.onexit (internal/child_process.js:220:5)

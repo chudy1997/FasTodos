@@ -74,7 +74,6 @@ class List extends Component {
 
   createTodos = () => {
     let id = -1;
-    let newCategoryId = this.getCategoryId();
     const categoryId = this.getCategoryId();
     this.todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId);
 
@@ -123,13 +122,14 @@ class List extends Component {
                             timeCaption="time"
                         />
                     </form>
-                        <select  className="Select" onChange={(e) => this.selectCategory( e,todo.todoId, newCategoryId)}>
-                            { this.props.categories.map(category => {
+                    <select  className="Select"  onChange={(e) => this.selectCategory( e.target.value,todo)}>
+                        { this.props.categories.map(category => {
 
-                                   return <option  >{ category.categoryName }</option>
-                              })
-                            }
-                        </select>
+                            return <option  value={category.categoryId} >{ category.categoryName }</option>
+
+                        })
+                        }
+                    </select>
 
                 </p>
             </div>
@@ -139,24 +139,27 @@ class List extends Component {
     });
   }
 
+    selectCategory = (categoryId,todo, ) =>{
 
-    addDate = (e,todoId) => {
         const todos = this.props.todos;
-        const todo = todos.find(todo => todo.todoId === todoId);
-        let text = this.state.date.trim();
+       $.post(`${CONFIG.serverUrl}/todos/changeCategory?todoId=${todo.todoId}&categoryId=${categoryId}`);
+        todo.categoryId=categoryId;
+        const index = todos.findIndex(t => t.todoId === todo.todoId);
+        let newTodo={};
+        Object.assign(newTodo,todo);
+        todos[index] = newTodo;
+        this.props.fetchTodos(todos);
+
+    };
+
+
+
+    handleChangeDate = (e) => {
         $.post(`${CONFIG.serverUrl}/todos/changeDate?id=${todo.todoId}&date=${text}`);
-        this.state.date=' ';
+    }
 
-    };
-
-    selectCategory = (e,todoId, categoryId) =>{
-
-        $.post(`${CONFIG.serverUrl}/todos/cahngeCategory?todoId=${todoId}&categoryId=${categoryId}`);
-
-    };
 
     handleChange = (e) => this.setState({ input: e.target.value });
-    handleChangeDate = (e) => this.setState({ date: e.target.date });
     chooseTodo = (e) => this.props.chooseTodo(e.target.id);
 
     handleExpand= (e, todoId) => {

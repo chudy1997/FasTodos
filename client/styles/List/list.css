@@ -68,20 +68,20 @@
                 outline: 0;
             }
 
-            .todos .panel .noview{
+            .todos  .noview{
 
                 padding: 0 9px;
                 display: none;
                 overflow: hidden;
             }
-            .todos .panel .view{
+            .todos  .view{
 
                 padding: 0 9px;
-                display: inline-block ;
+                display: inline-block;
                 overflow: hidden;
             }
-            .todos .panel .view .Select{
-               display: block;
+            .todos  .view .Select{
+                display: block;
                 padding: 6px;
                 margin: 6px;
                 margin-left: auto;

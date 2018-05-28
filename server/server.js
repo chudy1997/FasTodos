@@ -103,6 +103,14 @@ function createServer() {
       });
   });
 
+    server.post('/todos/changeCategory', (req, res) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        const todoId = req.query.todoId;
+        const categoryId = req.query.categoryId;
+
+        db.changeCategory(todoId, categoryId).then(res.status(200).send('Category deleted successfully'))
+    });
+
   server.post('/categories/delete', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     const categoryId = req.query.categoryId;
