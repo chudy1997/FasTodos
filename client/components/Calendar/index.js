@@ -68,7 +68,7 @@ class Calendar extends Component {
       const index = todos.findIndex((interval) => interval.todoId === todoId);
       todos.splice(index,1);
       this.props.fetchTodos(todos);
-    }
+    };
 
     handleSelect = (newIntervals) => {
       const text = newIntervals[0].value;

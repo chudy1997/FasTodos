@@ -22,7 +22,7 @@ class List extends Component {
 
     componentDidMount = () => {
       ajax('GET', 'todos', 5, 1000, todos => {
-        this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId).sort((a, b) => a.finished < b.finished ? -1 : 1));
+        this.props.fetchTodos(todos.sort((a, b) => a.deadline - b.deadline));
       }, 
       () => {
         alert('Could not fetch todos...');
@@ -52,7 +52,7 @@ class List extends Component {
         {categoryId = 1;}
 
         ajax('POST', `todos/new?text=${text}&categoryId=${categoryId}`, 5, 1000, res => {
-          const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId };
+          const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId, finished: false };
           todos.unshift(newTodo);
           this.props.fetchTodos(todos);
         }, 
@@ -132,11 +132,10 @@ class List extends Component {
       // $.post(`${CONFIG.serverUrl}/todos/changeDate?id=${todo.todoId}&date=${text}`);
     };
 
-    createTodos = () => {
+    createTodos = (finished) => {
       const categoryId = this.getCategoryId();
       const todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId);
-
-      return todos.map(todo => {
+      return todos.filter(todo => todo.finished == finished).map(todo => {
         const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
         const className = this.props.chosenTodoId == todo.todoId ? 'todo chosen-todo' : 'todo';
 
@@ -179,10 +178,14 @@ class List extends Component {
                 </form>
                 <select
                   className="Select"
-                  onClick={e => e.stopPropagation()}
                   onChange={(e) => this.selectCategory( e.target.value,todo)}
+                  onClick={e => e.stopPropagation()}
                 >
-                  {this.props.categories.map(category => (<option key={category.categoryId} value={category.categoryId} >{ category.categoryName }</option>))}
+                  {this.props.categories.map(category => (
+                    <option
+                      key={category.categoryId}
+                      value={category.categoryId}
+                    >{ category.categoryName }</option>))}
                 </select>
               </p>
             </div>
@@ -209,7 +212,11 @@ class List extends Component {
         </form>
         <div className='todos-wrapper'>
           <ul className='todos'>
-            {this.createTodos()}
+            {this.createTodos(false)}
+          </ul>
+          <hr className="todos-split" />
+          <ul className='todos'>
+            {this.createTodos(true)}
           </ul>
         </div>
       </div>

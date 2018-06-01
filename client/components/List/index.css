@@ -104,3 +104,9 @@
     display: inline-block;
     overflow: hidden;
 }
+
+.list-router .todos-split{
+    border: none;
+    margin: 0 10px;
+    border-bottom: 3px dashed #ADADAD;
+}
