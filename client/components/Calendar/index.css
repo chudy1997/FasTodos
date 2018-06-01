@@ -92,6 +92,7 @@
 }
 
 .calendar-router .match-chosen-category{
+    border: 3px solid blue;
     opacity: 1;
 }
 
