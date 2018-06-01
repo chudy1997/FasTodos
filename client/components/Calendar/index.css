@@ -1,5 +1,5 @@
 .calendar-router {
-    background-color: #e8ecf2;
+    background-color: #d0d3d7;
     flex: auto;
     display: flex;
     flex-direction: column;
@@ -9,6 +9,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    height: 100%;
 }
 
 .calendar-router .toggle{
@@ -89,6 +90,7 @@
     font-size: 15pt;
     overflow: hidden;
     text-align: center;
+    white-space: nowrap;
 }
 
 .calendar-router .match-chosen-category{
