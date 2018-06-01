@@ -39,7 +39,6 @@ function createServer() {
         res.status(500).send('Problem occured when adding new todo');
       });
   });
-  ;
 
   server.post('/todos/finish', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -66,15 +65,27 @@ function createServer() {
       });
   });
 
+  server.post('/todos/changeCategory', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const {todoId, categoryId} = req.query;
+
+    db.changeCategory(todoId, categoryId).then((todoId) => {
+      res.status(201).send(todoId);
+    })
+    .catch((err) => {
+      res.status(500).send('Problem occurred when changing category');
+    });
+  });
+
   server.get('/categories', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
 
     db.getCategories().then((categories) => {
       res.send(categories);
     })
-      .catch((err) => {
-        res.status(500).send('Problem occured when fetching categories');
-      });
+    .catch((err) => {
+      res.status(500).send('Problem occured when fetching categories');
+    });
   });
 
   server.post('/categories/new', (req, res) => {
@@ -84,9 +95,16 @@ function createServer() {
     db.addCategory(categoryName).then((categoryId) => {
       res.status(201).send(categoryId);
     })
-      .catch((err) => {
-        res.status(500).send('Problem occured when adding new category');
-      });
+    .catch((err) => {
+      res.status(500).send('Problem occured when adding new category');
+    });
+  });
+
+  server.post('/todos/changeCategory', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const {todoId, categoryId} = req.query;
+
+    db.changeCategory(todoId, categoryId).then(() => res.status(200).send('Category deleted successfully'));
   });
 
   server.post('/categories/delete', (req, res) => {
@@ -101,4 +119,3 @@ function createServer() {
 
   return server;
 }
-

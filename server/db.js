@@ -12,7 +12,7 @@ module.exports = {
           throw err;
         }
         con.query(query, callback);
-        con.release();//extremally important
+        con.release();
       });
     }
 
@@ -38,7 +38,8 @@ module.exports = {
                   }
                 });
             });
-        });
+        }
+      );
     }
 
     function clearDb() {
@@ -47,14 +48,23 @@ module.exports = {
           if (err) {
             throw err;
           }
-        });
+        }
+      );
+
       executeSql("DELETE FROM `categories`",
         (err, result) => {
           if (err) {
             throw err;
           }
-        });
+        }
+      );
     }
+
+    function closeDb() {
+      pool.end();
+    }
+
+
 
     function getTodos() {
       return new Promise((resolve, reject) => {
@@ -115,6 +125,8 @@ module.exports = {
       });
     }
 
+
+
     function getCategories() {
       return new Promise((resolve, reject) => {
         executeSql('SELECT * FROM categories',
@@ -133,7 +145,6 @@ module.exports = {
       });
     }
 
-
     function addCategory(categoryName) {
       return new Promise((resolve, reject) => {
         executeSql(`INSERT INTO categories (categoryName) VALUES ('${categoryName}')`,
@@ -145,11 +156,6 @@ module.exports = {
           });
       });
     }
-
-    function closeDb() {
-      pool.end();
-    }
-
 
     function deleteCategory(categoryId) {
       updateTodosCategory(categoryId);
@@ -174,6 +180,16 @@ module.exports = {
         });
     }
 
+    function changeCategory(todoId, categoryId) {
+      return new Promise((resolve, reject) => {
+          executeSql(`UPDATE todos SET categoryId=${categoryId} WHERE todoId=${todoId}`,
+              (err, result) => {
+                  if (err) reject(err);
+                  resolve(result);
+              });
+      });
+    }
+
     return {
       executeSql: executeSql,
       clearDb: clearDb,
@@ -186,6 +202,7 @@ module.exports = {
       addCategory: addCategory,
       deleteCategory: deleteCategory,
       updateTodosCategory: updateTodosCategory,
+      changeCategory: changeCategory
     };
   }
-}
+};

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 
+import 'react-datepicker/dist/react-datepicker.css';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import fetchTodos from './../../actions/fetchTodos';
@@ -14,8 +16,9 @@ import './index.css';
 
 class List extends Component {
     state = {
-      input: ''
-    }
+      input: '',
+      date: moment()
+    };
 
     componentDidMount = () => {
       ajax('GET', 'todos', 5, 1000, todos => {
@@ -37,7 +40,7 @@ class List extends Component {
     getCategoryId = () => {
       const category = this.props.categories[this.props.chosenCategoryId];
       return category ? category.categoryId : 0;
-    }
+    };
 
     handleSubmit = (e) => {
       e.preventDefault();
@@ -59,7 +62,7 @@ class List extends Component {
 
         this.setState({ input: '' });
       }
-    }
+    };
 
     handleChange = (e) => this.setState({ input: e.target.value });
 
@@ -111,6 +114,24 @@ class List extends Component {
        });
      };
 
+    selectCategory = (categoryId, todo) => {
+      const todos = this.props.todos;
+      const oldCategoryId = todo.categoryId;
+      todo.categoryId = categoryId;
+      this.fetchChangedTodos(todos, todo);
+
+      ajax('POST', `todos/changeCategory?todoId=${todo.todoId}&categoryId=${categoryId}`, 5, 1000, () => {},
+        () => {
+          alert('Could not change todo\'s category...');
+          todo.categoryId = oldCategoryId;
+          this.fetchChangedTodos(todos, todo);
+        });
+    };
+
+    handleChangeDate = (e) => {
+      // $.post(`${CONFIG.serverUrl}/todos/changeDate?id=${todo.todoId}&date=${text}`);
+    };
+
     createTodos = () => {
       const categoryId = this.getCategoryId();
       const todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId);
@@ -136,40 +157,38 @@ class List extends Component {
             {todo.text}
             <button
               className="buttonstyle"
-              hidden={this.props.chosenTodoId == todo.todoId ? '' : 'hidden'}
+              hidden={this.props.chosenTodoId === todo.todoId ? '' : 'hidden'}
               onClick={(e) => this.handleDelete(e, todo)}
             >
               {'✘'}
             </button>
             <div className="panel">
-              <p className={this.props.chosenTodoId == todo.todoId ? 'view' : 'noview'}>
-                <form
-                  className="form"
-                >
-                  <input
-                    autoFocus="autofocus"
-                    className="input"
-                    maxLength="50"
-                    onChange={this.handleChange}
-                    placeholder="date"
-                    type="text"
-                    value={this.state.input}
-                  />
-                  <input
-                    autoFocus="autofocus"
-                    className="input"
-                    maxLength="50"
-                    onChange={this.handleChange}
-                    placeholder="categorie"
-                    type="text"
-                    value={this.state.input}
+              <p className={this.props.chosenTodoId === todo.todoId ? 'view' : 'noview'}>
+                <form >
+                  <DatePicker
+                    className="Select"
+                    dateFormat="LLL"
+                    onChange={this.handleChangeDate}
+                    onClick={e => e.stopPropagation()}
+                    selected={this.state.date}
+                    showTimeSelect
+                    timeCaption="time"
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
                   />
                 </form>
+                <select
+                  className="Select"
+                  onClick={e => e.stopPropagation()}
+                  onChange={(e) => this.selectCategory( e.target.value,todo)}
+                >
+                  {this.props.categories.map(category => (<option key={category.categoryId} value={category.categoryId} >{ category.categoryName }</option>))}
+                </select>
               </p>
             </div>
           </li>);
       });
-    }
+    };
 
     render = () => (
       <div className='list'>
