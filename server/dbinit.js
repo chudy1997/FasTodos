@@ -35,7 +35,7 @@ p.then(new Promise((resolve) => {
 
 p.then(new Promise((resolve) => {
   executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255)," +
-    " finished BOOL, categoryId INT, deadline DATETIME, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
+    " finished BOOL, categoryId INT, deadline DATETIME, description TEXT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
   (err, result) => {
     if (err) {
       throw err;

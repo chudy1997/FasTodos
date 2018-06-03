@@ -128,6 +128,23 @@ class List extends Component {
         });
     };
 
+    setDescription = (description, todo) => {
+      console.log(description);
+      console.log(todo);
+
+      const todos = this.props.todos;
+      const oldDescription = todo.description;
+      todo.description = description;
+      this.fetchChangedTodos(todos,todo);
+
+      ajax('POST', `todos/setDescription?todoId=${todo.todoId}&description="${description}"`, 5, 1000, () => {},
+        () => {
+          alert('Could not change todo\'s description...');
+          todo.description = oldDescription;
+          this.fetchChangedTodos(todos, todo);
+        });
+    };
+
     handleChangeDate = (e) => {
       // $.post(`${CONFIG.serverUrl}/todos/changeDate?id=${todo.todoId}&date=${text}`);
     };
@@ -187,6 +204,13 @@ class List extends Component {
                       value={category.categoryId}
                     >{ category.categoryName }</option>))}
                 </select>
+
+                <form onSubmit={(e)=> this.setDescription(e.target.value,todo)}>
+                  <input type="text" name="description" placeholder="Description..."/>
+                  <br/>
+                  <input type="submit" value="Set description"/>
+                </form>
+
               </p>
             </div>
           </li>);

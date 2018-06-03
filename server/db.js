@@ -79,7 +79,8 @@ module.exports = {
                 text: rowDataPacket.text,
                 finished: rowDataPacket.finished,
                 deadline: rowDataPacket.deadline,
-                categoryId: rowDataPacket.categoryId
+                categoryId: rowDataPacket.categoryId,
+                description: rowDataPacket.description,
               };
             });
             resolve(todos);
@@ -191,6 +192,8 @@ module.exports = {
     }
 
     function setDescription(todoId, description) {
+      console.log(description);
+      console.log(todoId);
       return new Promise((resolve, reject) => {
         executeSql(`UPDATE todos SET description=${description} WHERE todoId=${todoId}`,
           (err, result) => {
