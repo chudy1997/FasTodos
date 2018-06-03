@@ -22,7 +22,7 @@ module.exports = {
           if (err) {
             throw err;
           }
-          executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL, deadline DATETIME, categoryId INT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
+          executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL, deadline DATETIME, categoryId INT, description TEXT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
             (err, result) => {
               if (err) {
                 throw err;
@@ -190,6 +190,16 @@ module.exports = {
       });
     }
 
+    function setDescription(todoId, description) {
+      return new Promise((resolve, reject) => {
+        executeSql(`UPDATE todos SET description=${description} WHERE todoId=${todoId}`,
+          (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+          });
+      });
+    }
+
     return {
       executeSql: executeSql,
       clearDb: clearDb,
@@ -202,7 +212,8 @@ module.exports = {
       addCategory: addCategory,
       deleteCategory: deleteCategory,
       updateTodosCategory: updateTodosCategory,
-      changeCategory: changeCategory
+      changeCategory: changeCategory,
+      setDescription: setDescription,
     };
   }
 };

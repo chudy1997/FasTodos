@@ -117,5 +117,17 @@ function createServer() {
       });
   });
 
+  server.post('/todos/setDescription', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const {todoId, description} = req.query;
+
+    db.setDescription(todoId, description).then((todoId) => {
+      res.status(201).send(todoId);
+    })
+      .catch((err) => {
+        res.status(500).send('Problem occurred when setting description');
+      });
+  });
+
   return server;
 }
