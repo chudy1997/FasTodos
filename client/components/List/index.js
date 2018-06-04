@@ -22,9 +22,18 @@ class List extends Component {
     };
 
     componentDidMount = () => {
+      window.onbeforeunload = (e) => {
+        const { todoId, text, finished, deadline, categoryId } = this.props.todos.filter(todo => todo.todoId === this.props.chosenTodoId)[0];
+
+        ajax('POST', `todos/update?todoId=${todoId}&text=${text}&finished=${finished}&deadline=${deadline}&categoryId=${categoryId}&description=${this.state.description}`, 5, 1000, todoId => {},
+          () => {
+            alert('Could not update todo on browser refresh / close...');
+          });
+      };
+
       ajax('GET', 'todos', 5, 1000, todos => {
         this.props.fetchTodos(todos.sort((a, b) => a.deadline - b.deadline));
-      }, 
+      },
       () => {
         alert('Could not fetch todos...');
       });
@@ -79,17 +88,16 @@ class List extends Component {
           todo.description = oldDescription;
           this.fetchChangedTodos(todos, todo);
         });
-
     };
 
 
     handleChange = (e) => this.setState({ input: e.target.value });
 
-    handleDescriptionChange = (e) => this.setState({description: e.target.value});
+    handleDescriptionChange = (e) => this.setState({ description: e.target.value });
 
     handleExpand = (todo) => {
       this.props.chooseTodo(this.props.chosenTodoId !== todo.todoId ? todo.todoId : -1);
-      this.setState({description:todo.description!="undefined" ? todo.description: ""});
+      this.setState({ description : (todo.description != "undefined" ? todo.description : "") });
     };
 
     handleCheck = (e, todo) => {      
@@ -212,13 +220,13 @@ class List extends Component {
 
                 <form
                   className="form"
-                  onSubmit={(e) => this.handleDescriptionSubmit(e,todo) }
+                  onSubmit={(e) => this.handleDescriptionSubmit(e,todo)}
                 >
                   <input
-                    onClick={(e) => e.stopPropagation()}
                     autoFocus="autofocus"
                     maxLength="50"
                     onChange={this.handleDescriptionChange}
+                    onClick={(e) => e.stopPropagation()}
                     placeholder="Description"
                     type="text"
                     value={this.state.description}
@@ -231,34 +239,36 @@ class List extends Component {
       });
     };
 
-    render = () => (
-      <div className='list'>
-        <form
-          className="form"
-          onSubmit={this.handleSubmit}
-        >
-          {this.props.toggle}
-          <input
-            autoFocus="autofocus"
-            className="input"
-            maxLength="50"
-            onChange={this.handleChange}
-            placeholder="What are you going TODO ?"
-            type="text"
-            value={this.state.input}
-          />
-        </form>
-        <div className='todos-wrapper'>
-          <ul className='todos'>
-            {this.createTodos(false)}
-          </ul>
-          <hr className="todos-split" />
-          <ul className='todos'>
-            {this.createTodos(true)}
-          </ul>
+    render = () => {
+      return (
+        <div className='list'>
+          <form
+            className="form"
+            onSubmit={this.handleSubmit}
+          >
+            {this.props.toggle}
+            <input
+              autoFocus="autofocus"
+              className="input"
+              maxLength="50"
+              onChange={this.handleChange}
+              placeholder="What are you going TODO ?"
+              type="text"
+              value={this.state.input}
+            />
+          </form>
+          <div className='todos-wrapper'>
+            <ul className='todos'>
+              {this.createTodos(false)}
+            </ul>
+            <hr className="todos-split" />
+            <ul className='todos'>
+              {this.createTodos(true)}
+            </ul>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
 }
 
 

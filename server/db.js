@@ -126,6 +126,18 @@ module.exports = {
       });
     }
 
+    function updateTodo(todoId, text, finished, deadline, categoryId, description) {
+      return new Promise((resolve, reject) => {
+        executeSql(`UPDATE todos SET text='${text}', finished=${finished}, deadline=FROM_UNIXTIME(${deadline}), categoryId=${categoryId}, description='${description}' WHERE todoId = '${todoId}'`,
+          (err, result) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(result);
+          });
+      });
+    }
+
 
 
     function getCategories() {
@@ -183,11 +195,11 @@ module.exports = {
 
     function changeCategory(todoId, categoryId) {
       return new Promise((resolve, reject) => {
-          executeSql(`UPDATE todos SET categoryId=${categoryId} WHERE todoId=${todoId}`,
-              (err, result) => {
-                  if (err) reject(err);
-                  resolve(result);
-              });
+        executeSql(`UPDATE todos SET categoryId=${categoryId} WHERE todoId=${todoId}`,
+          (err, result) => {
+            if (err) {reject(err);}
+            resolve(result);
+          });
       });
     }
 
@@ -195,7 +207,7 @@ module.exports = {
       return new Promise((resolve, reject) => {
         executeSql(`UPDATE todos SET description=${description} WHERE todoId=${todoId}`,
           (err, result) => {
-            if (err) reject(err);
+            if (err) {reject(err);}
             resolve(result);
           });
       });
@@ -209,6 +221,7 @@ module.exports = {
       addTodo: addTodo,
       deleteTodo: deleteTodo,
       finishTodo: finishTodo,
+      updateTodo: updateTodo,
       getCategories: getCategories,
       addCategory: addCategory,
       deleteCategory: deleteCategory,
