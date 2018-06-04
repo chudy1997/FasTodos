@@ -96,7 +96,7 @@ class Calendar extends Component {
       return (
         <div 
           className={classes}
-          style={{ backgroundColor: this.props.colorMap[props.categoryId] }}
+          style={{ backgroundColor: this.props.colorMap[props.categoryId%Object.keys(this.props.colorMap).length] }}
         >
           {props.value}
         </div>);

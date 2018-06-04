@@ -72,9 +72,21 @@ function createServer() {
     db.changeCategory(todoId, categoryId).then((todoId) => {
       res.status(201).send(todoId);
     })
-    .catch((err) => {
-      res.status(500).send('Problem occurred when changing category');
-    });
+      .catch((err) => {
+        res.status(500).send('Problem occurred when changing category');
+      });
+  });
+
+  server.post('/todos/changeDeadline', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const {todoId, deadline} = req.query;
+
+    db.changeDeadline(todoId, deadline).then((todoId) => {
+      res.status(201).send(todoId);
+    })
+      .catch((err) => {
+        res.status(500).send('Problem occurred when changing category');
+      });
   });
 
   server.get('/categories', (req, res) => {
@@ -98,13 +110,6 @@ function createServer() {
     .catch((err) => {
       res.status(500).send('Problem occured when adding new category');
     });
-  });
-
-  server.post('/todos/changeCategory', (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    const {todoId, categoryId} = req.query;
-
-    db.changeCategory(todoId, categoryId).then(() => res.status(200).send('Category deleted successfully'));
   });
 
   server.post('/categories/delete', (req, res) => {
