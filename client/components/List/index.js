@@ -66,14 +66,20 @@ class List extends Component {
         result.destination.index
       );
 
-      this.setState({
-        todos,
-      });
-    }
+      todos.map((todo,index) => {
+        todo.priority=todos.length-index-1;
+        ajax('POST', `todos/updatePriority?id=${todo.todoId}&value=${todo.priority}`, 5, 1000, () => {
+        },
+        () => {
+          alert('Could not add new todo...');
+        });
+      })
+      this.props.fetchTodos(todos);
+    };
 
     componentDidMount = () => {
       ajax('GET', 'todos', 5, 1000, todos => {
-        this.props.fetchTodos(todos.sort((a, b) => a.deadline - b.deadline));
+        this.props.fetchTodos(todos.sort((a, b) => b.priority - a.priority));
       },
       () => {
         alert('Could not fetch todos...');
@@ -98,12 +104,13 @@ class List extends Component {
       const text = this.state.input.trim();
       if (text.length > 0){
         const todos = this.props.todos;
+        const priority = this.props.todos.length;
         let categoryId = this.getCategoryId();
         if (categoryId === 0)
         {categoryId = 1;}
 
-        ajax('POST', `todos/new?text=${text}&categoryId=${categoryId}`, 5, 1000, res => {
-          const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId, finished: false };
+        ajax('POST', `todos/new?text=${text}&categoryId=${categoryId}&priority=${priority}`, 5, 1000, res => {
+          const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId, finished: false, priority: priority };
           todos.unshift(newTodo);
           this.props.fetchTodos(todos);
         },

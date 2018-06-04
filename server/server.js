@@ -32,7 +32,8 @@ function createServer() {
     const text = req.query.text;
     const categoryId = req.query.categoryId;
     const deadline = req.query.deadline != null ? req.query.deadline : null;
-    db.addTodo(text, categoryId, deadline).then((todoId) => {
+    const priority = req.query.priority;
+    db.addTodo(text, categoryId, deadline, priority).then((todoId) => {
       res.status(201).send(todoId);
     })
       .catch((err) => {
@@ -50,6 +51,18 @@ function createServer() {
     })
       .catch((err) => {
         res.status(500).send('Problem occured when toggling finished todo');
+      });
+  });
+
+  server.post('/todos/updatePriority', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const todoId = req.query.id;
+    const newPriority = req.query.value;
+    db.updateTodosPriority(todoId, newPriority).then(() => {
+      res.status(200).send();
+    })
+      .catch((err) => {
+        res.status(500).send('Problem occured when updating todo\'s priority');
       });
   });
 
