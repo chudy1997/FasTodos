@@ -1,10 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const authors = ['Krzysztof Balwierczak', 'Karol Bartyzel', 'Adam Dyszy', 'Weronika Gancarczyk', 'Maciej Mizera', 'Anna Zubel'];
-const PORT = 8000;
+var PORT = 8000;
+if (process.env.PORT){
+  PORT=process.env.PORT;
+}
 
 createServer();
 const db = require('./db').initDb('./dbConf.json');
+
 
 //Server
 function createServer() {
