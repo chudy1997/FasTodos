@@ -115,9 +115,12 @@ class List extends Component {
      };
 
     selectCategory = (categoryId, todo) => {
+      categoryId = parseInt(categoryId)
+
       const todos = this.props.todos;
       const oldCategoryId = todo.categoryId;
       todo.categoryId = categoryId;
+
       this.fetchChangedTodos(todos, todo);
 
       ajax('POST', `todos/changeCategory?todoId=${todo.todoId}&categoryId=${categoryId}`, 5, 1000, () => {},
@@ -180,6 +183,7 @@ class List extends Component {
                   className="Select"
                   onChange={(e) => this.selectCategory( e.target.value,todo)}
                   onClick={e => e.stopPropagation()}
+                  value={todo.categoryId}
                 >
                   {this.props.categories.map(category => (
                     <option
