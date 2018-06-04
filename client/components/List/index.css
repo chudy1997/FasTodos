@@ -82,7 +82,6 @@
 .list-router .buttonstyle {
     margin: 0px 10px 10px 10px;
     float: right;
-    /*border-radius: 70%;*/
     background-color:#000000;
     cursor:pointer;
     color:#ffffff;
@@ -112,7 +111,6 @@
 }
 
 .list-router select{
-    /*margin: 3px 3px 3px 4px;*/
     height: 40px;
     width: 70px
 }
