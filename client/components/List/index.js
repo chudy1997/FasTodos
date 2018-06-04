@@ -17,7 +17,8 @@ import './index.css';
 class List extends Component {
     state = {
       input: '',
-      date: moment()
+      date: moment(),
+      // blockedDate: false
     };
 
     componentDidMount = () => {
@@ -68,6 +69,14 @@ class List extends Component {
 
     handleExpand = (todo) => {
       this.props.chooseTodo(this.props.chosenTodoId !== todo.todoId ? todo.todoId : -1);
+      if(todo.deadline === null){
+        this.setState({ date: moment() });
+        //maybe make state bool that will make button instead moment()
+        //and if you click button calendar will appear
+      }
+      else {
+        this.setState({ date: moment(todo.deadline) });
+      }
     };
 
     handleCheck = (e, todo) => {      
@@ -131,9 +140,24 @@ class List extends Component {
         });
     };
 
-    handleChangeDate = (e) => {
-      // $.post(`${CONFIG.serverUrl}/todos/changeDate?id=${todo.todoId}&date=${text}`);
+    handleChangeDate = (dateFromInput) => {
+      this.setState({
+        date: dateFromInput
+      });
     };
+
+    changeTodoDeadline = (todo,e) => {
+      const oldDeadline = todo.deadline
+      // toddddo.deadline = dateFromInput.format("YYYY-MM-DD HH:mm:ss")
+      todo.deadline = this.state.date.unix()
+      this.fetchChangedTodos(this.props.todos, todo);
+      ajax('POST', `todos/changeDeadline?todoId=${todo.todoId}&deadline=${todo.deadline}`, 5, 1000, () => {},
+        () => {
+          alert('Could not change todo\'s deadline...');
+          todo.deadline = oldDeadline;
+          this.fetchChangedTodos(this.props.todos, todo);
+        });
+    }
 
     createTodos = (finished) => {
       const categoryId = this.getCategoryId();
@@ -147,14 +171,20 @@ class List extends Component {
             className={className}
             id={todo.todoId}
             key={todo.todoId}
-            onClick={() => this.handleExpand(todo)}
+            onClick={() => {
+                this.handleExpand(todo);
+                e.stopPropagation();
+            }}
+            onSelect={()=> {
+              this.focus();
+            }}
             style={{ backgroundColor: backgroundColor }}
           >
-            <input 
-              checked={todo.finished ? 'checked' : ''} 
-              className='check' 
+            <input
+              checked={todo.finished ? 'checked' : ''}
+              className='check'
               onClick={(e) => this.handleCheck(e, todo)}
-              type='checkbox' 
+              type='checkbox'
             />
             {todo.text}
             <button
@@ -166,17 +196,27 @@ class List extends Component {
             </button>
             <div className="panel">
               <p className={this.props.chosenTodoId === todo.todoId ? 'view' : 'noview'}>
-                <form >
+                <form className="Select"
+                      onClick={e => {
+                        // alert("test inner");
+                        //add block for other click action
+                        this.state.blockedDate=true;
+                        e.stopPropagation();
+                      }}
+                >
                   <DatePicker
-                    className="Select"
-                    dateFormat="LLL"
-                    onChange={this.handleChangeDate}
-                    onClick={e => e.stopPropagation()}
+                    inline
                     selected={this.state.date}
+                    onChange={this.handleChangeDate}
                     showTimeSelect
-                    timeCaption="time"
                     timeFormat="HH:mm"
-                    timeIntervals={15}
+                    timeIntervals={3}
+                    dateFormat="LLL"
+                    timeCaption="time"
+                    dateFormatCalendar={" "}
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
                   />
                 </form>
                 <select
@@ -190,7 +230,13 @@ class List extends Component {
                       key={category.categoryId}
                       value={category.categoryId}
                     >{ category.categoryName }</option>))}
-                </select>
+                </select>             <button
+                className="buttonstyle"
+                hidden={this.props.chosenTodoId === todo.todoId ? '' : 'hidden'}
+                onClick={(e) => this.changeTodoDeadline(todo,e)}
+              >
+                {'Accept'}
+              </button>
               </p>
             </div>
           </li>);

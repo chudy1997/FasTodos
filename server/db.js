@@ -190,6 +190,17 @@ module.exports = {
       });
     }
 
+    function changeDeadline(todoId, deadline) {
+      return new Promise((resolve, reject) => {
+        // console.log(todoId,deadline)
+        executeSql(`UPDATE todos SET deadline=FROM_UNIXTIME(${deadline}) WHERE todoId=${todoId}`,
+          (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+          });
+      });
+    }
+
     return {
       executeSql: executeSql,
       clearDb: clearDb,
@@ -202,7 +213,8 @@ module.exports = {
       addCategory: addCategory,
       deleteCategory: deleteCategory,
       updateTodosCategory: updateTodosCategory,
-      changeCategory: changeCategory
+      changeCategory: changeCategory,
+      changeDeadline: changeDeadline
     };
   }
 };
