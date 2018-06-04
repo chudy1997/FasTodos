@@ -74,7 +74,7 @@ function createServer() {
     const {todoId, categoryId} = req.query;
 
     db.changeCategory(todoId, categoryId).then((todoId) => {
-      res.status(201).send(todoId);
+      res.status(200).send(todoId);
     })
       .catch((err) => {
         res.status(500).send('Problem occurred when changing category');
