@@ -149,9 +149,9 @@ class List extends Component {
     changeTodoDeadline = (todo,e) => {
       const oldDeadline = todo.deadline
       // toddddo.deadline = dateFromInput.format("YYYY-MM-DD HH:mm:ss")
-      todo.deadline = this.state.date.unix()
+      todo.deadline = 1000*this.state.date.unix()
       this.fetchChangedTodos(this.props.todos, todo);
-      ajax('POST', `todos/changeDeadline?todoId=${todo.todoId}&deadline=${todo.deadline}`, 5, 1000, () => {},
+      ajax('POST', `todos/changeDeadline?todoId=${todo.todoId}&deadline=${this.state.date.unix()}`, 5, 1000, () => {},
         () => {
           alert('Could not change todo\'s deadline...');
           todo.deadline = oldDeadline;
