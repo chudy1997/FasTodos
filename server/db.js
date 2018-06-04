@@ -192,8 +192,6 @@ module.exports = {
     }
 
     function setDescription(todoId, description) {
-      console.log(description);
-      console.log(todoId);
       return new Promise((resolve, reject) => {
         executeSql(`UPDATE todos SET description=${description} WHERE todoId=${todoId}`,
           (err, result) => {

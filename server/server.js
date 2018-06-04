@@ -119,10 +119,8 @@ function createServer() {
 
   server.post('/todos/setDescription', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    // const {todoId, description} = req.query;
     const todoId =req.query.todoId;
     const description =req.query.description;
-    console.log(description);
     db.setDescription(todoId, description).then((todoId) => {
       res.status(201).send(todoId);
     })
