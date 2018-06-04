@@ -16,6 +16,7 @@ import './index.css';
 
 class List extends Component {
     state = {
+      description:'',
       input: '',
       date: moment()
     };
@@ -64,10 +65,31 @@ class List extends Component {
       }
     };
 
+    handleDescriptionSubmit = (e,todo) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const todos = this.props.todos;
+      const oldDescription = todo.description;
+      todo.description = this.state.description;
+      this.fetchChangedTodos(todos,todo);
+
+      ajax('POST', `todos/setDescription?todoId=${todo.todoId}&description="${todo.description}"`, 5, 1000, () => {},
+        () => {
+          alert('Could not change todo\'s description...');
+          todo.description = oldDescription;
+          this.fetchChangedTodos(todos, todo);
+        });
+
+    };
+
+
     handleChange = (e) => this.setState({ input: e.target.value });
+
+    handleDescriptionChange = (e) => this.setState({description: e.target.value});
 
     handleExpand = (todo) => {
       this.props.chooseTodo(this.props.chosenTodoId !== todo.todoId ? todo.todoId : -1);
+      this.setState({description:todo.description!="undefined" ? todo.description: ""});
     };
 
     handleCheck = (e, todo) => {      
@@ -124,23 +146,6 @@ class List extends Component {
         () => {
           alert('Could not change todo\'s category...');
           todo.categoryId = oldCategoryId;
-          this.fetchChangedTodos(todos, todo);
-        });
-    };
-
-    setDescription = (description, todo) => {
-      console.log(description);
-      console.log(todo);
-
-      const todos = this.props.todos;
-      const oldDescription = todo.description;
-      todo.description = description;
-      this.fetchChangedTodos(todos,todo);
-
-      ajax('POST', `todos/setDescription?todoId=${todo.todoId}&description="${description}"`, 5, 1000, () => {},
-        () => {
-          alert('Could not change todo\'s description...');
-          todo.description = oldDescription;
           this.fetchChangedTodos(todos, todo);
         });
     };
@@ -205,10 +210,19 @@ class List extends Component {
                     >{ category.categoryName }</option>))}
                 </select>
 
-                <form onSubmit={(e)=> this.setDescription(e.target.value,todo)}>
-                  <input type="text" name="description" placeholder="Description..."/>
-                  <br/>
-                  <input type="submit" value="Set description"/>
+                <form
+                  className="form"
+                  onSubmit={(e) => this.handleDescriptionSubmit(e,todo) }
+                >
+                  <input
+                    onClick={(e) => e.stopPropagation()}
+                    autoFocus="autofocus"
+                    maxLength="50"
+                    onChange={this.handleDescriptionChange}
+                    placeholder="Description"
+                    type="text"
+                    value={this.state.description}
+                  />
                 </form>
 
               </p>
