@@ -58,6 +58,8 @@ class List extends Component {
       // dropped outside the list
       if (!result.destination) {
         return;
+      } else if (result.source.index===result.destination.index){
+        return;
       }
 
       const todos = reorder(
