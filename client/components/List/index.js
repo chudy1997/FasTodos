@@ -186,18 +186,20 @@ class List extends Component {
     createTodos = (finished) => {
       const categoryId = this.getCategoryId();
       const todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId);
-      return todos.filter(todo => todo.finished == finished).map((todo,index) => {
+      return (
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDraggingOver)}
+              >
+          {
+        todos.filter(todo => todo.finished == finished).map((todo,index) => {
         const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
         const className = this.props.chosenTodoId == todo.todoId ? 'todo chosen-todo' : 'todo';
 
         return (
-          <DragDropContext onDragEnd={this.onDragEnd}>
-            <Droppable droppableId="droppable">
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  style={getListStyle(snapshot.isDraggingOver)}
-                >
                     <Draggable key={todo.todoId} draggableId={todo.todoId} index={index} >
                       {(provided, snapshot) => (
                         <li
@@ -260,13 +262,12 @@ class List extends Component {
 
                       )}
                     </Draggable>
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-          );
-      });
+          )})}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>)
     };
 
     render = () => (

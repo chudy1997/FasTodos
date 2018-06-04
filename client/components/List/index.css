@@ -71,8 +71,9 @@
 }
 
 .list-router .check {
-    transform: scale(1.5);
-    margin-right: 10px;
+    transform: scale(3);
+    margin-right: 15px;
+    cursor: pointer;
 }
 
 .list-router .chosen-todo{
