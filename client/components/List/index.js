@@ -68,14 +68,17 @@ class List extends Component {
         result.destination.index
       );
 
-      todos.map((todo,index) => {
-        todo.priority=todos.length-index-1;
-        ajax('POST', `todos/updatePriority?id=${todo.todoId}&value=${todo.priority}`, 5, 1000, () => {
-        },
-        () => {
-          alert('Could not add new todo...');
-        });
-      })
+      todos.filter((todo,index) => result.source.index-result.destination.index < 0 ? (index >= result.source.index && index <= result.destination.index) : (index <= result.source.index && index >= result.destination.index))
+        .map(todo => {
+          const index = todos.findIndex(t => t.todoId === todo.todoId);
+          todo.priority=todos.length-index-1;
+          ajax('POST', `todos/updatePriority?id=${todo.todoId}&value=${todo.priority}`, 5, 1000, () => {
+          },
+          () => {
+            alert('Could not add new todo...');
+          });
+        })
+
       this.props.fetchTodos(todos);
     };
 
@@ -203,14 +206,14 @@ class List extends Component {
                 ref={provided.innerRef}
                 style={getListStyle(snapshot.isDraggingOver)}
               >
-          {
-        todos.filter(todo => todo.finished == finished).map((todo,index) => {
-        const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
-        const className = this.props.chosenTodoId == todo.todoId ? 'todo chosen-todo' : 'todo';
+              {
+                todos.filter(todo => todo.finished == finished).map((todo,index) => {
+                const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
+                const className = this.props.chosenTodoId == todo.todoId ? 'todo chosen-todo' : 'todo';
 
-        return (
-                    <Draggable key={todo.todoId} draggableId={todo.todoId} index={index} >
-                      {(provided, snapshot) => (
+                return (
+                  <Draggable key={todo.todoId} draggableId={todo.todoId} index={index} >
+                    {(provided, snapshot) => (
                         <li
                           className={className}
                           id={todo.todoId}
@@ -270,8 +273,8 @@ class List extends Component {
                         </li>
 
                       )}
-                    </Draggable>
-          )})}
+                  </Draggable>
+                )})}
                 {provided.placeholder}
               </div>
             )}
