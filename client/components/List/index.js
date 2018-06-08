@@ -21,17 +21,35 @@ class List extends Component {
       date: moment()
     };
 
+    saveAll = (msg) => {
+      if (!this.props.chosenTodoId)
+      {return;}
+
+      const todo = this.props.todos.filter(todo => todo.todoId === this.props.chosenTodoId)[0];
+      if(!todo)
+          return;
+
+      todo.description = this.state.description;
+      this.fetchChangedTodos(this.props.todos, todo);
+      const { todoId, text, finished, deadline, categoryId, description } = todo;
+
+      ajax('POST', 
+        `todos/update?todoId=${todoId}&text=${text}&finished=${finished}&deadline=${deadline}&categoryId=${categoryId}&description=${description}`,
+        5, 
+        1000, 
+        todoId => {},
+        () => {
+          alert(msg);
+        });
+    };
+
     componentDidMount = () => {
       window.onbeforeunload = (e) => {
-        const { todoId, text, finished, deadline, categoryId } = this.props.todos.filter(todo => todo.todoId === this.props.chosenTodoId)[0];
-
-        ajax('POST', `todos/update?todoId=${todoId}&text=${text}&finished=${finished}&deadline=${deadline}&categoryId=${categoryId}&description=${this.state.description}`, 5, 1000, todoId => {},
-          () => {
-            alert('Could not update todo on browser refresh / close...');
-          });
+        this.saveAll('Could not update todo on browser refresh / close...');
       };
 
       ajax('GET', 'todos', 5, 1000, todos => {
+          console.log(todos);
         this.props.fetchTodos(todos.sort((a, b) => a.deadline - b.deadline));
       },
       () => {
@@ -96,8 +114,11 @@ class List extends Component {
     handleDescriptionChange = (e) => this.setState({ description: e.target.value });
 
     handleExpand = (todo) => {
+      this.saveAll('Could not update todo...');
+
       this.props.chooseTodo(this.props.chosenTodoId !== todo.todoId ? todo.todoId : -1);
-      this.setState({ description : (todo.description != "undefined" ? todo.description : "") });
+      const description = todo.description ? todo.description : "";
+      this.setState({ description : description });
     };
 
     handleCheck = (e, todo) => {      
@@ -164,7 +185,7 @@ class List extends Component {
 
     createTodos = (finished) => {
       const categoryId = this.getCategoryId();
-      const todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId === categoryId);
+      const todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId == categoryId);
       return todos.filter(todo => todo.finished == finished).map(todo => {
         const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
         const className = this.props.chosenTodoId == todo.todoId ? 'todo chosen-todo' : 'todo';
@@ -208,8 +229,9 @@ class List extends Component {
                 </form>
                 <select
                   className="Select"
-                  onChange={(e) => this.selectCategory( e.target.value,todo)}
+                  onChange={(e) => this.selectCategory( e.target.value, todo)}
                   onClick={e => e.stopPropagation()}
+                  value={todo.categoryId}
                 >
                   {this.props.categories.map(category => (
                     <option
