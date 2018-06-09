@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { NotificationManager } from 'react-notifications';
 
 import WeekCalendar from 'react-week-calendar';
 import 'react-week-calendar/dist/style.css';
@@ -26,7 +27,7 @@ class Calendar extends Component {
       () => {
         alert('Could not fetch todos from db with 5 tries at maximum 6 sec...');
       });
-    }
+    };
 
     onRightArrowClick = e => {
       this.setState({ firstDay: moment(this.state.firstDay).add(1, "week") });
@@ -39,7 +40,7 @@ class Calendar extends Component {
     getCategoryId = () => {
       const category = this.props.categories[this.props.chosenCategoryId];
       return category ? category.categoryId : 0;
-    }
+    };
 
     getSelectedIntervals = () => {
       const intervals = this.props.todos.map(todo => {
@@ -53,21 +54,55 @@ class Calendar extends Component {
       });
 
       return intervals;
-    }
+    };
 
     handleEventRemove = (e) => {
       const todos = this.props.todos;
       const todoId = e.id;
       const todo = todos.find(todo => todo.todoId === todoId);
 
-      ajax('POST', `todos/delete?id=${todo.todoId}`, 5, 1000, () => {}, 
-        () => {
-          alert('Could not delete todo from db with 5 tries at maximum 6 sec...');
-        });
+      ajax('POST', `todos/delete?id=${todo.todoId}`, 5, 1000, () => {
+        NotificationManager.success(`Successfully deleted todo: ${todo.text}.`);
+      },
+      () => {
+        alert('Could not delete todo from db with 5 tries at maximum 6 sec...');
+      });
 
       const index = todos.findIndex((interval) => interval.todoId === todoId);
       todos.splice(index,1);
       this.props.fetchTodos(todos);
+    };
+
+    fetchChangedTodos = (todos, todo) => {
+      const index = todos.findIndex(t => t.todoId === todo.todoId);
+      todos[index] = {
+        ...todo
+      };
+      this.props.fetchTodos(todos);
+    };
+
+    handleEventUpdate = (e) => {
+      const todos = this.props.todos;
+      const todoId = e.id;
+      const todo = todos.find(todo => todo.todoId === todoId);
+
+      if (todo.text === e.value)
+      {return;}
+
+      todo.text = e.value;
+      this.fetchChangedTodos(this.props.todos, todo);
+      const { text, finished, deadline, categoryId, description } = todo;
+
+      ajax('POST',
+        `todos/update?todoId=${todoId}&text=${text}&finished=${finished}&deadline=${deadline}&categoryId=${categoryId}&description=${description}`,
+        5,
+        1000,
+        todoId => {
+          NotificationManager.success(`Successfully updated todo: ${todo.text}`);
+        },
+        () => {
+          alert(msg);
+        });
     };
 
     handleSelect = (newIntervals) => {
@@ -81,6 +116,8 @@ class Calendar extends Component {
         {categoryId = 1;}
 
         ajax('POST', `todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}`, 5, 1000, res => {
+          NotificationManager.success(`Successfully created todo: ${text}.`);
+
           const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId, deadline: deadline*1000 };
           todos.unshift(newTodo);
           this.props.fetchTodos(todos);
@@ -107,7 +144,8 @@ class Calendar extends Component {
       return (
         <div 
           className={classes}
-          onMouseDown={props.startSelection} />);
+          onMouseDown={props.startSelection}
+        />);
     };
 
     createWeekCalendar = () => (
@@ -115,15 +153,16 @@ class Calendar extends Component {
         cellHeight={25}
         dayCellComponent={this.customDayCell}
         dayFormat={'ddd DD.MM'}
-        endTime={moment({h: 18, m: 1})}
+        endTime={moment({ h: 18, m: 1 })}
         eventComponent={this.customEvent}
         firstDay={this.state.firstDay}
         onIntervalRemove={this.handleEventRemove}
         onIntervalSelect={this.handleSelect}
+        onIntervalUpdate={this.handleEventUpdate}
         scaleHeaderTitle='FasTodos'
         scaleUnit={30}
         selectedIntervals={this.getSelectedIntervals()}
-        startTime={moment({h: 6, m: 0 })}
+        startTime={moment({ h: 6, m: 0 })}
       />);
 
     render = () => {

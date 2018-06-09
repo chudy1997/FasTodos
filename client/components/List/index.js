@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import { NotificationManager } from 'react-notifications';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -26,8 +27,8 @@ class List extends Component {
       {return;}
 
       const todo = this.props.todos.filter(todo => todo.todoId === this.props.chosenTodoId)[0];
-      if(!todo)
-          return;
+      if (!todo)
+      {return;}
 
       todo.description = this.state.description;
       this.fetchChangedTodos(this.props.todos, todo);
@@ -49,7 +50,7 @@ class List extends Component {
       };
 
       ajax('GET', 'todos', 5, 1000, todos => {
-          console.log(todos);
+        console.log(todos);
         this.props.fetchTodos(todos.sort((a, b) => a.deadline - b.deadline));
       },
       () => {
@@ -80,6 +81,7 @@ class List extends Component {
         {categoryId = 1;}
 
         ajax('POST', `todos/new?text=${text}&categoryId=${categoryId}`, 5, 1000, res => {
+          NotificationManager.success(`Successfully created todo: ${text}.`);
           const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId, finished: false };
           todos.unshift(newTodo);
           this.props.fetchTodos(todos);
@@ -129,12 +131,14 @@ class List extends Component {
 
       todo.finished = newValue;
       this.fetchChangedTodos(todos, todo);
-      ajax('POST', `todos/finish?id=${todo.todoId}&value=${newValue}`, 5, 1000, () => {}, 
-        () => {
-          alert('Could not check todo...');
-          todo.finished = oldValue;
-          this.fetchChangedTodos(todos, todo);
-        });
+      ajax('POST', `todos/finish?id=${todo.todoId}&value=${newValue}`, 5, 1000, () => {
+        NotificationManager.success(`Successfully ${newValue ? '' : 'un'}checked todo: ${todo.text}.`);
+      },
+      () => {
+        alert('Could not check todo...');
+        todo.finished = oldValue;
+        this.fetchChangedTodos(todos, todo);
+      });
     };
 
      handleDelete = (e, todo) => {
@@ -150,6 +154,7 @@ class List extends Component {
                const todos = this.props.todos;
 
                ajax('POST', `todos/delete?id=${todo.todoId}`, 5, 1000, () => {
+                 NotificationManager.success(`Successfully deleted todo ${todo.text}`);
                  todos.splice(todos.findIndex(t => t.todoId === todo.todoId), 1);
                  this.props.fetchTodos(todos);
                }, 
