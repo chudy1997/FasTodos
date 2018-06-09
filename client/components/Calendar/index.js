@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import WeekCalendar from 'react-week-calendar';
 import 'react-week-calendar/dist/style.css';
+import CustomModal from './CustomModal';
 
 const moment = require('moment');
 
@@ -120,6 +121,8 @@ class Calendar extends Component {
         firstDay={this.state.firstDay}
         onIntervalRemove={this.handleEventRemove}
         onIntervalSelect={this.handleSelect}
+        useModal={CustomModal}
+        modalComponent={CustomModal}
         scaleHeaderTitle='FasTodos'
         scaleUnit={30}
         selectedIntervals={this.getSelectedIntervals()}

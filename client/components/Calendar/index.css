@@ -115,3 +115,33 @@
 .afterNow{
     background-color: white;
 }
+
+.calendarModal__content{
+    background-color: #d0d3d7;
+    border-radius: 15px;
+}
+
+.customModal .customModal__text{
+    color: #4a4a4a;
+    font-size: 120%;
+}
+
+.customModal .customModal__input{
+    font-size: 140%;
+    border: thin solid #ADADAD;
+    border-radius: 10px;
+    padding-left: 10px;
+}
+
+.customModal .customModal__button{
+    border: 1px solid transparent;
+    font-size: 110%;
+    border-radius: 5px;
+}
+
+.customModal .customModal_button_delete{
+    background-color: red;
+}
+.customModal .customModal_button_save{
+    background-color: green;
+}
