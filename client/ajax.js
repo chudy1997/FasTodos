@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { NotificationManager } from 'react-notifications';
 import { serverUrl } from "./../config.json";
 
 const ajax  = (type, url, tryCount, timeout, successCallback, errCallback) => {
@@ -8,8 +9,11 @@ const ajax  = (type, url, tryCount, timeout, successCallback, errCallback) => {
     timeout: timeout,
     success: successCallback,
     error: () => tryCount > 0 
-      ? ajax(tryCount-1, timeout+1000, type, url, successCallback, errCallback)
-      : errCallback()
+      ? ajax(type, url, tryCount-1, timeout+1000, successCallback, errCallback)
+      : () => {
+        NotificationManager.error(`Problem with request of type ${type} to ${url} occurred...`);
+        errCallback();
+      }
   });
 };
 

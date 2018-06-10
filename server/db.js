@@ -33,7 +33,6 @@ module.exports = {
                     throw err;
                   }
                   if (result.length < 1) {
-                    console.log("adding default cat");
                     addCategory("Default");
                   }
                 });
@@ -128,13 +127,20 @@ module.exports = {
 
     function updateTodo(todoId, text, finished, deadline, categoryId, description) {
       return new Promise((resolve, reject) => {
-        executeSql(`UPDATE todos SET text='${text}', finished=${finished}, deadline=FROM_UNIXTIME(${deadline}), categoryId=${categoryId}, description='${description}' WHERE todoId = '${todoId}'`,
-          (err, result) => {
+        function updateField(setQuery){
+          executeSql(`UPDATE todos SET ${setQuery} WHERE todoId = '${todoId}'`, (err, result) => {
             if (err) {
               reject(err);
             }
-            resolve(result);
           });
+        }
+
+        if (text !== null) {updateField(`text='${text}'`);}
+        if (finished !== null) {updateField(`finished=${finished}`);}
+        if (deadline !== null) {updateField(`deadline=FROM_UNIXTIME(${deadline})`);}
+        if (categoryId !== null) {updateField(`categoryId=${categoryId}`);}
+        if (description !== null) {updateField(`description='${description}'`);}
+        resolve('Ok');
       });
     }
 

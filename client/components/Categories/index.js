@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { NotificationManager } from 'react-notifications';
 
 import ajax from './../../ajax';
 
@@ -31,47 +32,48 @@ class Categories extends Component {
             id={id} 
             key={(id++)} 
             onClick={this.chooseCategory} 
-            style={{backgroundColor:this.props.colorMap[category.categoryId%Object.keys(this.props.colorMap).length]}} 
+            style={{ backgroundColor:this.props.colorMap[category.categoryId%Object.keys(this.props.colorMap).length] }} 
           >
             {category.categoryName}
           </li>)
       );
-    }
+    };
 
     chooseCategory = (e) => {
       const id = e.target.id;
       this.props.chooseCategory(this.props.chosenCategoryId == id ? -1 : id);
-    }
+    };
 
     handleChange = (e) => this.setState({ input: e.target.value });
 
-    handleSubmit = (e) => {
+    handleCategorySubmit = (e) => {
       const categoryName = this.state.input.trim();
-      if (this.isInputValid(categoryName)){
+      if (categoryName.length === 0) {NotificationManager.info('Category name has to have at least 1 character.');}
+      else if (this.props.categories.some(category => category.categoryName === categoryName)) {NotificationManager.warning('Category already exists!');}
+      else {
         const categories = this.props.categories;
-    
+
         ajax('POST', `categories/new?categoryName=${categoryName}`, 5, 1000, res => {
+          NotificationManager.success(`Successfully created category: ${categoryName}.`);
           const newCategory = { categoryId: res.insertId, categoryName: categoryName };
           categories.unshift(newCategory);
           this.props.fetchCategories(categories);
-        }, 
-        () => {
-          alert('Could not fetch categories from db with 5 tries at maximum 6 sec...');
+          this.setState({ input: '' });
         });
+      }
 
-        this.setState({ input: '' });
-      }   
-
+      e.stopPropagation();
       e.preventDefault();
-    }
+    };
 
-    handleDelete = (e) => {
+    handleCategoryDelete = (e) => {
       if (this.props.chosenCategoryId<0){
-        alert('You need to choose the category to delete!');
-      } 
+        NotificationManager.warning('You need to choose the category to delete!');
+      }
       else if (this.props.chosenCategoryId==this.props.categories.length-1){
-        alert('Category Other cannot be deleted');
-      } 
+        NotificationManager.warning('Category Default cannot be deleted');
+
+      }
       else {
         const categories = this.props.categories;
         const todos = this.props.todos;
@@ -79,6 +81,7 @@ class Categories extends Component {
         const defaultCategoryId=categories[this.props.categories.length-1].categoryId;
 
         ajax('POST', `categories/delete?categoryId=${deletedCategoryId}`, 5, 1000, res => {
+          NotificationManager.success(`Successfully deleted category: ${categories[this.props.chosenCategoryId].categoryName}.`);
           categories.splice(this.props.chosenCategoryId,1);
           this.props.fetchCategories(categories);
           for (let t in todos){
@@ -104,7 +107,7 @@ class Categories extends Component {
         <div className="categories">
           <form  
             className="inputForm"
-            onSubmit={this.handleSubmit}
+            onSubmit={this.handleCategorySubmit}
           >
             <input 
               className="input"
@@ -118,7 +121,8 @@ class Categories extends Component {
           <form className="buttonForm">
             <button  
               className="deleteButton"
-              onClick={this.handleDelete}>Delete</button>
+              onClick={this.handleCategoryDelete}
+            >Delete</button>
           </form>
           <div className='categories-list-wrapper'>
             <ol className='categories-list'>

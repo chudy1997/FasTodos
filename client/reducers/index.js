@@ -3,19 +3,16 @@ import todosReducer from './todos';
 import chosenTodoIdReducer from './chosenTodoId';
 import categoriesReducer from './categories';
 import chosenCategoryIdReducer from './chosenCategoryId';
+import draggedTodoReducer from './draggedTodo';
 import colorMap from "./colorMap";
 
 const reducers = combineReducers({
-  //Todos
   todos: todosReducer,
   chosenTodoId: chosenTodoIdReducer,
-    
-  //Categories
   categories: categoriesReducer,
   chosenCategoryId: chosenCategoryIdReducer,
-
-  //map
-  colorMap: colorMap
+  colorMap: colorMap,
+  draggedTodo: draggedTodoReducer
 });
 
 export default reducers;
