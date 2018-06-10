@@ -1,8 +1,53 @@
+@media (min-width: 800px){
+    .calendar-router .fa-list {
+        font-size: 33px;
+    }
+
+    .calendar-router .calendar-switch label{
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 800px) {
+    .calendar-router .fa-list {
+        font-size: 29px;
+    }
+
+    .calendar-router .calendar-switch label{
+        font-size: 17px;
+    }
+}
+
+@media (min-width: 400px) and (max-width: 600px) {
+    .calendar-router .fa-list {
+        font-size: 25px;
+    }
+
+    .calendar-router .calendar-switch label{
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 400px) {
+    .calendar-router .fa-list {
+        font-size: 21px;
+    }
+
+    .calendar-router .calendar-switch label{
+        font-size: 11px;
+    }
+
+    .calendar-router .switch {
+        padding: 0px 3px 3px 5px !important;
+    }
+}
+
 .calendar-router {
     background-color: #d0d3d7;
     flex: auto;
     display: flex;
     flex-direction: column;
+    width: 70%;
 }
 
 .calendar-router .calendar {
@@ -14,10 +59,6 @@
 
 .calendar-router .toggle{
     margin-left: 10px;
-}
-
-.calendar-router .toggle .fa-list {
-    font-size: 33px;
 }
 
 .calendar-router .calendar-switch {
@@ -37,7 +78,7 @@
 .calendar-router .switch {
     margin: 15px auto;
     height: 20px;
-    padding: 3px 7px 3px 8px;
+    padding: 0px 7px 3px 8px;
     background-color: white;
     cursor: pointer;
 }

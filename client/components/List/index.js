@@ -45,10 +45,10 @@ const getListStyle = isDraggingOver => ({
 });
 
 class List extends Component {
-    constructor(props) {
-      super(props);
-      this.onDragEnd = this.onDragEnd.bind(this);
-    }
+  constructor(props) {
+    super(props);
+    this.onDragEnd = this.onDragEnd.bind(this);
+  }
 
     state = {
       description:'',
@@ -145,7 +145,7 @@ class List extends Component {
           () => {
             alert('Could not add new todo...');
           });
-        })
+        });
 
       this.props.fetchTodos(todos);
     };
@@ -332,20 +332,22 @@ class List extends Component {
                               backgroundColor
                             )}
                           >
-                            <input
-                              checked={todo.finished ? 'checked' : ''}
-                              className='check'
-                              onClick={(e) => this.handleCheck(e, todo)}
-                              type='checkbox'
-                            />
-                            {todo.text}
-                            <button
-                              className="buttonstyle"
-                              hidden={this.props.chosenTodoId === todo.todoId ? '' : 'hidden'}
-                              onClick={(e) => this.handleDelete(e, todo)}
-                            >
-                              {'✘'}
-                            </button>
+                            <div className="todo-header">
+                              <input
+                                checked={todo.finished ? 'checked' : ''}
+                                className='check'
+                                onClick={(e) => this.handleCheck(e, todo)}
+                                type='checkbox'
+                              />
+                              {todo.text}
+                              <button
+                                className="delete-todo-button"
+                                hidden={this.props.chosenTodoId === todo.todoId ? '' : 'hidden'}
+                                onClick={(e) => this.handleDelete(e, todo)}
+                              >
+                                {'✘'}
+                              </button>
+                            </div>
                             <div className="panel">
                               <p className={this.props.chosenTodoId === todo.todoId ? 'view' : 'noview'}>
                                 <form >

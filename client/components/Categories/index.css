@@ -1,3 +1,63 @@
+@media (min-width: 800px){
+    .categories-list .category {
+        font-size: 24px;
+    }
+
+    .categories .input {
+        font-size: 20px;
+        width: 55%;
+    }
+
+    .categories .delete-button {
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 800px){
+    .categories-list .category {
+        font-size: 20px;
+    }
+
+    .categories .input {
+        font-size: 17px;
+        width: 80%;
+    }
+
+    .categories .delete-button {
+        font-size: 17px;
+    }
+}
+
+@media (min-width: 400px) and (max-width: 600px){
+    .categories-list .category {
+        font-size: 16px;
+    }
+
+    .categories .input {
+        font-size: 14px;
+        width: 80%;
+    }
+
+    .categories .delete-button {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 400px){
+    .categories-list .category {
+        font-size: 12px;
+    }
+
+    .categories .input {
+        font-size: 11px;
+        width: 80%;
+    }
+
+    .categories .delete-button {
+        font-size: 11px;
+    }
+}
+
 .categories {
     background-color: #ADADAD;
     display: flex;
@@ -19,18 +79,17 @@
         list-style: none;
         display: flex;
         flex-wrap: wrap; 
-        margin: 10px;
+        margin: 2%;
         padding: 0;
+        justify-content: center;
     }
 
         .categories-list .category {
-            height: 50px;
             counter-increment: item;
             margin: 3px;
-            padding: 10px 20px 0 20px;
+            padding: 10px 20px;
             border-radius : 25px;
             opacity: 0.5;
-            font-size: 24px;
         }
 
         .categories-list .category:hover {
@@ -44,27 +103,28 @@
             border-width: 3px;
         }
 
-    .categories .input {
-        width: 80%;
-        border: none;
-        float: left;
+    .categories .input-form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 
-        display: inline-block;
-        margin: 15px 5px 15px 10px;
+    .categories .input {
+        border: none;
+
+        margin: 2% 2% 4% 2%;
         padding: 5px;
 
-        font-size: 20px;
         border-radius: 10px;
     }
 
-    .categories .deleteButton {
+    .categories .delete-button {
         background-color: #cc0000;
         border: none;
         color: white;
-        margin: 15px 3px 15px 10px;
+        margin: 2% 2% 4% 2%;
         padding: 5px 10px;
         text-align: center;
-        font-size: 20px;
         border-radius: 10px;
         opacity: 0.6;
         transition: 0.3s;

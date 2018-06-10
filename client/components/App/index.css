@@ -1,3 +1,14 @@
+@media (max-width: 400px) {
+    .notification {
+        width: 250px;
+        margin-left: 40px;
+    }
+
+    .message {
+        font-size: 12px;
+    }
+}
+
 .app {
     font-family: "Tahoma";
     font-weight: 200;

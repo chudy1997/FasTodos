@@ -1,3 +1,62 @@
+@media (min-width: 800px){
+    .list-router .input {
+        font-size: 20px;
+    }
+
+    .list-router .fa-calendar {
+        font-size: 33px;
+    }
+    .list-router .todo {
+        font-size: 18px;
+        padding: 16px !important;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 800px) {
+    .list-router .input {
+        font-size: 17px;
+    }
+
+    .list-router .fa-calendar {
+        font-size: 29px;
+    }
+
+    .list-router .todo {
+        font-size: 15.5px;
+        padding: 13px !important;
+    }
+}
+
+@media (min-width: 400px) and (max-width: 600px) {
+    .list-router .input {
+        font-size: 14px;
+    }
+
+    .list-router .fa-calendar {
+        font-size: 25px;
+    }
+
+    .list-router .todo {
+        font-size: 13px;
+        padding: 10px !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .list-router .input {
+        font-size: 11px;
+    }
+
+    .list-router .fa-calendar {
+        font-size: 21px;
+    }
+
+    .list-router .todo {
+        font-size: 10.5px;
+        padding: 7px !important;
+    }
+}
+
 .list-router {
     background-color: #d0d3d7;
     flex: auto;
@@ -16,10 +75,6 @@
     margin-left: 10px;
 }
 
-.list-router .fa-calendar {
-    font-size: 33px;
-}
-
 .list-router .form {
     display: flex;
     justify-content: flex-start;
@@ -27,12 +82,11 @@
 }
 
 .list-router .input{
-    width: 50%;
+    width: 70%;
     border: none;
     margin: 15px auto;
 
     padding: 5px;
-    font-size: 20px;
     border-radius: 10px;
     background-color: #bdbdbd;
 }
@@ -57,12 +111,15 @@
 }
 
 .list-router .todo {
-    font-size: 18px;
     counter-increment: item;
     margin-bottom: 5px;
-    padding: 15px 15px 20px 15px;
     border-radius : 25px;
     opacity: 0.75;
+}
+
+.list-router .todo-header {
+    display: flex;
+    align-items: center;
 }
 
 .list-router .todo:hover {
@@ -71,7 +128,7 @@
 }
 
 .list-router .check {
-    transform: scale(2);
+    transform: scale(1.5);
     margin-right: 15px;
     cursor: pointer;
 }
@@ -80,8 +137,8 @@
     opacity: 1;
 }
 
-.list-router .buttonstyle {
-    margin: 0px 10px 10px 10px;
+.list-router .delete-todo-button {
+    margin-left: auto;
     float: right;
     border-radius: 70%;
     background-color:#599bb3;

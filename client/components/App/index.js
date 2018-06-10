@@ -14,7 +14,7 @@ import './index.css';
 function App(props){
   return (
     <div className="app max-size">
-      <NotificationContainer />
+      <NotificationContainer/>
       <BrowserRouter history={browserHistory} >
         <div className="app-router max-size">
           <Header />

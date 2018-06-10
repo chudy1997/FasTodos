@@ -158,7 +158,6 @@ class WeekCalendarWrapper extends Component {
         const deadline = newIntervals[0].end.unix();
         const priority = todos.length;
 
-
         if (categoryId === 0)
         {categoryId = 1;}
 

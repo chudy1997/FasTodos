@@ -106,7 +106,7 @@ class Categories extends Component {
       return (
         <div className="categories">
           <form  
-            className="inputForm"
+            className="input-form"
             onSubmit={this.handleCategorySubmit}
           >
             <input 
@@ -117,12 +117,12 @@ class Categories extends Component {
               type="text"
               value={this.state.input}
             />
-          </form>
-          <form className="buttonForm">
-            <button  
-              className="deleteButton"
+            <button
+              className="delete-button"
               onClick={this.handleCategoryDelete}
-            >Delete</button>
+            >
+                  Delete
+            </button>
           </form>
           <div className='categories-list-wrapper'>
             <ol className='categories-list'>
