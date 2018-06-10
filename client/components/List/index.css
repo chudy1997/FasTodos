@@ -75,6 +75,10 @@
     margin-left: 10px;
 }
 
+/*.list-router .fa-calendar {*/
+    /*font-size: 33px;*/
+/*}*/
+
 .list-router .form {
     display: flex;
     justify-content: flex-start;
@@ -168,3 +172,13 @@
     margin: 0 10px;
     border-bottom: 3px dashed #ADADAD;
 }
+
+/*.list-router select{*/
+    /*height: 40px;*/
+    /*width: 70px*/
+/*}*/
+
+.react-datepicker ul{
+    padding: 0;
+}
+

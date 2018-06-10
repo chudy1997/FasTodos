@@ -1,7 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const authors = ['Krzysztof Balwierczak', 'Karol Bartyzel', 'Adam Dyszy', 'Weronika Gancarczyk', 'Maciej Mizera', 'Anna Zubel'];
-const PORT = 8000;
+var PORT = 8000;
+if (process.env.PORT){
+  PORT=process.env.PORT;
+}
 
 const DEBUG = false;
 
@@ -37,7 +40,7 @@ function createServer() {
     const deadline = req.query.deadline != null ? req.query.deadline : null;
     const priority = req.query.priority;
     db.addTodo(text, categoryId, deadline, priority).then((todoId) => {
-      res.status(201).send(todoId);
+      res.status(200).send(todoId);
     })
       .catch((err) => {
         if (DEBUG){console.log(err);}
@@ -90,12 +93,25 @@ function createServer() {
     const { todoId, categoryId } = req.query;
 
     db.changeCategory(todoId, categoryId).then((todoId) => {
-      res.status(201).send(todoId);
+      res.status(200).send(todoId);
     })
       .catch((err) => {
         if (DEBUG){console.log(err);}
         res.status(500).send('Problem occurred when changing category');
       });
+  });
+
+  server.post('/todos/changeDeadline', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const {todoId, deadline} = req.query;
+
+    db.changeDeadline(todoId, deadline).then((todoId) => {
+      res.status(200).send(todoId);
+    })
+      .catch((err) => {
+        if (DEBUG){console.log(err);}
+        res.status(500).send('Problem occurred when changing category');
+      })
   });
 
   server.post('/todos/update', (req, res) => {

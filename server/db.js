@@ -2,8 +2,22 @@ const mysql = require('mysql');
 
 module.exports = {
   initDb: function initDb(configFile) {
-    const dbConnectionInfo = require(configFile);
-    const pool = mysql.createPool(dbConnectionInfo);
+    var pool = null;
+    if (process.env.CLEARDB_HOST) {//if CLEARDB_HOST is set = if server on heroku
+      pool = mysql.createPool(
+        {
+          "host": process.env.CLEARDB_HOST.toString(),
+          "user": process.env.CLEARDB_USER.toString(),
+          "password": process.env.CLEARDB_PASS.toString(),
+          "database": process.env.CLEARDB_DB.toString(),
+          "connectionLimit": process.env.CLEARDB_CONN_LIM
+        }
+      );
+    }
+    else {
+      const dbConnectionInfo = require(configFile);
+      pool = mysql.createPool(dbConnectionInfo);
+    }
     createTables();
 
     function executeSql(query, callback) {
@@ -222,6 +236,16 @@ module.exports = {
       });
     }
 
+    function changeDeadline(todoId, deadline) {
+      return new Promise((resolve, reject) => {
+        executeSql(`UPDATE todos SET deadline=FROM_UNIXTIME(${deadline}) WHERE todoId=${todoId}`,
+          (err, result) => {
+            if (err) {reject(err);}
+            resolve(result);
+          });
+      });
+    }
+
     function setDescription(todoId, description) {
       return new Promise((resolve, reject) => {
         executeSql(`UPDATE todos SET description=${description} WHERE todoId=${todoId}`,
@@ -247,6 +271,7 @@ module.exports = {
       deleteCategory: deleteCategory,
       updateTodosCategory: updateTodosCategory,
       changeCategory: changeCategory,
+      changeDeadline: changeDeadline,
       setDescription: setDescription,
     };
   }

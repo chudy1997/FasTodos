@@ -227,6 +227,14 @@ class List extends Component {
       this.props.chooseTodo(this.props.chosenTodoId !== todo.todoId ? todo.todoId : -1);
       const description = todo.description ? todo.description : "";
       this.setState({ description : description });
+      if(todo.deadline === null){
+        this.setState({ date: moment() });
+        //maybe make state bool that will make button instead moment()
+        //and if you click button calendar will appear
+      }
+      else {
+        this.setState({ date: moment(todo.deadline) });
+      }
     };
 
     handleCheck = (e, todo) => {
@@ -279,7 +287,7 @@ class List extends Component {
     selectCategory = (categoryId, todo) => {
       const todos = this.props.todos;
       const oldCategoryId = todo.categoryId;
-      todo.categoryId = categoryId;
+      todo.categoryId = parseInt(categoryId);
       this.fetchChangedTodos(todos, todo);
 
       ajax('POST', `todos/changeCategory?todoId=${todo.todoId}&categoryId=${categoryId}`, 5, 1000, () => {},
@@ -290,9 +298,24 @@ class List extends Component {
         });
     };
 
-    handleChangeDate = (e) => {
-      // $.post(`${CONFIG.serverUrl}/todos/changeDate?id=${todo.todoId}&date=${text}`);
+    handleChangeDate = (dateFromInput) => {
+      this.setState({
+        date: dateFromInput
+      });
     };
+
+    changeTodoDeadline = (todo,e) => {
+      const oldDeadline = todo.deadline
+      // toddddo.deadline = dateFromInput.format("YYYY-MM-DD HH:mm:ss")
+      todo.deadline = 1000*this.state.date.unix()
+      this.fetchChangedTodos(this.props.todos, todo);
+      ajax('POST', `todos/changeDeadline?todoId=${todo.todoId}&deadline=${this.state.date.unix()}`, 5, 1000, () => {},
+        () => {
+          alert('Could not change todo\'s deadline...');
+          todo.deadline = oldDeadline;
+          this.fetchChangedTodos(this.props.todos, todo);
+        });
+    }
 
     createTodos = (finished) => {
       const categoryId = this.getCategoryId();
@@ -352,15 +375,18 @@ class List extends Component {
                               <p className={this.props.chosenTodoId === todo.todoId ? 'view' : 'noview'}>
                                 <form >
                                   <DatePicker
-                                    className="Select"
-                                    dateFormat="LLL"
-                                    onChange={this.handleChangeDate}
-                                    onClick={e => e.stopPropagation()}
+                                    inline
                                     selected={this.state.date}
+                                    onChange={this.handleChangeDate}
                                     showTimeSelect
-                                    timeCaption="time"
                                     timeFormat="HH:mm"
-                                    timeIntervals={15}
+                                    timeIntervals={3}
+                                    dateFormat="LLL"
+                                    timeCaption="time"
+                                    dateFormatCalendar={" "}
+                                    showMonthDropdown
+                                    showYearDropdown
+                                    dropdownMode="select"
                                   />
                                 </form>
                                 <select
