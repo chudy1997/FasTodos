@@ -8,6 +8,7 @@ const moment = require('moment');
 
 import WeekCalendar from 'react-week-calendar';
 import 'react-week-calendar/dist/style.css';
+import CustomModal from './../Calendar/CustomModal'
 
 import { ItemTypes } from './../CalendarTodo';
 import fetchTodos from './../../actions/fetchTodos';
@@ -201,6 +202,8 @@ class WeekCalendarWrapper extends Component {
           onIntervalRemove={this.handleEventRemove}
           onIntervalSelect={this.handleSelect}
           onIntervalUpdate={this.handleEventUpdate}
+          modalComponent={CustomModal}
+          useModal={CustomModal}
           scaleHeaderTitle='FasTodos'
           scaleUnit={30}
           selectedIntervals={this.getSelectedIntervals()}
