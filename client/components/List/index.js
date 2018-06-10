@@ -14,6 +14,7 @@ import chooseTodo from './../../actions/chooseTodo';
 
 import ajax from './../../ajax';
 
+import { colorMap } from './../../constants/colorMap';
 import './index.css';
 
 const reorder = (list, startIndex, endIndex) => {
@@ -308,7 +309,7 @@ class List extends Component {
               >
                 {
                   todos.map((todo, index) => {
-                    const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
+                    const backgroundColor =  colorMap[todo.categoryId%Object.keys(colorMap).length];
                     const className = this.props.chosenTodoId == todo.todoId ? 'todo chosen-todo' : 'todo';
 
                     return (
