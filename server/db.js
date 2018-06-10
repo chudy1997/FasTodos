@@ -22,7 +22,7 @@ module.exports = {
           if (err) {
             throw err;
           }
-          executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL, deadline DATETIME, categoryId INT, description TEXT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
+          executeSql("CREATE TABLE IF NOT EXISTS `todos` (todoId INT AUTO_INCREMENT PRIMARY KEY, text VARCHAR(255), finished BOOL, deadline DATETIME, priority INT, categoryId INT, description TEXT, FOREIGN KEY (categoryId) REFERENCES categories(categoryId))",
             (err, result) => {
               if (err) {
                 throw err;
@@ -78,6 +78,7 @@ module.exports = {
                 text: rowDataPacket.text,
                 finished: rowDataPacket.finished,
                 deadline: rowDataPacket.deadline,
+                priority: rowDataPacket.priority,
                 categoryId: rowDataPacket.categoryId,
                 description: rowDataPacket.description,
               };
@@ -87,11 +88,11 @@ module.exports = {
       });
     }
 
-    function addTodo(text, categoryId, deadline) {
+    function addTodo(text, categoryId, deadline, priority) {
       const defaultCategoryId = 1;
       categoryId = categoryId ? categoryId : defaultCategoryId;
       return new Promise((resolve, reject) => {
-        executeSql(`INSERT INTO todos (text, finished, categoryId, deadline) VALUES ('${text}', 0, ${categoryId}, FROM_UNIXTIME(${deadline}))`,
+        executeSql(`INSERT INTO todos (text, finished, categoryId, deadline, priority) VALUES ('${text}', 0, ${categoryId}, FROM_UNIXTIME(${deadline}), ${priority})`,
           (err, result) => {
             if (err) {
               reject(err);
@@ -104,6 +105,18 @@ module.exports = {
     function finishTodo(todoId, value) {
       return new Promise((resolve, reject) => {
         executeSql(`UPDATE todos SET finished=${value} WHERE todoId=${todoId}`,
+          (err, result) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(result);
+          });
+      });
+    }
+
+    function updateTodosPriority(todoId, newPriority) {
+      return new Promise((resolve, reject) => {
+        executeSql(`UPDATE todos SET priority=${newPriority} WHERE todoId=${todoId}`,
           (err, result) => {
             if (err) {
               reject(err);
@@ -227,6 +240,7 @@ module.exports = {
       addTodo: addTodo,
       deleteTodo: deleteTodo,
       finishTodo: finishTodo,
+      updateTodosPriority: updateTodosPriority,
       updateTodo: updateTodo,
       getCategories: getCategories,
       addCategory: addCategory,
