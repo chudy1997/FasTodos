@@ -115,3 +115,31 @@
 .afterNow{
     background-color: white;
 }
+
+.todos-without-deadline-wrapper{
+    max-height: 15%;
+    overflow: auto;
+}
+
+.todos-without-deadline {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px;
+    padding: 0;
+}
+
+.todo-without-deadline {
+    height: 24px;
+    counter-increment: item;
+    margin: 3px;
+    padding: 7px 20px;
+    border-radius : 25px;
+    opacity: 0.5;
+    font-size: 20px;
+}
+
+.todo-without-deadline:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}

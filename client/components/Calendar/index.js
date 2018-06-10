@@ -2,28 +2,31 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
-
-import WeekCalendar from 'react-week-calendar';
-import 'react-week-calendar/dist/style.css';
-
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 const moment = require('moment');
 
 import ajax from './../../ajax';
+import colorMap from './../../constants/colorMap';
 
 import fetchTodos from './../../actions/fetchTodos';
 import chooseTodo from './../../actions/chooseTodo';
+
+import CalendarTodo from './../CalendarTodo';
+import WeekCalendar from './../WeekCalendar';
 
 import './index.css';
 
 class Calendar extends Component {
     state = {
-      firstDay: moment().startOf('week').add(1, 'days')
+      firstDay: moment().startOf('week').add(1, 'days'),
+      draggedTodo: { },
     };
 
     componentDidMount = () => {
       ajax('GET', 'todos', 5, 1000, todos => {
         this.props.fetchTodos(todos.sort((a, b) => b.todoId - a.todoId));
-      }, 
+      },
       () => {
         alert('Could not fetch todos from db with 5 tries at maximum 6 sec...');
       });
@@ -37,137 +40,9 @@ class Calendar extends Component {
       this.setState({ firstDay: moment(this.state.firstDay).subtract(1, "week") });
     };
 
-    getCategoryId = () => {
-      const category = this.props.categories[this.props.chosenCategoryId];
-      return category ? category.categoryId : 0;
-    };
-
-    getSelectedIntervals = () => {
-      const intervals = this.props.todos.map(todo => {
-        return {
-          start: moment(todo.deadline).subtract('30',"minute"),
-          end: moment(todo.deadline),
-          value: todo.text,
-          id: todo.todoId,
-          categoryId: todo.categoryId
-        };
-      });
-
-      return intervals;
-    };
-
-    handleEventRemove = (e) => {
-      const todos = this.props.todos;
-      const todoId = e.id;
-      const todo = todos.find(todo => todo.todoId === todoId);
-
-      ajax('POST', `todos/delete?id=${todo.todoId}`, 5, 1000, () => {
-        NotificationManager.success(`Successfully deleted todo: ${todo.text}.`);
-      },
-      () => {
-        alert('Could not delete todo from db with 5 tries at maximum 6 sec...');
-      });
-
-      const index = todos.findIndex((interval) => interval.todoId === todoId);
-      todos.splice(index,1);
-      this.props.fetchTodos(todos);
-    };
-
-    fetchChangedTodos = (todos, todo) => {
-      const index = todos.findIndex(t => t.todoId === todo.todoId);
-      todos[index] = {
-        ...todo
-      };
-      this.props.fetchTodos(todos);
-    };
-
-    handleEventUpdate = (e) => {
-      const todos = this.props.todos;
-      const todoId = e.id;
-      const todo = todos.find(todo => todo.todoId === todoId);
-
-      if (todo.text === e.value)
-      {return;}
-
-      todo.text = e.value;
-      this.fetchChangedTodos(this.props.todos, todo);
-      const { text, finished, deadline, categoryId, description } = todo;
-
-      ajax('POST',
-        `todos/update?todoId=${todoId}&text=${text}&finished=${finished}&deadline=${deadline}&categoryId=${categoryId}&description=${description}`,
-        5,
-        1000,
-        todoId => {
-          NotificationManager.success(`Successfully updated todo: ${todo.text}`);
-        },
-        () => {
-          alert(msg);
-        });
-    };
-
-    handleSelect = (newIntervals) => {
-      const text = newIntervals[0].value;
-      if (text.length > 0){
-        const todos = this.props.todos;
-        let categoryId = this.getCategoryId();
-        const deadline = newIntervals[0].end.unix();
-
-        if (categoryId === 0)
-        {categoryId = 1;}
-
-        ajax('POST', `todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}`, 5, 1000, res => {
-          NotificationManager.success(`Successfully created todo: ${text}.`);
-
-          const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId, deadline: deadline*1000 };
-          todos.unshift(newTodo);
-          this.props.fetchTodos(todos);
-        }, 
-        () => {
-          alert('Could not add new todo to db with 5 tries at maximum 6 sec...');
-        });
-      }
-    };
-
-    customEvent = (props) => {
-      const classes = `custom-event ${props.categoryId === this.getCategoryId() ? 'match-chosen-category' : 'not-match-chosen-category' }`;
-      return (
-        <div 
-          className={classes}
-          style={{ backgroundColor: this.props.colorMap[props.categoryId] }}
-        >
-          {props.value}
-        </div>);
-    };
-
-    customDayCell = (props) =>{
-      const classes = `custom-day-cell ${props.endTime.unix()*1000 < Date.now() ? 'beforeNow' : 'afterNow' }`;
-      return (
-        <div 
-          className={classes}
-          onMouseDown={props.startSelection}
-        />);
-    };
-
-    createWeekCalendar = () => (
-      <WeekCalendar
-        cellHeight={25}
-        dayCellComponent={this.customDayCell}
-        dayFormat={'ddd DD.MM'}
-        endTime={moment({ h: 18, m: 1 })}
-        eventComponent={this.customEvent}
-        firstDay={this.state.firstDay}
-        onIntervalRemove={this.handleEventRemove}
-        onIntervalSelect={this.handleSelect}
-        onIntervalUpdate={this.handleEventUpdate}
-        scaleHeaderTitle='FasTodos'
-        scaleUnit={30}
-        selectedIntervals={this.getSelectedIntervals()}
-        startTime={moment({ h: 6, m: 0 })}
-      />);
-
     render = () => {
       return (
-        <div className='calendar'>
+          <div className='calendar'>
           <div className="calendar-switch">
             {this.props.toggle}
             <span
@@ -187,7 +62,26 @@ class Calendar extends Component {
             </span>
           </div>
           <div className='week-calendar'>
-            {this.createWeekCalendar()}
+            {<WeekCalendar
+              categories={this.props.categories}
+              chosenCategoryId={this.props.chosenCategoryId}
+              colorMap={colorMap}
+              draggedTodo={this.state.draggedTodo}
+              fetchTodos={this.props.fetchTodos}
+              firstDay={this.state.firstDay}
+              todos={this.props.todos}
+            />}
+          </div>
+          <div className="todos-without-deadline-wrapper">
+            <ul className="todos-without-deadline">
+              { this.props.todos.filter(todo => !todo.deadline).map(todo => (
+                <CalendarTodo
+                  draggedTodo={this.state.draggedTodo}
+                  setDraggedTodo={(draggedTodo) => { this.setState({ draggedTodo: draggedTodo });}}
+                  todo={todo}
+                />
+              ))}
+            </ul>
           </div>
         </div>
       );
@@ -208,11 +102,11 @@ function matchDispatchToProps(dispatch){
     {
       fetchTodos: fetchTodos,
       chooseTodo: chooseTodo
-    }, 
+    },
     dispatch
   );
 }
 
 
 
-export default connect(mapStateToProps, matchDispatchToProps)(Calendar);
+export default connect(mapStateToProps, matchDispatchToProps)(DragDropContext(HTML5Backend)(Calendar));

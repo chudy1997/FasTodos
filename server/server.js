@@ -85,7 +85,6 @@ function createServer() {
         res.status(200).send(todoId);
       })
       .catch((err) => {
-        console.log(err);
         res.status(500).send('Problem occurred when updating todo.');
       });
   });

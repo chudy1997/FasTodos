@@ -50,7 +50,6 @@ class List extends Component {
       };
 
       ajax('GET', 'todos', 5, 1000, todos => {
-        console.log(todos);
         this.props.fetchTodos(todos.sort((a, b) => a.deadline - b.deadline));
       },
       () => {
@@ -145,7 +144,7 @@ class List extends Component {
        e.stopPropagation();
 
        confirmAlert({
-         title: 'Confirm to submit',
+         title: 'Confirm to delete',
          message: 'Are you sure to remove this todo?',
          buttons: [
            {

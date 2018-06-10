@@ -33,7 +33,6 @@ module.exports = {
                     throw err;
                   }
                   if (result.length < 1) {
-                    console.log("adding default cat");
                     addCategory("Default");
                   }
                 });
@@ -136,12 +135,11 @@ module.exports = {
           });
         }
 
-        if (text !== null) {updateField(`text='${text}'`, reject);}
+        if (text !== null) {updateField(`text='${text}'`);}
         if (finished !== null) {updateField(`finished=${finished}`);}
-        if (deadline !== null) {updateField(`deadline=FROM_UNIXTIME(${text})`);}
+        if (deadline !== null) {updateField(`deadline=FROM_UNIXTIME(${deadline})`);}
         if (categoryId !== null) {updateField(`categoryId=${categoryId}`);}
         if (description !== null) {updateField(`description='${description}'`);}
-        if (text !== null) {updateField(`text='${text}'`);}
         resolve('Ok');
       });
     }
