@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import WeekCalendar from 'react-week-calendar';
 import 'react-week-calendar/dist/style.css';
 
-import { NotificationManager } from 'react-notifications';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 

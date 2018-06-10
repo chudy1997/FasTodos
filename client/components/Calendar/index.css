@@ -142,8 +142,9 @@
 .customModal .customModal_button_delete{
     background-color: red;
 }
-.customModal .customModal_button_save{
+.customModal .customModal_button_save {
     background-color: green;
+}
 
 .todos-without-deadline-wrapper{
     max-height: 15%;
