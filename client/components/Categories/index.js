@@ -96,6 +96,7 @@ class Categories extends Component {
           alert('Could not fetch categories from db with 5 tries at maximum 6 sec...');
         });
       }
+      e.stopPropagation();
       e.preventDefault();
     }
 
@@ -117,6 +118,8 @@ class Categories extends Component {
               type="text"
               value={this.state.input}
             />
+          </form>
+          <form>
             <button
               className="delete-button"
               onClick={this.handleCategoryDelete}
