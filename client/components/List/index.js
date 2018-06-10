@@ -4,10 +4,10 @@ import { confirmAlert } from 'react-confirm-alert';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { NotificationManager } from 'react-notifications';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import fetchTodos from './../../actions/fetchTodos';
 import chooseTodo from './../../actions/chooseTodo';
@@ -55,6 +55,50 @@ class List extends Component {
       input: '',
       date: moment()
     };
+
+    reorder = (list, startIndex, endIndex) => {
+      const result = Array.from(list);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      return result;
+    };
+
+    getItemStyle = (isDragging, draggableStyle, backgroundColor) => ({
+      userSelect: 'none',
+      padding: '16px',
+      margin: `0 0 8px 0`,
+      background: isDragging ? 'lightgreen' : backgroundColor,
+      ...draggableStyle,
+    });
+
+
+    onDragEnd = (result) => {
+      if (!result.destination) {
+        return;
+      } else if (result.source.index===result.destination.index){
+        return;
+      }
+
+      const todos = this.reorder(
+        this.props.todos,
+        result.source.index,
+        result.destination.index
+      );
+
+      todos.filter((todo,index) => result.source.index-result.destination.index < 0 ? (index >= result.source.index && index <= result.destination.index) : (index <= result.source.index && index >= result.destination.index))
+        .map(todo => {
+          const index = todos.findIndex(t => t.todoId === todo.todoId);
+          todo.priority=todos.length-index-1;
+          ajax('POST', `todos/updatePriority?id=${todo.todoId}&value=${todo.priority}`, 5, 1000, () => {
+          },
+          () => {
+            alert('Could not add new todo...');
+          });
+        });
+
+      this.props.fetchTodos(todos);
+    };
+
 
     saveAll = (msg) => {
       if (!this.props.chosenTodoId)
@@ -112,7 +156,7 @@ class List extends Component {
       };
 
       ajax('GET', 'todos', 5, 1000, todos => {
-          this.props.fetchTodos(todos.sort((a, b) => b.priority - a.priority));
+        this.props.fetchTodos(todos.sort((a, b) => b.priority - a.priority));
       },
       () => {
         alert('Could not fetch todos...');
@@ -143,8 +187,8 @@ class List extends Component {
         {categoryId = 1;}
 
         ajax('POST', `todos/new?text=${text}&categoryId=${categoryId}&priority=${priority}`, 5, 1000, res => {
-            NotificationManager.success(`Successfully created todo: ${text}.`);
-            const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId, finished: false, priority: priority };
+          NotificationManager.success(`Successfully created todo: ${text}.`);
+          const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId, finished: false, priority: priority };
           todos.unshift(newTodo);
           this.props.fetchTodos(todos);
         },
@@ -252,106 +296,115 @@ class List extends Component {
 
     createTodos = (finished) => {
       const categoryId = this.getCategoryId();
-      const todos = this.props.todos.filter(todo => categoryId === 0 || todo.categoryId == categoryId);
+      const todos = this.props.todos.filter(todo => (categoryId === 0
+      || todo.categoryId == categoryId) && todo.finished == finished);
+
       return (
         <DragDropContext onDragEnd={this.onDragEnd}>
-          <Droppable droppableId="droppable">
+          <Droppable droppableId="droppable" >
             {(provided, snapshot) => (
               <div
                 ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver)}
               >
-              {
-                todos.filter(todo => todo.finished == finished).map((todo, index) => {
-                const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
-                const className = this.props.chosenTodoId == todo.todoId ? 'todo chosen-todo' : 'todo';
+                {
+                  todos.map((todo, index) => {
+                    const backgroundColor =  this.props.colorMap[todo.categoryId%Object.keys(this.props.colorMap).length];
+                    const className = this.props.chosenTodoId == todo.todoId ? 'todo chosen-todo' : 'todo';
 
-                return (
-                  <Draggable key={todo.todoId} draggableId={todo.todoId} index={index} >
-                    {(provided, snapshot) => (
-                        <li
-                          className={className}
-                          id={todo.todoId}
-                          key={todo.todoId}
-                          onClick={() => this.handleExpand(todo)}
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style,
-                            backgroundColor
-                          )}
-                        >
-                          <input
-                            checked={todo.finished ? 'checked' : ''}
-                            className='check'
-                            onClick={(e) => this.handleCheck(e, todo)}
-                            type='checkbox'
-                          />
-                          {todo.text}
-                          <button
-                            className="buttonstyle"
-                            hidden={this.props.chosenTodoId === todo.todoId ? '' : 'hidden'}
-                            onClick={(e) => this.handleDelete(e, todo)}
+                    return (
+                      <Draggable
+                        draggableId={todo.todoId}
+                        index={index}
+                        key={todo.todoId}
+                      >
+                        {(provided, snapshot) => (
+                          <li
+                            className={className}
+                            id={todo.todoId}
+                            key={todo.todoId}
+                            onClick={() => this.handleExpand(todo)}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={this.getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style,
+                              backgroundColor
+                            )}
                           >
-                            {'✘'}
-                          </button>
-                          <div className="panel">
-                            <p className={this.props.chosenTodoId === todo.todoId ? 'view' : 'noview'}>
-                              <form >
-                                <DatePicker
+                            <input
+                              checked={todo.finished ? 'checked' : ''}
+                              className='check'
+                              onClick={(e) => this.handleCheck(e, todo)}
+                              type='checkbox'
+                            />
+                            {todo.text}
+                            <button
+                              className="buttonstyle"
+                              hidden={this.props.chosenTodoId === todo.todoId ? '' : 'hidden'}
+                              onClick={(e) => this.handleDelete(e, todo)}
+                            >
+                              {'✘'}
+                            </button>
+                            <div className="panel">
+                              <p className={this.props.chosenTodoId === todo.todoId ? 'view' : 'noview'}>
+                                <form >
+                                  <DatePicker
+                                    className="Select"
+                                    dateFormat="LLL"
+                                    onChange={this.handleChangeDate}
+                                    onClick={e => e.stopPropagation()}
+                                    selected={this.state.date}
+                                    showTimeSelect
+                                    timeCaption="time"
+                                    timeFormat="HH:mm"
+                                    timeIntervals={15}
+                                  />
+                                </form>
+                                <select
                                   className="Select"
-                                  dateFormat="LLL"
-                                  onChange={this.handleChangeDate}
+                                  onChange={(e) => this.selectCategory( e.target.value, todo)}
                                   onClick={e => e.stopPropagation()}
-                                  selected={this.state.date}
-                                  showTimeSelect
-                                  timeCaption="time"
-                                  timeFormat="HH:mm"
-                                  timeIntervals={15}
-                                />
-                              </form>
-                              <select
-                                className="Select"
-                                onChange={(e) => this.selectCategory( e.target.value,todo)}
-                                onClick={e => e.stopPropagation()}
-                                value={todo.categoryId}
-                              >
-                                {this.props.categories.map(category => (
-                                  <option
-                                    key={category.categoryId}
-                                    value={category.categoryId}
-                                  >{ category.categoryName }</option>))}
-                              </select>
+                                  value={todo.categoryId}
+                                >
+                                  {this.props.categories.map(category => (
+                                    <option
+                                      key={category.categoryId}
+                                      value={category.categoryId}
+                                    >{ category.categoryName }</option>))}
+                                </select>
 
-                              <form
-                                className="form"
-                                onSubmit={(e) => this.handleDescriptionSubmit(e,todo)}
-                              >
-                                <input
-                                  autoFocus="autofocus"
-                                  maxLength="50"
-                                  onChange={this.handleDescriptionChange}
-                                  onClick={(e) => e.stopPropagation()}
-                                  placeholder="Description"
-                                  type="text"
-                                  value={this.state.description}
-                                />
-                              </form>
+                                <form
+                                  className="form"
+                                  onSubmit={(e) => this.handleDescriptionSubmit(e,todo)}
+                                >
+                                  <input
+                                    autoFocus="autofocus"
+                                    maxLength="50"
+                                    onChange={this.handleDescriptionChange}
+                                    onClick={(e) => e.stopPropagation()}
+                                    placeholder="Description"
+                                    type="text"
+                                    value={this.state.description}
+                                  />
+                                </form>
 
-                            </p>
-                          </div>
-                        </li>
-
-                      )}
-                  </Draggable>
-                )})}
+                              </p>
+                            </div>
+                          </li>
+                        )}
+                      </Draggable>
+                    );
+                  })
+                }
                 {provided.placeholder}
+
               </div>
             )}
+
           </Droppable>
-        </DragDropContext>)
+        </DragDropContext>
+      );
     };
 
     render = () => {

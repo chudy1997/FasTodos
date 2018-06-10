@@ -8,12 +8,13 @@ const moment = require('moment');
 
 import WeekCalendar from 'react-week-calendar';
 import 'react-week-calendar/dist/style.css';
-import CustomModal from './../Calendar/CustomModal'
 
 import { ItemTypes } from './../CalendarTodo';
 import fetchTodos from './../../actions/fetchTodos';
 import { colorMap } from './../../constants/colorMap';
 import ajax from './../../ajax';
+
+import CustomModal from './../Calendar/CustomModal';
 
 const CustomDayCell = (props) => {
   const { connectDropTarget, endTime } = props;
@@ -155,11 +156,13 @@ class WeekCalendarWrapper extends Component {
         const todos = this.props.todos;
         let categoryId = this.getCategoryId();
         const deadline = newIntervals[0].end.unix();
+        const priority = todos.length;
+
 
         if (categoryId === 0)
         {categoryId = 1;}
 
-        ajax('POST', `todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}`, 5, 1000, res => {
+        ajax('POST', `todos/new?text=${text}&categoryId=${categoryId}&deadline=${deadline}&priority=${priority}`, 5, 1000, res => {
           NotificationManager.success(`Successfully created todo: ${text}.`);
 
           const newTodo = { todoId: res.insertId, text: text, categoryId: categoryId, deadline: deadline*1000 };
@@ -195,6 +198,7 @@ class WeekCalendarWrapper extends Component {
               {...props}
               draggedTodo={this.props.draggedTodo}
             />)}
+
           dayFormat={'ddd DD.MM'}
           endTime={moment({ h: 18, m: 1 })}
           eventComponent={this.customEvent}

@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const authors = ['Krzysztof Balwierczak', 'Karol Bartyzel', 'Adam Dyszy', 'Weronika Gancarczyk', 'Maciej Mizera', 'Anna Zubel'];
 const PORT = 8000;
 
+const DEBUG = false;
+
 createServer();
 const db = require('./db').initDb('./dbConf.json');
 
@@ -23,6 +25,7 @@ function createServer() {
       res.send(todos);
     })
       .catch((err) => {
+        if (DEBUG){console.log(err);}
         res.status(500).send('Problem occured when fetching todos');
       });
   });
@@ -37,6 +40,7 @@ function createServer() {
       res.status(201).send(todoId);
     })
       .catch((err) => {
+        if (DEBUG){console.log(err);}
         res.status(500).send('Problem occured when adding new todo');
       });
   });
@@ -50,6 +54,7 @@ function createServer() {
       res.status(200).send();
     })
       .catch((err) => {
+        if (DEBUG){console.log(err);}
         res.status(500).send('Problem occured when toggling finished todo');
       });
   });
@@ -62,6 +67,7 @@ function createServer() {
       res.status(200).send();
     })
       .catch((err) => {
+        if (DEBUG){console.log(err);}
         res.status(500).send('Problem occured when updating todo\'s priority');
       });
   });
@@ -74,6 +80,7 @@ function createServer() {
       res.status(200).send();
     })
       .catch((err) => {
+        if (DEBUG){console.log(err);}
         res.status(500).send('Problem occured when deleting todo');
       });
   });
@@ -86,6 +93,7 @@ function createServer() {
       res.status(201).send(todoId);
     })
       .catch((err) => {
+        if (DEBUG){console.log(err);}
         res.status(500).send('Problem occurred when changing category');
       });
   });
@@ -98,6 +106,7 @@ function createServer() {
         res.status(200).send(todoId);
       })
       .catch((err) => {
+        if (DEBUG){console.log(err);}
         res.status(500).send('Problem occurred when updating todo.');
       });
   });
@@ -110,6 +119,7 @@ function createServer() {
         res.send(categories);
       })
       .catch((err) => {
+        if (DEBUG){console.log(err);}
         res.status(500).send('Problem occured when fetching categories');
       });
   });
@@ -122,6 +132,7 @@ function createServer() {
       res.status(201).send(categoryId);
     })
       .catch((err) => {
+        if (DEBUG){console.log(err);}
         res.status(500).send('Problem occured when adding new category');
       });
   });
@@ -130,7 +141,12 @@ function createServer() {
     res.setHeader('Access-Control-Allow-Origin', '*');
     const { todoId, categoryId } = req.query;
 
-    db.changeCategory(todoId, categoryId).then(() => res.status(200).send('Category deleted successfully'));
+    db.changeCategory(todoId, categoryId)
+      .then(() => res.status(200).send('Category deleted successfully'))
+      .catch(err => {
+        if (DEBUG){console.log(err);}
+        res.status(500).send('Problem occured when deleting category');
+      });
   });
 
   server.post('/categories/delete', (req, res) => {
@@ -139,6 +155,8 @@ function createServer() {
 
     db.deleteCategory(categoryId).then(res.status(200).send('Category deleted successfully'))
       .catch((err) => {
+        if (DEBUG){console.log(err);}
+
         res.status(500).send('Problem occured when deleting category');
       });
   });
@@ -151,6 +169,7 @@ function createServer() {
       res.status(201).send(todoId);
     })
       .catch((err) => {
+        if (DEBUG){console.log(err);}
         res.status(500).send('Problem occurred when setting description');
       });
   });
