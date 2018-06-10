@@ -9,7 +9,6 @@ import Calendar from './../Calendar';
 import List from './../List';
 import Categories from './../Categories';
 
-import { colorMap } from './../../constants/colorMap';
 import './index.css';
 
 function App(props){
@@ -31,7 +30,7 @@ function App(props){
                 <Categories 
                   categories={props.categories} 
                   chosenCategoryId={props.chosenCategoryId} 
-                  colorMap={colorMap}
+                  colorMap={props.colorMap}
                 />
               )}
             />
@@ -43,7 +42,7 @@ function App(props){
                   <List 
                     categories={props.categories} 
                     chosenCategoryId={props.chosenCategoryId} 
-                    colorMap={colorMap}
+                    colorMap={props.colorMap}
                     toggle={(
                       <Link 
                         className='toggle' 
@@ -51,9 +50,9 @@ function App(props){
                         to='calendar'
                       >
                         <i 
-                          aria-hidden="true"
-                          className="fa fa-calendar"
-                        />
+                            aria-hidden="true"
+                            className="fa fa-calendar"
+                          />
                       </Link>
                     )}
                   />
@@ -68,7 +67,7 @@ function App(props){
                   <Calendar
                     categories={props.categories} 
                     chosenCategoryId={props.chosenCategoryId} 
-                    colorMap={colorMap}
+                    colorMap={props.colorMap}
                     toggle={(
                       <Link 
                         className='toggle' 
@@ -76,9 +75,9 @@ function App(props){
                         to='/list'
                       >
                         <i 
-                          aria-hidden="true"
-                          className="fa fa-list"
-                        />
+                            aria-hidden="true"
+                            className="fa fa-list"
+                          />
                       </Link>
                     )}
                   />
@@ -97,7 +96,8 @@ function App(props){
 function mapStateToProps(state){
   return {
     chosenCategoryId: state.chosenCategoryId,
-    categories: state.categories
+    categories: state.categories,
+    colorMap: state.colorMap
   };
 }
 

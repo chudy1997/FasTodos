@@ -10,7 +10,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 const moment = require('moment');
 
 import ajax from './../../ajax';
-import { colorMap } from './../../constants/colorMap';
+import colorMap from './../../constants/colorMap';
 
 import fetchTodos from './../../actions/fetchTodos';
 import chooseTodo from './../../actions/chooseTodo';

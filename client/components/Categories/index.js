@@ -9,7 +9,6 @@ import fetchCategories from './../../actions/fetchCategories';
 import fetchTodos from './../../actions/fetchTodos';
 import chooseCategory from './../../actions/chooseCategory';
 
-import { colorMap } from './../../constants/colorMap';
 import './index.css';
 
 class Categories extends Component {
@@ -33,7 +32,7 @@ class Categories extends Component {
             id={id} 
             key={(id++)} 
             onClick={this.chooseCategory} 
-            style={{ backgroundColor: colorMap[category.categoryId%Object.keys(colorMap).length] }}
+            style={{ backgroundColor:this.props.colorMap[category.categoryId%Object.keys(this.props.colorMap).length] }} 
           >
             {category.categoryName}
           </li>)
