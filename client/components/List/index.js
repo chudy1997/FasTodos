@@ -31,8 +31,7 @@ class List extends Component {
 
     reorder = (list, startIndex, endIndex) => {
       const result = Array.from(list);
-      const [removed] = result.splice(startIndex, 1);
-      result.splice(endIndex, 0, removed);
+      result.splice(endIndex, 0, this.splice(startIndex, 1)[0]);
       return result;
     };
 
@@ -67,6 +66,7 @@ class List extends Component {
     };
 
     onDragEnd = (result) => {
+        console.log(result);
       if (!result.destination) {
         return;
       } else if (result.source.index===result.destination.index){
@@ -273,7 +273,7 @@ class List extends Component {
 
       return (
         <DragDropContext onDragEnd={this.onDragEnd}>
-          <Droppable droppableId="droppable" >
+          <Droppable droppableId={finished ? "finished" : "unfinished"} >
             {(provided, snapshot) => (
               <div
                 ref={provided.innerRef}
