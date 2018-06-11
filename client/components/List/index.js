@@ -16,34 +16,6 @@ import ajax from './../../ajax';
 
 import './index.css';
 
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
-
-const grid = 8;
-
-const getItemStyle = (isDragging, draggableStyle, backgroundColor) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: 'none',
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
-
-  // change background colour if dragging
-  background: isDragging ? 'lightgreen' : backgroundColor,
-
-  // styles we need to apply on draggables
-  ...draggableStyle,
-});
-
-const getListStyle = isDraggingOver => ({
-  //background: isDraggingOver ? 'lightblue' : 'lightgrey',
-  //padding: grid,
-});
-
 class List extends Component {
   constructor(props) {
     super(props);
@@ -53,7 +25,8 @@ class List extends Component {
     state = {
       description:'',
       input: '',
-      date: moment()
+      date: moment(),
+      tempPriority: ''
     };
 
     reorder = (list, startIndex, endIndex) => {
@@ -71,7 +44,6 @@ class List extends Component {
       ...draggableStyle,
     });
 
-
     onDragEnd = (result) => {
       if (!result.destination) {
         return;
@@ -79,26 +51,29 @@ class List extends Component {
         return;
       }
 
-      const todos = this.reorder(
+      let todos = this.props.todos;
+
+      const sourceIndex = todos.findIndex(t => t.priority === todos.filter(todo => todo.finished===0)[result.source.index].priority);
+      const destinationIndex = todos.findIndex(t => t.priority === todos.filter(todo => todo.finished===0)[result.destination.index].priority);
+
+      todos = this.reorder(
         this.props.todos,
-        result.source.index,
-        result.destination.index
+        sourceIndex,
+        destinationIndex
       );
 
-      todos.filter((todo,index) => result.source.index-result.destination.index < 0 ? (index >= result.source.index && index <= result.destination.index) : (index <= result.source.index && index >= result.destination.index))
-        .map(todo => {
-          const index = todos.findIndex(t => t.todoId === todo.todoId);
-          todo.priority=todos.length-index-1;
+      let tempPriority = todos.filter(todo => todo.finished===0)[result.source.index>result.destination.index ? result.source.index : result.destination.index].priority;
+
+      todos.filter((todo,index) => todo.finished===0 && (sourceIndex-destinationIndex < 0 ? (index >= sourceIndex && index <= destinationIndex) : (index <= sourceIndex && index >= destinationIndex))).map(todo => {
+          [todo.priority,tempPriority]=[tempPriority,todo.priority];
           ajax('POST', `todos/updatePriority?id=${todo.todoId}&value=${todo.priority}`, 5, 1000, () => {
           },
           () => {
             alert('Could not add new todo...');
           });
         });
-
       this.props.fetchTodos(todos);
     };
-
 
     saveAll = (msg) => {
       if (!this.props.chosenTodoId)
@@ -120,34 +95,6 @@ class List extends Component {
         () => {
           alert(msg);
         });
-    };
-
-    onDragEnd(result) {
-      // dropped outside the list
-      if (!result.destination) {
-        return;
-      } else if (result.source.index===result.destination.index){
-        return;
-      }
-
-      const todos = reorder(
-        this.props.todos,
-        result.source.index,
-        result.destination.index
-      );
-
-      todos.filter((todo,index) => result.source.index-result.destination.index < 0 ? (index >= result.source.index && index <= result.destination.index) : (index <= result.source.index && index >= result.destination.index))
-        .map(todo => {
-          const index = todos.findIndex(t => t.todoId === todo.todoId);
-          todo.priority=todos.length-index-1;
-          ajax('POST', `todos/updatePriority?id=${todo.todoId}&value=${todo.priority}`, 5, 1000, () => {
-          },
-          () => {
-            alert('Could not add new todo...');
-          });
-        });
-
-      this.props.fetchTodos(todos);
     };
 
     componentDidMount = () => {
@@ -316,6 +263,7 @@ class List extends Component {
                         draggableId={todo.todoId}
                         index={index}
                         key={todo.todoId}
+                        isDragDisabled={finished ? true : false}
                       >
                         {(provided, snapshot) => (
                           <li
