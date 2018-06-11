@@ -24,6 +24,7 @@ class Calendar extends Component {
     state = {
       firstDay: moment().startOf('week').add(1, 'days'),
       draggedTodo: { },
+      firstTime: true
     };
 
     componentDidMount = () => {
@@ -43,10 +44,45 @@ class Calendar extends Component {
       this.setState({ firstDay: moment(this.state.firstDay).subtract(1, "week") });
     };
 
+  fetchChangedTodos(todos, todo){
+    const index = todos.findIndex(t => parseInt(t.todoId) === parseInt(todo.todoId));
+    todos[parseInt(index)] = {
+      ...todo
+    };
+    this.props.fetchTodos(todos);
+  }
+
+  savePreviousChanges = (msg) => {
+    if(!this.state.firstTime){
+      return;
+    }
+    if (!this.props.chosenTodoId)
+    {return;}
+
+    const todo = this.props.todos.filter(todo => todo.todoId === this.props.chosenTodoId)[0];
+    if (!todo)
+    {return;}
+
+    todo.description = this.state.description;
+    this.fetchChangedTodos(this.props.todos, todo);
+    const { todoId, text, finished, deadline, categoryId, description } = todo;
+    this.props.chooseTodo(-1);
+    ajax('POST',
+      `todos/update?todoId=${todoId}&text=${text}&finished=${finished}&deadline=${moment(deadline).unix()}&categoryId=${categoryId}&description=${description}`,
+      5,
+      1000,
+      todoId => {},
+      () => {
+        alert(msg);
+      });
+    this.setState({ firstTime : false });
+  };
+
     render = () => {
       return (
         <div className='calendar'>
           <div className="calendar-switch">
+            {this.savePreviousChanges("Could not save before load")}
             {this.props.toggle}
             <span
               className='switch switch-left'
