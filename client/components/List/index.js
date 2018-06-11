@@ -259,24 +259,10 @@ class List extends Component {
   };
 
     updateTodoDeadline = (todo, datetime) => {
-      const todos = this.props.todos;
-      const oldDeadline = todo.deadline;
       if(!isNaN(datetime) && datetime !== null) {
-        // todo.deadline = 1000 * datetime.unix()
         todo.deadline = datetime;
+        const todos = this.props.todos;
         this.fetchChangedTodos(todos, todo);
-        // ajax('POST', `todos/changeDeadline?todoId=${todo.todoId}&deadline=${datetime.unix()}`, 5, 1000, () => {
-        //     NotificationManager.success(`Successfully  set ${todo.text}'s deadline to: ${datetime.format("YYYY-MM-DD HH:mm")} from ${oldDeadline}`);
-        //   },
-        //   () => {
-        //     alert('Could not change todo\'s deadline...');
-        //     todo.deadline = oldDeadline;
-        //     this.setState({
-        //       date: moment(todo.deadline).format("YYYY-MM-DD"),
-        //       time: moment(todo.deadline).format("HH:mm")
-        //     });
-        //     this.fetchChangedTodos(todos, todo);
-        //   });
       }
     }
 
