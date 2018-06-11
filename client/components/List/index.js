@@ -25,7 +25,8 @@ class List extends Component {
     state = {
       description:'',
       input: '',
-      date: moment()
+      date: "",
+      time: ""
     };
 
     reorder = (list, startIndex, endIndex) => {
@@ -56,7 +57,7 @@ class List extends Component {
       const { todoId, text, finished, deadline, categoryId, description } = todo;
 
       ajax('POST',
-        `todos/update?todoId=${todoId}&text=${text}&finished=${finished}&deadline=${deadline}&categoryId=${categoryId}&description=${description}`,
+        `todos/update?todoId=${todoId}&text=${text}&finished=${finished}&deadline=${moment(deadline).unix()}&categoryId=${categoryId}&description=${description}`,
         5,
         1000,
         todoId => {},
@@ -106,8 +107,8 @@ class List extends Component {
     };
 
     fetchChangedTodos(todos, todo){
-      const index = todos.findIndex(t => t.todoId === todo.todoId);
-      todos[index] = {
+      const index = todos.findIndex(t => parseInt(t.todoId) === parseInt(todo.todoId));
+      todos[parseInt(index)] = {
         ...todo
       };
       this.props.fetchTodos(todos);
@@ -169,13 +170,14 @@ class List extends Component {
       this.props.chooseTodo(this.props.chosenTodoId !== todo.todoId ? todo.todoId : -1);
       const description = todo.description ? todo.description : "";
       this.setState({ description : description });
-      if(todo.deadline === null){
-        this.setState({ date: moment() });
-        //maybe make state bool that will make button instead moment()
-        //and if you click button calendar will appear
+      if(todo.deadline === null || todo.deadline === ""){
+        console.log("null deadline");
+        this.setState({ date: "", time: "" });
       }
       else {
-        this.setState({ date: moment(todo.deadline) });
+        this.setState({ date: moment(todo.deadline).format("YYYY-MM-DD"),
+          time: moment(todo.deadline).format("HH:mm")
+        });
       }
     };
 
@@ -240,23 +242,42 @@ class List extends Component {
         });
     };
 
-    handleChangeDate = (dateFromInput) => {
-      this.setState({
-        date: dateFromInput
-      });
-    };
+  handleChangeDate = (dateValue, todo) => {
+    this.setState({
+      date: dateValue
+    });
+    const datetime = moment(dateValue+this.state.time,"YYYY-MM-DDHH:mm")
+    this.updateTodoDeadline(todo, datetime);
+  };
 
-    changeTodoDeadline = (todo,e) => {
-      const oldDeadline = todo.deadline
-      // toddddo.deadline = dateFromInput.format("YYYY-MM-DD HH:mm:ss")
-      todo.deadline = 1000*this.state.date.unix()
-      this.fetchChangedTodos(this.props.todos, todo);
-      ajax('POST', `todos/changeDeadline?todoId=${todo.todoId}&deadline=${this.state.date.unix()}`, 5, 1000, () => {},
-        () => {
-          alert('Could not change todo\'s deadline...');
-          todo.deadline = oldDeadline;
-          this.fetchChangedTodos(this.props.todos, todo);
-        });
+  handleChangeTime = (timeValue, todo) => {
+    this.setState({
+      time: timeValue
+    });
+    const datetime = moment(this.state.date+timeValue,"YYYY-MM-DDHH:mm")
+    this.updateTodoDeadline(todo, datetime);
+  };
+
+    updateTodoDeadline = (todo, datetime) => {
+      const todos = this.props.todos;
+      const oldDeadline = todo.deadline;
+      if(!isNaN(datetime) && datetime !== null) {
+        // todo.deadline = 1000 * datetime.unix()
+        todo.deadline = datetime;
+        this.fetchChangedTodos(todos, todo);
+        // ajax('POST', `todos/changeDeadline?todoId=${todo.todoId}&deadline=${datetime.unix()}`, 5, 1000, () => {
+        //     NotificationManager.success(`Successfully  set ${todo.text}'s deadline to: ${datetime.format("YYYY-MM-DD HH:mm")} from ${oldDeadline}`);
+        //   },
+        //   () => {
+        //     alert('Could not change todo\'s deadline...');
+        //     todo.deadline = oldDeadline;
+        //     this.setState({
+        //       date: moment(todo.deadline).format("YYYY-MM-DD"),
+        //       time: moment(todo.deadline).format("HH:mm")
+        //     });
+        //     this.fetchChangedTodos(todos, todo);
+        //   });
+      }
     }
 
     createTodos = (finished) => {
@@ -287,7 +308,10 @@ class List extends Component {
                             className={className}
                             id={todo.todoId}
                             key={todo.todoId}
-                            onClick={() => this.handleExpand(todo)}
+                            onClick={(e) => {
+                              this.handleExpand(todo);
+                              e.stopPropagation();
+                            }}
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
@@ -314,23 +338,26 @@ class List extends Component {
                               </button>
                             </div>
                             <div className="panel">
-                              <p className={this.props.chosenTodoId === todo.todoId ? 'view' : 'noview'}>
-                                <form >
-                                  <DatePicker
-                                    inline
-                                    selected={this.state.date}
-                                    onChange={this.handleChangeDate}
-                                    showTimeSelect
-                                    timeFormat="HH:mm"
-                                    timeIntervals={3}
-                                    dateFormat="LLL"
-                                    timeCaption="time"
-                                    dateFormatCalendar={" "}
-                                    showMonthDropdown
-                                    showYearDropdown
-                                    dropdownMode="select"
-                                  />
-                                </form>
+                              <div className={this.props.chosenTodoId === todo.todoId ? 'view' : 'noview'}>
+                                <form className="form"
+                                      onClick={e => {
+                                        e.stopPropagation();
+                                      }}
+                                >
+                                  <input
+                                    onChange={(e) => this.handleChangeDate(e.target.value, todo)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    type="date"
+                                    value={this.state.date}
+                                  >
+                                  </input>
+                                  <input
+                                    onChange={(e) => this.handleChangeTime(e.target.value, todo)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    type="time"
+                                    value={this.state.time}
+                                  >
+                                  </input>
                                 <select
                                   className="Select"
                                   onChange={(e) => this.selectCategory( e.target.value, todo)}
@@ -343,23 +370,38 @@ class List extends Component {
                                       value={category.categoryId}
                                     >{ category.categoryName }</option>))}
                                 </select>
-
+                                </form>
+                                {/*<button*/}
+                                  {/*className="accept-calendar-button"*/}
+                                  {/*hidden={this.props.chosenTodoId === todo.todoId ? '' : 'hidden'}*/}
+                                  {/*onClick={(e) => this.changeTodoDeadline(todo,e)}*/}
+                                {/*>*/}
+                                  {/*{'Accept New Date'}*/}
+                                {/*</button>*/}
                                 <form
                                   className="form"
                                   onSubmit={(e) => this.handleDescriptionSubmit(e,todo)}
                                 >
-                                  <input
+                                  {/*<input*/}
+                                    {/*autoFocus="autofocus"*/}
+                                    {/*maxLength="50"*/}
+                                    {/*onChange={this.handleDescriptionChange}*/}
+                                    {/*onClick={(e) => e.stopPropagation()}*/}
+                                    {/*placeholder="Description"*/}
+                                    {/*type=""*/}
+                                    {/*value={this.state.description}*/}
+                                  {/*/>*/}
+                                  <textarea rows="4" cols="50"
                                     autoFocus="autofocus"
                                     maxLength="50"
                                     onChange={this.handleDescriptionChange}
                                     onClick={(e) => e.stopPropagation()}
                                     placeholder="Description"
-                                    type="text"
-                                    value={this.state.description}
-                                  />
+                                     value={this.state.description}>
+                                    {/*{this.state.description}*/}
+                                </textarea>
                                 </form>
-
-                              </p>
+                              </div>
                             </div>
                           </li>
                         )}

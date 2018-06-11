@@ -173,12 +173,16 @@
     border-bottom: 3px dashed #ADADAD;
 }
 
-/*.list-router select{*/
-    /*height: 40px;*/
-    /*width: 70px*/
-/*}*/
-
-.react-datepicker ul{
-    padding: 0;
+.list-router select{
+    margin-left: 5px;
+    padding: 0 10px;
+    display: inline-block;
+    overflow: hidden;
+    font-size: 18px;
 }
+
+.list-router textarea{
+    margin-top: 5px;
+}
+
 
